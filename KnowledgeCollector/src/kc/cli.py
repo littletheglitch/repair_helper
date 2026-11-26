@@ -12,6 +12,8 @@ Commands:
   search <query>                   Offline full-text search
   documents [--source NAME]        List collected documents
   export <format> [--out DIR]      Export: jsonl|markdown|sqlite|text|knowledge
+  import [DIR] [--dry-run]         Import assistant Knowledge JSON (offline)
+  export-cases [--out DIR]         Export unresolved repair-case candidates
   verify                           Verify the DB integrity + manifest
   stats                            Show collection statistics
   help                             This message
@@ -22,11 +24,13 @@ commands work fully offline.
 """
 from __future__ import annotations
 
+import shlex
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 from . import (config, database, export as X, manifest, collector, fetcher,
-               schemas)
+               importer as I, repair_case_export as RCX, schemas)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -37,26 +41,32 @@ def main(argv: Optional[List[str]] = None) -> int:
         print("Knowledge Collector. Type 'help' for commands.")
         _repl()
         return 0
-    out = dispatch(" ".join(argv))
+    out = _dispatch_args([str(item) for item in argv])
     print(out)
     return 0
 
 
 def dispatch(line: str) -> str:
-    """Dispatch one command line; return the output string. Used by
-    tests and the REPL."""
-    args = line.split()
+    """Dispatch one REPL command line; quoted Windows paths stay intact."""
+    try:
+        args = shlex.split(line, posix=True)
+    except ValueError as exc:
+        return f"Command parse error: {exc}"
+    return _dispatch_args(args)
+
+
+def _dispatch_args(args: List[str]) -> str:
+    """Dispatch an already-tokenized argument list (preserves argv paths)."""
     if not args:
         return ""
     cmd = args[0]
     handler = COMMANDS.get(cmd)
     if handler is None:
-        return (f"Unknown command: '{cmd}'. Type 'help' for the list.")
+        return f"Unknown command: '{cmd}'. Type 'help' for the list."
     try:
         return handler(args[1:])
-    except Exception as e:
-        return f"Error in '{cmd}': {e}"
-
+    except Exception as exc:
+        return f"Error in '{cmd}': {type(exc).__name__}: {exc}"
 
 def _repl() -> None:
     while True:
@@ -291,7 +301,7 @@ def cmd_export(args: List[str]) -> str:
     i = 1
     while i < len(args):
         if args[i] == "--out" and i + 1 < len(args):
-            out_dir = __import__("pathlib").Path(args[i + 1]); i += 2
+            out_dir = Path(args[i + 1]).expanduser(); i += 2
         elif args[i] == "--source" and i + 1 < len(args):
             source = args[i + 1]; i += 2
         else:
@@ -304,6 +314,55 @@ def cmd_export(args: List[str]) -> str:
                 f"file(s) in {config.export_dir() / 'knowledge'}.")
     return (f"Exported {r.get('records','?')} record(s) to "
             f"{r.get('file', r.get('files','?'))}.")
+
+
+def cmd_import(args: List[str]) -> str:
+    """Import assistant-compatible Knowledge JSON exports offline."""
+    export_dir = config.export_dir() / "knowledge"
+    force = False
+    dry_run = False
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg in ("--from", "--dir") and i + 1 < len(args):
+            export_dir = Path(args[i + 1]).expanduser(); i += 2
+        elif arg == "--force":
+            force = True; i += 1
+        elif arg == "--dry-run":
+            dry_run = True; i += 1
+        elif not arg.startswith("--") and export_dir == config.export_dir() / "knowledge":
+            export_dir = Path(arg).expanduser(); i += 1
+        else:
+            return "Usage: import [EXPORT_DIR] [--from DIR] [--dry-run] [--force]"
+    result = I.import_export(export_dir, force=force, dry_run=dry_run)
+    return I.render_import_report(result)
+
+
+def cmd_export_cases(args: List[str]) -> str:
+    """Export repair-post candidates; every candidate remains unverified."""
+    out_dir = None
+    source = ""
+    include_all = False
+    i = 0
+    while i < len(args):
+        if args[i] == "--out" and i + 1 < len(args):
+            out_dir = Path(args[i + 1]).expanduser(); i += 2
+        elif args[i] == "--source" and i + 1 < len(args):
+            source = args[i + 1]; i += 2
+        elif args[i] == "--all":
+            include_all = True; i += 1
+        else:
+            return "Usage: export-cases [--out DIR] [--source NAME] [--all]"
+    result = RCX.export_candidates(
+        out_dir=out_dir, source_name=source, include_all_relevant=include_all
+    )
+    if not result.get("ok"):
+        return f"Repair-case export failed: {result.get('error', 'unknown error')}"
+    return (
+        f"Exported {result['candidates']} unresolved repair-case candidate(s); "
+        f"skipped {result['skipped']}. Output: {result['directory']}\n"
+        "Candidates are NOT confirmed and are NOT promoted automatically."
+    )
 
 
 def cmd_verify(args: List[str]) -> str:
@@ -357,6 +416,8 @@ COMMANDS = {
     "search": cmd_search,
     "documents": cmd_documents,
     "export": cmd_export,
+    "import": cmd_import,
+    "export-cases": cmd_export_cases,
     "verify": cmd_verify,
     "stats": cmd_stats,
     "exit": lambda a: "exit",
@@ -384,6 +445,9 @@ Offline commands (no network):
   documents [--source NAME]        List collected documents
   export <format> [--out DIR] [--source NAME]
                                    Formats: jsonl|markdown|sqlite|text|knowledge
+  import [DIR] [--dry-run] [--force]  Import assistant Knowledge JSON offline
+  export-cases [--out DIR] [--source NAME] [--all]
+                                   Export unresolved repair-case candidates
   verify                           DB integrity + source manifest
   stats                            Collection statistics
 

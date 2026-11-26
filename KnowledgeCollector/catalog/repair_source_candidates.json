@@ -1,0 +1,854 @@
+{
+  "catalog_name": "AI1 Repair Knowledge Source Candidate Catalog",
+  "catalog_version": "1.0.0",
+  "created_date": "2026-11-25",
+  "purpose": "Candidate inventory for evaluation; not an active crawl configuration.",
+  "counts": {
+    "total_candidates": 47,
+    "dedicated_mobile_sources": 3,
+    "mobile_or_apple_mixed_sources": 7,
+    "stack_exchange_sites": 11
+  },
+  "important_rules": [
+    "Do not enable a source until access, robots.txt, terms/license and collection method have been checked.",
+    "Do not bypass login walls, CAPTCHAs, paywalls, rate limits or robots.txt restrictions.",
+    "Do not add BIOS dumps, schematics, BoardView files or datasheets to the main knowledge corpus.",
+    "Do not label ORA event-level repair attempts as technician forum diagnosis cases.",
+    "Mobile repair sources are categorized separately; mixed Apple and iFixit sources are explicitly marked as mixed coverage."
+  ],
+  "sources": [
+    {
+      "source_id": "vinafix",
+      "name": "VinaFix",
+      "category": "laptop_pc_motherboard",
+      "device_coverage": [
+        "laptop",
+        "desktop",
+        "motherboard",
+        "display",
+        "graphics"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Community repair discussions; exclude BIOS/firmware file areas from the main corpus."
+    },
+    {
+      "source_id": "all_about_circuits",
+      "name": "All About Circuits",
+      "category": "electronics_repair",
+      "device_coverage": [
+        "electronics",
+        "circuits",
+        "components",
+        "power"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize its Technical Repair discussions; distinguish repair cases from general engineering Q&A."
+    },
+    {
+      "source_id": "badcaps",
+      "name": "Badcaps",
+      "category": "electronics_repair",
+      "device_coverage": [
+        "power_supply",
+        "monitor",
+        "television",
+        "capacitors",
+        "motherboard"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "High-value repair candidate; crawl access and permissions still need validation."
+    },
+    {
+      "source_id": "electronics_repair_school",
+      "name": "Electronics Repair School",
+      "category": "mobile_and_cross_device_repair",
+      "device_coverage": [
+        "laptop",
+        "desktop",
+        "mobile",
+        "motherboard",
+        "electronics"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Previously named candidate; verify the exact community/site, relevance, access and permissions before adding a connector."
+    },
+    {
+      "source_id": "laptop_repair_forums",
+      "name": "Laptop Repair Forums",
+      "category": "laptop_pc_motherboard",
+      "device_coverage": [
+        "laptop",
+        "motherboard",
+        "power_rails"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize measured board-level diagnosis and confirmed fixes."
+    },
+    {
+      "source_id": "eevblog",
+      "name": "EEVblog",
+      "category": "electronics_repair",
+      "device_coverage": [
+        "electronics",
+        "test_equipment",
+        "microcontrollers",
+        "power"
+      ],
+      "priority": "A",
+      "status": "blocked_robots",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "User run on 2026-11-25 reported robots.txt disallow for all five configured EEVblog board entry points. Do not bypass; re-check only if site policy changes."
+    },
+    {
+      "source_id": "electronics_point",
+      "name": "Electronics Point",
+      "category": "electronics_repair",
+      "device_coverage": [
+        "electronics",
+        "components",
+        "circuits"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "General electronics discussions; filter for actual repair cases."
+    },
+    {
+      "source_id": "electro_tech_online",
+      "name": "Electro-Tech-Online",
+      "category": "electronics_repair",
+      "device_coverage": [
+        "electronics",
+        "circuits",
+        "power",
+        "industrial_control"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Potentially valuable for board and circuit troubleshooting."
+    },
+    {
+      "source_id": "eserviceinfo",
+      "name": "eServiceInfo",
+      "category": "consumer_electronics",
+      "device_coverage": [
+        "television",
+        "monitor",
+        "audio_video"
+      ],
+      "priority": "A",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Select repair discussions only; do not ingest schematic/manual or firmware file collections."
+    },
+    {
+      "source_id": "sci_electronics_repair_faq",
+      "name": "Sci.Electronics.Repair FAQ",
+      "category": "repair_reference_archive",
+      "device_coverage": [
+        "television",
+        "monitor",
+        "audio",
+        "power_supply",
+        "consumer_electronics"
+      ],
+      "priority": "B",
+      "status": "terms_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Legacy repair archive/reference, not a live forum. Preserve attribution and source-specific reuse conditions."
+    },
+    {
+      "source_id": "van_thinh_tech",
+      "name": "Vân Thịnh Tech",
+      "category": "laptop_pc_motherboard",
+      "device_coverage": [
+        "laptop",
+        "desktop",
+        "gpu",
+        "motherboard"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Previously named candidate; identity, relevance, access and permissions need verification."
+    },
+    {
+      "source_id": "laptechinfo",
+      "name": "Laptechinfo",
+      "category": "laptop_pc_motherboard",
+      "device_coverage": [
+        "laptop",
+        "motherboard"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Previously named candidate; identity, relevance, access and permissions need verification."
+    },
+    {
+      "source_id": "gsm_forum",
+      "name": "GSM-Forum",
+      "category": "mobile_repair",
+      "device_coverage": [
+        "mobile_phone",
+        "smartphone",
+        "phone_board_repair"
+      ],
+      "priority": "A",
+      "status": "permission_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mobile repair candidate; verify public access, account requirements and content reuse permissions."
+    },
+    {
+      "source_id": "martview_forum",
+      "name": "Martview Forum",
+      "category": "mobile_repair",
+      "device_coverage": [
+        "mobile_phone",
+        "smartphone",
+        "phone_board_repair"
+      ],
+      "priority": "A",
+      "status": "permission_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mobile repair candidate; verify access and permissions before crawling."
+    },
+    {
+      "source_id": "xda_forums",
+      "name": "XDA Forums",
+      "category": "mobile_repair",
+      "device_coverage": [
+        "android",
+        "smartphone",
+        "tablet",
+        "device_hardware"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mixed technical community; retain only hardware diagnosis/repair threads, not generic ROM/software content."
+    },
+    {
+      "source_id": "ifixit_answers",
+      "name": "iFixit Answers",
+      "category": "mobile_and_cross_device_repair",
+      "device_coverage": [
+        "mobile_phone",
+        "tablet",
+        "laptop",
+        "console",
+        "appliance"
+      ],
+      "priority": "B",
+      "status": "permission_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Cross-device repair Q&A with mobile coverage. Do not ingest into the main corpus until license/API terms explicitly permit the intended storage and reuse."
+    },
+    {
+      "source_id": "macrumors_forums",
+      "name": "MacRumors Forums",
+      "category": "apple_devices_mixed",
+      "device_coverage": [
+        "iphone",
+        "ipad",
+        "mac",
+        "apple_hardware"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mixed Apple device community; mobile and Mac coverage. Filter out general news/opinion."
+    },
+    {
+      "source_id": "apple_discussions",
+      "name": "Apple Discussions",
+      "category": "apple_devices_mixed",
+      "device_coverage": [
+        "iphone",
+        "ipad",
+        "mac",
+        "apple_hardware"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mixed Apple support community; verify content reuse terms and prioritize hardware fault reports."
+    },
+    {
+      "source_id": "techpowerup_forums",
+      "name": "TechPowerUp Forums",
+      "category": "pc_hardware",
+      "device_coverage": [
+        "gpu",
+        "graphics_card",
+        "motherboard",
+        "desktop"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize hardware fault diagnosis; exclude performance-only discussions."
+    },
+    {
+      "source_id": "guru3d_forums",
+      "name": "Guru3D Forums",
+      "category": "pc_hardware",
+      "device_coverage": [
+        "gpu",
+        "graphics_card",
+        "drivers",
+        "desktop"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Filter for physical hardware faults and repair-relevant diagnosis."
+    },
+    {
+      "source_id": "overclock_net",
+      "name": "Overclock.net",
+      "category": "pc_hardware",
+      "device_coverage": [
+        "motherboard",
+        "gpu",
+        "ram",
+        "cpu",
+        "desktop"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Large enthusiast community; separate overclocking/configuration topics from hardware repair."
+    },
+    {
+      "source_id": "level1techs_forums",
+      "name": "Level1Techs Forums",
+      "category": "pc_and_server_hardware",
+      "device_coverage": [
+        "motherboard",
+        "server",
+        "storage",
+        "gpu"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize hardware diagnostics and failure reports."
+    },
+    {
+      "source_id": "servethehome_forums",
+      "name": "ServeTheHome Forums",
+      "category": "server_and_network_hardware",
+      "device_coverage": [
+        "server",
+        "motherboard",
+        "storage",
+        "network"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Useful for professional/server hardware fault cases."
+    },
+    {
+      "source_id": "toms_hardware_forums",
+      "name": "Tom's Hardware Forums",
+      "category": "pc_hardware",
+      "device_coverage": [
+        "desktop",
+        "motherboard",
+        "gpu",
+        "cpu",
+        "power_supply"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "High volume likely includes many configuration questions; use strict repair-case filtering."
+    },
+    {
+      "source_id": "hardforum",
+      "name": "HardForum",
+      "category": "pc_hardware",
+      "device_coverage": [
+        "desktop",
+        "motherboard",
+        "gpu",
+        "power_supply"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize hardware failure and measured troubleshooting."
+    },
+    {
+      "source_id": "audiokarma",
+      "name": "Audiokarma",
+      "category": "audio_repair",
+      "device_coverage": [
+        "amplifier",
+        "receiver",
+        "audio_equipment"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Audio equipment failures and repair discussions."
+    },
+    {
+      "source_id": "diy_audio",
+      "name": "DIY Audio",
+      "category": "audio_electronics",
+      "device_coverage": [
+        "amplifier",
+        "audio_circuit",
+        "power_supply"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Useful for circuit-level audio troubleshooting; distinguish design projects from repairs."
+    },
+    {
+      "source_id": "avs_forum",
+      "name": "AVS Forum",
+      "category": "audio_visual",
+      "device_coverage": [
+        "television",
+        "display",
+        "projector",
+        "audio_video"
+      ],
+      "priority": "C",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Large AV community; strict filtering needed for actual hardware faults."
+    },
+    {
+      "source_id": "consolemods",
+      "name": "ConsoleMods",
+      "category": "console_hardware",
+      "device_coverage": [
+        "game_console",
+        "handheld_console"
+      ],
+      "priority": "C",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize physical hardware failure/repair; exclude modification-only instructions."
+    },
+    {
+      "source_id": "gbatemp",
+      "name": "GBATemp",
+      "category": "console_and_handheld",
+      "device_coverage": [
+        "game_console",
+        "handheld_console"
+      ],
+      "priority": "C",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Mixed gaming/software community; retain only hardware repair discussions."
+    },
+    {
+      "source_id": "applianceblog",
+      "name": "ApplianceBlog",
+      "category": "appliance_repair",
+      "device_coverage": [
+        "washing_machine",
+        "refrigerator",
+        "dishwasher",
+        "appliance_control_board"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Prioritize symptom, measurements, tests and confirmed appliance repair."
+    },
+    {
+      "source_id": "appliancepartspros",
+      "name": "AppliancePartsPros",
+      "category": "appliance_repair",
+      "device_coverage": [
+        "washing_machine",
+        "refrigerator",
+        "dishwasher",
+        "appliance"
+      ],
+      "priority": "B",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Repair help content; verify reuse terms and avoid turning parts advice into confirmed repair cases."
+    },
+    {
+      "source_id": "electriciantalk",
+      "name": "ElectricianTalk",
+      "category": "electrical_and_industrial",
+      "device_coverage": [
+        "electrical_equipment",
+        "control",
+        "power"
+      ],
+      "priority": "C",
+      "status": "candidate_unverified",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "May contain installation/code discussions; retain only electronics/equipment fault diagnosis."
+    },
+    {
+      "source_id": "ecu_connections",
+      "name": "ECU Connections",
+      "category": "automotive_electronics",
+      "device_coverage": [
+        "ecu",
+        "automotive_electronics",
+        "vehicle_control_module"
+      ],
+      "priority": "B",
+      "status": "permission_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Verify access and reuse permissions; prioritize board-level ECU repair, not tuning."
+    },
+    {
+      "source_id": "mhh_auto",
+      "name": "MHH Auto",
+      "category": "automotive_diagnostics",
+      "device_coverage": [
+        "ecu",
+        "automotive_diagnostics",
+        "vehicle_electronics"
+      ],
+      "priority": "C",
+      "status": "permission_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Access and permissions need review; exclude immobilizer bypass, credential/security circumvention and tuning-only content."
+    },
+    {
+      "source_id": "reddit",
+      "name": "Reddit",
+      "category": "cross_domain_discussion",
+      "device_coverage": [
+        "mobile",
+        "computer",
+        "electronics",
+        "appliance",
+        "automotive",
+        "console"
+      ],
+      "priority": "C",
+      "status": "api_and_terms_review",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Keep as a candidate only. Do not bulk collect without approved access and terms explicitly permitting the intended use."
+    },
+    {
+      "source_id": "se_electronics",
+      "name": "Electronics Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "electronics",
+        "circuits",
+        "components",
+        "repair"
+      ],
+      "priority": "A",
+      "status": "api_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing Stack Exchange site candidate; filter for practical troubleshooting and repair."
+    },
+    {
+      "source_id": "se_electrical_engineering",
+      "name": "Electrical Engineering Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "electronics",
+        "electrical_engineering",
+        "power",
+        "components"
+      ],
+      "priority": "B",
+      "status": "api_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Additional candidate; many design questions are not repair cases."
+    },
+    {
+      "source_id": "se_arduino",
+      "name": "Arduino Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "microcontrollers",
+        "arduino",
+        "embedded_hardware"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; focus on board/electrical faults rather than code-only questions."
+    },
+    {
+      "source_id": "se_raspberrypi",
+      "name": "Raspberry Pi Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "single_board_computer",
+        "power",
+        "connectivity"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; prioritize hardware failure and power issues."
+    },
+    {
+      "source_id": "se_robotics",
+      "name": "Robotics Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "robotics",
+        "motor_driver",
+        "sensors",
+        "control"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; focus on electronics/hardware diagnosis."
+    },
+    {
+      "source_id": "se_retrocomputing",
+      "name": "Retrocomputing Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "retro_computer",
+        "vintage_hardware"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; hardware restoration and fault diagnosis."
+    },
+    {
+      "source_id": "se_3dprinting",
+      "name": "3D Printing Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "3d_printer",
+        "control_board",
+        "heater",
+        "motor",
+        "power"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; prioritize electrical/control-board failures, not slicer/software issues."
+    },
+    {
+      "source_id": "se_diy",
+      "name": "Home Improvement / DIY Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "diy",
+        "appliance",
+        "electrical"
+      ],
+      "priority": "C",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; broad and noisy, use strict electronics-repair filters."
+    },
+    {
+      "source_id": "se_superuser",
+      "name": "Super User Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "computer_hardware",
+        "storage",
+        "peripherals"
+      ],
+      "priority": "C",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Existing catalog site; mostly computing support, selectively retain hardware diagnostics."
+    },
+    {
+      "source_id": "se_ask_ubuntu",
+      "name": "Ask Ubuntu Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "computer_hardware",
+        "linux_hardware",
+        "drivers"
+      ],
+      "priority": "C",
+      "status": "api_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Additional candidate; retain hardware-level faults only, not general Linux support."
+    },
+    {
+      "source_id": "se_iot",
+      "name": "Internet of Things Stack Exchange",
+      "category": "stack_exchange",
+      "device_coverage": [
+        "iot",
+        "embedded_hardware",
+        "sensors",
+        "connectivity"
+      ],
+      "priority": "B",
+      "status": "existing_catalog_candidate",
+      "connector_status": "not_implemented_or_not_verified",
+      "access_method": "to_be_verified",
+      "permission_status": "not_verified_unless_status_says_otherwise",
+      "collection_scope": "public, permitted repair discussions only; exclude BIOS dumps, schematics, BoardView and datasheets from the main corpus",
+      "notes": "Already present in prior project catalog; preserve it while evaluating repair-case yield."
+    }
+  ]
+}

@@ -21,7 +21,7 @@ export before importing.
 from __future__ import annotations
 
 import json
-import shutil
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -99,25 +99,34 @@ def _export_markdown(out: Path, source_name: str) -> Dict[str, Any]:
 # ----------------------------------------------------------------------
 
 def _export_sqlite(out: Path) -> Dict[str, Any]:
+    """Create a consistent standalone SQLite snapshot using SQLite backup API.
+
+    The live collector connection remains open and its WAL/SHM sidecars are
+    not copied separately. This avoids a torn snapshot and avoids clearing
+    the module's active connection cache.
+    """
     src = config.db_path()
     dst = out / "kc_snapshot.sqlite3"
-    # Close the live connection so the file isn't locked, then
-    # checkpoint the WAL so the snapshot contains all committed data.
-    conn = database.connect()
+    out.mkdir(parents=True, exist_ok=True)
+    temp = dst.with_name(f".{dst.name}.tmp")
     try:
-        conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        temp.unlink(missing_ok=True)
+        source_conn = database.connect()
+        snapshot_conn = sqlite3.connect(str(temp))
+        try:
+            source_conn.backup(snapshot_conn)
+            check = snapshot_conn.execute("PRAGMA integrity_check").fetchone()
+            if not check or check[0] != "ok":
+                raise sqlite3.DatabaseError(
+                    f"snapshot integrity check failed: {check[0] if check else 'no result'}"
+                )
+        finally:
+            snapshot_conn.close()
+        os.replace(temp, dst)
     except Exception:
-        pass
-    database._connections.clear()
-    shutil.copy2(src, dst)
-    # Also copy sidecar WAL/SHM if present (best effort).
-    for suffix in ("-wal", "-shm"):
-        side = Path(str(src) + suffix)
-        if side.exists():
-            try:
-                shutil.copy2(side, Path(str(dst) + suffix))
-            except OSError:
-                pass
+        temp.unlink(missing_ok=True)
+        raise
+
     database.log_export("sqlite", 1, -1, str(out))
     _write_manifest(out, {"sqlite": [str(dst)]}, -1)
     return {"ok": True, "format": "sqlite", "file": str(dst)}
@@ -131,7 +140,9 @@ def _export_text(out: Path, source_name: str) -> Dict[str, Any]:
     rows = _load_records(source_name)
     files = []
     for r in rows:
-        safe = (r.get("url") or str(r["id"])).replace("/", "_").replace(":", "_")[:80]
+        raw_name = str(r.get("url") or r["id"])
+        safe = "".join(ch if ch.isalnum() or ch in "-_." else "_" for ch in raw_name)
+        safe = safe.strip(" .")[:80] or "record"
         path = out / f"{r['id']}_{safe}.txt"
         header = (
             f"# Source: {r['source_name']}\n"

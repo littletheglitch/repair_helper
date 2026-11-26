@@ -1,15 +1,14 @@
-"""Read-only accessor for the component database + replacement mappings.
+"""Read-only, indexed accessor for ExpansionPack component data.
 
-Loads every component record (IC + MOSFET) and replacement mapping from
-the pack and offers simple lookups used by the diagnostic engine, the
-export tool and the tests.
-
-Pure standard library, no network access.
+The loader is tolerant of individual malformed JSON files: a bad record is
+reported in ``load_errors`` without preventing the remaining catalog from
+being used. Lookup and summary methods cover ICs, MOSFETs, analog ICs and
+discrete semiconductors without silently double-counting records.
 """
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -17,111 +16,152 @@ from typing import Optional
 @dataclass
 class ComponentDatabase:
     pack_root: Path
-    ic_records: list[dict]
-    mosfet_records: list[dict]
-    discrete_records: list[dict] = None
-    analog_records: list[dict] = None
-    replacement_mappings: list[dict] = None
+    ic_records: list[dict] = field(default_factory=list)
+    mosfet_records: list[dict] = field(default_factory=list)
+    discrete_records: list[dict] = field(default_factory=list)
+    analog_records: list[dict] = field(default_factory=list)
+    replacement_mappings: list[dict] = field(default_factory=list)
+    load_errors: list[str] = field(default_factory=list)
+    _by_part_number: dict[str, list[dict]] = field(
+        default_factory=dict, init=False, repr=False
+    )
 
-    def __post_init__(self):
-        if self.discrete_records is None:
-            self.discrete_records = []
-        if self.analog_records is None:
-            self.analog_records = []
-        if self.replacement_mappings is None:
-            self.replacement_mappings = []
+    def __post_init__(self) -> None:
+        self.pack_root = Path(self.pack_root)
+        self._rebuild_index()
 
-    # --- construction ----------------------------------------------------
+    @staticmethod
+    def _read_tree(
+        root: Path, errors: list[str], label: str, required_key: str = "part_number"
+    ) -> list[dict]:
+        records: list[dict] = []
+        if not root.exists():
+            return records
+        for path in sorted(root.rglob("*.json")):
+            try:
+                with path.open("r", encoding="utf-8-sig") as handle:
+                    record = json.load(handle)
+                if not isinstance(record, dict):
+                    raise ValueError("JSON root must be an object")
+                identity = record.get(required_key)
+                if not isinstance(identity, str) or not identity.strip():
+                    raise ValueError(f"missing non-empty {required_key}")
+                record.setdefault("_source_file", str(path))
+                records.append(record)
+            except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+                errors.append(f"{label}: {path}: {type(exc).__name__}: {exc}")
+        return records
 
     @classmethod
     def load(cls, pack_root: Path) -> "ComponentDatabase":
-        ic_records: list[dict] = []
-        mosfet_records: list[dict] = []
-        discrete_records: list[dict] = []
-        analog_records: list[dict] = []
-        mappings: list[dict] = []
-
-        ic_root = pack_root / "ComponentDatabase" / "ICs"
-        if ic_root.exists():
-            for f in sorted(ic_root.rglob("*.json")):
-                with open(f, "r", encoding="utf-8") as fh:
-                    ic_records.append(json.load(fh))
-
-        mosfet_root = pack_root / "ComponentDatabase" / "MOSFETs"
-        if mosfet_root.exists():
-            for f in sorted(mosfet_root.rglob("*.json")):
-                with open(f, "r", encoding="utf-8") as fh:
-                    mosfet_records.append(json.load(fh))
-
-        # Discrete semiconductors (diodes, BJTs, Zeners, TVS, ESD)
-        discrete_root = pack_root / "ComponentDatabase" / "DiscreteSemiconductors"
-        if discrete_root.exists():
-            for f in sorted(discrete_root.rglob("*.json")):
-                with open(f, "r", encoding="utf-8") as fh:
-                    discrete_records.append(json.load(fh))
-
-        # Analog ICs (op-amps, comparators, supervisors, etc.)
-        analog_root = pack_root / "ComponentDatabase" / "AnalogICs"
-        if analog_root.exists():
-            for f in sorted(analog_root.rglob("*.json")):
-                with open(f, "r", encoding="utf-8") as fh:
-                    analog_records.append(json.load(fh))
-
-        map_root = pack_root / "ComponentDatabase" / "ReplacementMappings"
-        if map_root.exists():
-            for f in sorted(map_root.glob("*.json")):
-                with open(f, "r", encoding="utf-8") as fh:
-                    mappings.append(json.load(fh))
-
-        return cls(
-            pack_root=pack_root,
-            ic_records=ic_records,
-            mosfet_records=mosfet_records,
-            discrete_records=discrete_records,
-            analog_records=analog_records,
-            replacement_mappings=mappings,
+        root = Path(pack_root)
+        errors: list[str] = []
+        db = cls(
+            pack_root=root,
+            ic_records=cls._read_tree(root / "ComponentDatabase" / "ICs", errors, "IC"),
+            mosfet_records=cls._read_tree(root / "ComponentDatabase" / "MOSFETs", errors, "MOSFET"),
+            discrete_records=cls._read_tree(
+                root / "ComponentDatabase" / "DiscreteSemiconductors", errors, "discrete"
+            ),
+            analog_records=cls._read_tree(
+                root / "ComponentDatabase" / "AnalogICs", errors, "analog IC"
+            ),
+            replacement_mappings=cls._read_tree(
+                root / "ComponentDatabase" / "ReplacementMappings", errors,
+                "replacement mapping", required_key="original_part"
+            ),
+            load_errors=errors,
         )
+        db._rebuild_index()
+        return db
 
-    # --- lookups ---------------------------------------------------------
+    def all_records(self) -> list[dict]:
+        """Return unique records across all component families.
+
+        Duplicates are identified by part number + manufacturer + category.
+        Same-number parts from different manufacturers/categories remain
+        distinct, because they may not be interchangeable.
+        """
+        ordered = (
+            self.ic_records + self.mosfet_records
+            + self.discrete_records + self.analog_records
+        )
+        seen: set[tuple[str, str, str]] = set()
+        result: list[dict] = []
+        for record in ordered:
+            key = (
+                str(record.get("part_number", "")).strip().casefold(),
+                str(record.get("manufacturer", "")).strip().casefold(),
+                str(record.get("category", "")).strip().casefold(),
+            )
+            if not key[0] or key in seen:
+                continue
+            seen.add(key)
+            result.append(record)
+        return result
+
+    def _rebuild_index(self) -> None:
+        index: dict[str, list[dict]] = {}
+        for record in self.all_records():
+            key = str(record.get("part_number", "")).strip().casefold()
+            index.setdefault(key, []).append(record)
+        self._by_part_number = index
 
     def find_part(self, part_number: str) -> Optional[dict]:
-        """Find any component record by exact part number."""
-        for rec in (self.ic_records + self.mosfet_records
-                    + self.discrete_records + self.analog_records):
-            if rec.get("part_number") == part_number:
-                return rec
-        return None
+        """Find the first exact part-number match, case-insensitively."""
+        key = str(part_number or "").strip().casefold()
+        matches = self._by_part_number.get(key, [])
+        return matches[0] if matches else None
+
+    def find_all_parts(self, part_number: str) -> list[dict]:
+        """Return all distinct manufacturer/category records for a part number."""
+        key = str(part_number or "").strip().casefold()
+        return list(self._by_part_number.get(key, []))
 
     def replacements_for(self, part_number: str) -> list[dict]:
-        """Return all replacement mappings whose original_part matches."""
+        key = str(part_number or "").strip().casefold()
         return [
-            m for m in self.replacement_mappings
-            if m.get("original_part") == part_number
+            mapping for mapping in self.replacement_mappings
+            if str(mapping.get("original_part", "")).strip().casefold() == key
         ]
 
     def by_category(self, category: str) -> list[dict]:
-        return [r for r in self.ic_records if r.get("category") == category]
+        key = str(category or "").strip().casefold()
+        return [
+            record for record in self.all_records()
+            if str(record.get("category", "")).strip().casefold() == key
+        ]
 
     def by_channel(self, channel: str) -> list[dict]:
-        """channel: 'N-channel' or 'P-channel'."""
-        return [r for r in self.mosfet_records if r.get("channel_type") == channel]
-
-    # --- summary ---------------------------------------------------------
+        """Return MOSFET records for 'N-channel' or 'P-channel'."""
+        key = str(channel or "").strip().casefold()
+        return [
+            record for record in self.mosfet_records
+            if str(record.get("channel_type", "")).strip().casefold() == key
+        ]
 
     def summary(self) -> dict:
         by_cat: dict[str, int] = {}
-        for r in self.ic_records:
-            by_cat[r["category"]] = by_cat.get(r["category"], 0) + 1
+        for record in self.all_records():
+            category = str(record.get("category") or "uncategorized")
+            by_cat[category] = by_cat.get(category, 0) + 1
+
+        duplicate_groups = sum(
+            1 for values in self._by_part_number.values() if len(values) > 1
+        )
         return {
             "ic_count": len(self.ic_records),
             "mosfet_count": len(self.mosfet_records),
             "discrete_count": len(self.discrete_records),
             "analog_ic_count": len(self.analog_records),
+            "unique_component_count": len(self.all_records()),
+            "duplicate_part_number_groups": duplicate_groups,
             "replacement_mapping_count": len(self.replacement_mappings),
+            "load_error_count": len(self.load_errors),
+            "load_errors": self.load_errors[:20],
             "ic_by_category": by_cat,
             "mosfet_by_channel": {
                 "N-channel": len(self.by_channel("N-channel")),
                 "P-channel": len(self.by_channel("P-channel")),
             },
         }
-

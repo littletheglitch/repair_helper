@@ -80,21 +80,6 @@ class ComponentIdentificationEngine:
     def __init__(self, pack_root: Optional[Path] = None):
         self.pack_root = pack_root or PACK_ROOT
         self.db = ComponentDatabase.load(self.pack_root)
-        self._load_extended_records()
-
-    def _load_extended_records(self) -> None:
-        """Include discrete semiconductor + analog IC records."""
-        for sub in ("DiscreteSemiconductors", "AnalogICs"):
-            root = self.pack_root / "ComponentDatabase" / sub
-            if not root.exists():
-                continue
-            for f in sorted(root.rglob("*.json")):
-                try:
-                    with open(f, "r", encoding="utf-8") as fh:
-                        rec = json.load(fh)
-                    self.db.ic_records.append(rec)
-                except (OSError, json.JSONDecodeError):
-                    continue
 
     # --- public API ----------------------------------------------------
 
@@ -107,7 +92,7 @@ class ComponentIdentificationEngine:
                 requires_info_note="At least one of part_number or marking is required.",
             )
 
-        all_records = self.db.ic_records + self.db.mosfet_records
+        all_records = self.db.all_records()
         scored: list[tuple[int, dict, list[str]]] = []
 
         for rec in all_records:
@@ -152,8 +137,14 @@ class ComponentIdentificationEngine:
             cat = rec.get("category", "")
             # Pinout verification
             pinout = rec.get("pinout", {}) or {}
-            if pinout and len(pinout) > 0 and not (len(pinout) == 1 and "notes" in pinout):
+            verification_status = str(rec.get("verification_status", "unknown")).lower()
+            has_pin_data = isinstance(pinout, dict) and any(
+                key != "notes" and value not in (None, "") for key, value in pinout.items()
+            )
+            if verification_status == "verified" and has_pin_data:
                 pinout_verified = "verified"
+            elif verification_status == "partial" and has_pin_data:
+                pinout_verified = "partial"
             else:
                 pinout_verified = "unverified"
             # Confidence per-candidate
