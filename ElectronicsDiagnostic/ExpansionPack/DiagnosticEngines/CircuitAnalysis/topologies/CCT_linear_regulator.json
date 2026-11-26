@@ -1,0 +1,61 @@
+{
+  "circuit_id": "CCT_linear_regulator",
+  "name": "Linear regulator",
+  "description": "Series-pass element drops the input-to-output voltage difference. Output is regulated by feedback.",
+  "topology": "Series pass transistor + error amp + reference",
+  "main_components": [
+    "pass transistor (BJT or MOSFET)",
+    "error amplifier",
+    "voltage reference",
+    "feedback divider",
+    "output cap"
+  ],
+  "input": "Unregulated DC (e.g. 5-12 V)",
+  "output": "Regulated DC (e.g. 3.3 V)",
+  "expected_signal_behavior": "Output within +/-2% of nominal; ripple <50 mVpp; pass element warm but not hot.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "pass element open, fuse open, thermal shutdown"
+    },
+    {
+      "mode": "low_output",
+      "description": "dropout, overload, wrong divider"
+    },
+    {
+      "mode": "high_output",
+      "description": "pass element shorted, divider open high-side"
+    },
+    {
+      "mode": "overheating",
+      "description": "high Vin-Vout*I"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "output voltage",
+    "dropout margin",
+    "pass element temperature",
+    "output ripple"
+  ],
+  "possible_fault_locations": [
+    "pass transistor",
+    "feedback divider resistors",
+    "output capacitor",
+    "input fuse"
+  ],
+  "recommended_next_tests": [
+    "measure input voltage",
+    "measure output voltage",
+    "check dropout margin",
+    "thermal scan pass element"
+  ],
+  "source_references": [
+    {
+      "title": "LM317 datasheet",
+      "url": "https://www.ti.com/lit/ds/symlink/lm317.pdf",
+      "type": "datasheet"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

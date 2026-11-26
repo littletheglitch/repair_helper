@@ -1,0 +1,125 @@
+{
+  "record_id": "IC_OB_OB2269",
+  "part_number": "OB2269",
+  "manufacturer": "On-Bright Electronics",
+  "manufacturer_short": "On-Bright",
+  "category": "pwm_controller",
+  "package": "SOP-8 / DIP-8",
+  "pin_count": 8,
+  "pinout": {
+    "1": "GATE (gate drive output)",
+    "2": "CS (current sense)",
+    "3": "RT1 (oscillator / power setting)",
+    "4": "INV (feedback, optocoupler)",
+    "5": "GND",
+    "6": "NC (no connect)",
+    "7": "VCC",
+    "8": "HV (high-voltage startup)"
+  },
+  "pin_functions": [
+    {
+      "name": "gate",
+      "function": "gate",
+      "pin": 1
+    },
+    {
+      "name": "cs",
+      "function": "cs",
+      "pin": 2
+    },
+    {
+      "name": "rt",
+      "function": "rt",
+      "pin": 3
+    },
+    {
+      "name": "inv",
+      "function": "inv",
+      "pin": 4
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 5
+    },
+    {
+      "name": "vcc",
+      "function": "vcc",
+      "pin": 6
+    },
+    {
+      "name": "hv_startup",
+      "function": "hv_startup",
+      "pin": 7
+    }
+  ],
+  "electrical_characteristics": {
+    "switching_frequency_khz": [
+      65
+    ],
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": null,
+        "max": 30.0,
+        "typ": null,
+        "note": "VCC max ~30V; UVLO typical for offline"
+      },
+      "uvlo_threshold_v": {
+        "on": 16.0,
+        "off": 8.0,
+        "note": "Typical offline UVLO"
+      },
+      "hv_startup_v": {
+        "max": 500,
+        "note": "HV pin tolerates up to ~500V for startup"
+      },
+      "max_duty_cycle_pct": 75,
+      "output_drive_a": {
+        "typ": 1.0,
+        "note": "Peak gate drive ~1A"
+      },
+      "control_mode": "current_mode",
+      "protection_features": [
+        "OCP",
+        "OLP",
+        "OVP",
+        "UVLO",
+        "thermal shutdown"
+      ]
+    }
+  },
+  "typical_applications": [
+    "Low-cost offline flyback adapters/chargers",
+    "Set-top box auxiliary supplies",
+    "LED driver flyback"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Offline flyback with OB2269",
+      "topology": "flyback",
+      "description": "HV pin (8) provides startup current from the bulk cap; VCC sustained by aux winding. Current-mode via CS. Opto feedback via INV.",
+      "external_components": [
+        "HV startup",
+        "CS resistor",
+        "RT1",
+        "optocoupler",
+        "TL431 shunt regulator"
+      ]
+    }
+  ],
+  "datasheet_url": "http://www.on-bright.com/en/products/power-management/ob2269",
+  "datasheet_source": "On-Bright Electronics OB2269 datasheet (vendor-published)",
+  "source_date": "2024-01-01",
+  "verification_status": "unknown",
+  "verification_notes": "On-Bright parts are widely cloned; pinout/frequency are well-established but exact UVLO thresholds vary by clone. Marked 'community' — verify against the specific vendor's datasheet before relying on thresholds.",
+  "replacement_notes": "OB2269 clones (e.g. from various Chinese vendors) are common but thresholds/Protection behavior vary. Pin-compatible with some other OB22xx but NOT verified.",
+  "tags": [
+    "pwm",
+    "current_mode",
+    "offline",
+    "flyback",
+    "8-pin",
+    "hv_startup"
+  ],
+  "schema_version": "1.0.0"
+}

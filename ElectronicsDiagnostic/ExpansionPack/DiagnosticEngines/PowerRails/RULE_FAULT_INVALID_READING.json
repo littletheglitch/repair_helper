@@ -1,0 +1,36 @@
+{
+  "rule_id": "RULE_FAULT_INVALID_READING",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW",
+    "+1.8V",
+    "+VCCRTC",
+    "VCORE"
+  ],
+  "priority": 5,
+  "condition": {
+    "expression": "rail_voltage_invalid"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "The rail-voltage measurement was flagged INVALID (taken but unusable — e.g. loose probe contact, wrong range, or a non-numeric reading). No diagnostic conclusion can be trusted until the reading is re-taken. Re-measure the rail voltage carefully: correct range, solid probe contact, stable display.",
+      "measure": {
+        "what": "Rail voltage (re-measure)",
+        "where": "Rail test point",
+        "instrument": "DMM DC volts, correct range",
+        "expected": "A stable numeric reading (0.0 V or the nominal rail voltage).",
+        "safety": "Powered board."
+      },
+      "interpretations": [
+        {
+          "if_result": "Stable reading obtained",
+          "then": "Re-run the diagnosis with the new reading."
+        }
+      ],
+      "requires_info": true
+    }
+  ],
+  "schema_version": "1.0.0"
+}

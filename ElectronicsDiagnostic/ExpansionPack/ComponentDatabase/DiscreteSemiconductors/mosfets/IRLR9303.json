@@ -1,0 +1,46 @@
+{
+  "record_id": "MOS_Infineon_IRLR9303",
+  "part_number": "IRLR9303",
+  "manufacturer": "Infineon (IR)",
+  "manufacturer_short": "Infineon",
+  "channel_type": "P",
+  "package": "TO-252 (DPAK)",
+  "pin_count": 3,
+  "pinout": {
+    "1": "GATE",
+    "2": "DRAIN",
+    "3": "SOURCE"
+  },
+  "vds_v": 60,
+  "id_a": 12.0,
+  "id_conditions": "VGS=10.0V, 25C",
+  "rds_on_mohm": 200.0,
+  "rds_on_conditions": "VGS=10.0V",
+  "vgs_th_v": 1.0,
+  "vgs_max_v": 10.0,
+  "gate_charge_nc": 30.0,
+  "gate_charge_conditions": "VDS=60V",
+  "power_dissipation_w": 65.0,
+  "thermal": {
+    "r_theta_ja_c_per_w": 45,
+    "r_theta_jc_c_per_w": null,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "technology": "Trench MOSFET",
+  "typical_applications": [],
+  "datasheet_url": "https://www.infineon.com/dgdl/irlr9303pbf.pdf",
+  "datasheet_source": "Infineon (IR) IRLR9303 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "P-MOS 60V/12A. High-side switch / reverse-polarity protection.",
+  "replacement_notes": "",
+  "tags": [
+    "mosfet",
+    "p_channel",
+    "standard"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,28 @@
+{
+  "record_id": "TVS_Littelfuse_SMCJ33CA",
+  "part_number": "SMCJ33CA",
+  "manufacturer": "Littelfuse / Bourns / various",
+  "manufacturer_short": "Littelfuse",
+  "category": "tvs_diode",
+  "package": "SMC (DO-214AB)",
+  "pin_count": 2,
+  "pinout": {
+    "A": "anode",
+    "K": "cathode"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 33.0,
+    "vbr_v": 36.7,
+    "vc_v": 53.3,
+    "pp_w": 1500.0
+  },
+  "datasheet_url": "https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smcj_datasheet.pdf.pdf",
+  "datasheet_source": "Littelfuse / Bourns / various SMCJ33CA datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Bidirectional TVS, 33V working, 1500W. 24V/28V rail protection (automotive/industrial).",
+  "tags": [
+    "tvs"
+  ],
+  "schema_version": "1.0.0"
+}

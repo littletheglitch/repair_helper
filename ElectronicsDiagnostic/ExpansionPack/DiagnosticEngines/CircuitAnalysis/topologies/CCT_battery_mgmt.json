@@ -1,0 +1,61 @@
+{
+  "circuit_id": "CCT_battery_mgmt",
+  "name": "Battery management (BMS)",
+  "description": "Monitors cell voltages, current, temperature; controls charge/discharge FETs; communicates fuel gauge to host.",
+  "topology": "Gas gauge IC + protection FETs + sense resistor",
+  "main_components": [
+    "gas gauge IC",
+    "protection FETs (CHG/DSG)",
+    "current-sense resistor",
+    "cell voltage taps",
+    "thermistors"
+  ],
+  "input": "Battery cells + host SMBus",
+  "output": "Protected pack + fuel-gauge data",
+  "expected_signal_behavior": "Cell voltages within spec; current within charge/discharge limits; thermistors read ambient/cell temp.",
+  "common_failure_modes": [
+    {
+      "mode": "no_charge",
+      "description": "CHG FET off, gas gauge dead, cell imbalance"
+    },
+    {
+      "mode": "no_discharge",
+      "description": "DSG FET off, over-current latch"
+    },
+    {
+      "mode": "wrong_soc",
+      "description": "gas gauge firmware corrupt, sense resistor drift"
+    },
+    {
+      "mode": "over_temp",
+      "description": "thermistor fault, real overheating"
+    }
+  ],
+  "diagnostic_measurements": [
+    "cell voltages (per cell)",
+    "pack voltage",
+    "charge/discharge current",
+    "thermistor resistances",
+    "FET gate voltages"
+  ],
+  "possible_fault_locations": [
+    "gas gauge IC",
+    "protection FETs",
+    "sense resistor",
+    "thermistors"
+  ],
+  "recommended_next_tests": [
+    "measure each cell voltage",
+    "check FET gate voltages",
+    "read gas gauge status via SMBus",
+    "check thermistors"
+  ],
+  "source_references": [
+    {
+      "title": "TI battery management",
+      "url": "https://www.ti.com/power-management/battery-management/overview.html",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,53 @@
+{
+  "circuit_id": "CCT_clock_gen",
+  "name": "Clock generator (PLL)",
+  "description": "PLL-based clock generator. Multiplies a reference crystal to produce multiple output frequencies.",
+  "topology": "Crystal ref + PLL + divider + outputs",
+  "main_components": [
+    "reference crystal",
+    "PLL IC",
+    "loop filter",
+    "output dividers"
+  ],
+  "input": "Reference clock",
+  "output": "Multiple output clocks",
+  "expected_signal_behavior": "Outputs at configured frequencies; jitter within spec; lock indicator asserts.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "PLL dead, ref missing"
+    },
+    {
+      "mode": "wrong_freq",
+      "description": "divider programmed wrong"
+    },
+    {
+      "mode": "no_lock",
+      "description": "loop filter wrong, ref missing"
+    },
+    {
+      "mode": "high_jitter",
+      "description": "loop filter degraded, VDD noise"
+    }
+  ],
+  "diagnostic_measurements": [
+    "reference frequency",
+    "output frequencies",
+    "lock indicator",
+    "output jitter (phase)"
+  ],
+  "possible_fault_locations": [
+    "PLL IC",
+    "reference crystal",
+    "loop filter",
+    "output dividers"
+  ],
+  "recommended_next_tests": [
+    "check reference clock",
+    "check output frequencies",
+    "check lock indicator",
+    "scope jitter"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

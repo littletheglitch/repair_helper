@@ -1,0 +1,24 @@
+{
+  "rail_family": "PCIE_12V",
+  "description": "PCIe slot +12V (and 12V from the 6/8-pin GPU power connectors). Direct from ATX_12V via the slot and cables.",
+  "typical_voltage_v": {
+    "min": 11.4,
+    "typ": 12.0,
+    "max": 12.6,
+    "notes": "ATX12V +/-5%."
+  },
+  "typical_topology": "load_switch",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_12V"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

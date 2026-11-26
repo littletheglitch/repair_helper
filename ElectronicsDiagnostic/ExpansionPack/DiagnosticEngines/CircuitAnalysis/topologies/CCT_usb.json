@@ -1,0 +1,55 @@
+{
+  "circuit_id": "CCT_usb",
+  "name": "USB interface",
+  "description": "USB data + VBUS + GND. USB2: D+/D-; USB3: adds TX/RX pairs. VBUS 5V, current per USB spec.",
+  "topology": "USB connector + ESD + VBUS switch + USB PHY",
+  "main_components": [
+    "USB connector",
+    "ESD diodes on D+/D-",
+    "VBUS load switch / current limit",
+    "USB PHY / controller"
+  ],
+  "input": "USB cable",
+  "output": "USB data + 5V VBUS",
+  "expected_signal_behavior": "VBUS 4.75-5.25V; D+/D- differential; full-speed 12 Mbps, high-speed 480 Mbps.",
+  "common_failure_modes": [
+    {
+      "mode": "no_vbus",
+      "description": "VBUS switch dead, fuse open"
+    },
+    {
+      "mode": "no_enum",
+      "description": "ESD short, PHY dead, data line cut"
+    },
+    {
+      "mode": "overcurrent",
+      "description": "shorted peripheral"
+    }
+  ],
+  "diagnostic_measurements": [
+    "VBUS voltage",
+    "D+/D- voltage levels",
+    "VBUS current",
+    "ESD diode forward voltage"
+  ],
+  "possible_fault_locations": [
+    "VBUS switch",
+    "VBUS fuse",
+    "ESD diodes",
+    "USB PHY"
+  ],
+  "recommended_next_tests": [
+    "check VBUS",
+    "check D+/D- with scope",
+    "check ESD diodes for short",
+    "check VBUS current limit"
+  ],
+  "source_references": [
+    {
+      "title": "USB 2.0 spec",
+      "url": "https://www.usb.org/document-library/usb-20-specification",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

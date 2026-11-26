@@ -1,0 +1,48 @@
+{
+  "case_id": "SAMPLE_06_VCC_PRESENT_EN_MISSING",
+  "description": "+1.8V missing; VIN + VCC good, EN measured low.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "en",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_FAULT_EN_ABSENT",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": null,
+  "notes": "Engine surfaces that workflow is blocked; engineer follows RULE_BUCK_004 interpretation (trace EN from EC)."
+}

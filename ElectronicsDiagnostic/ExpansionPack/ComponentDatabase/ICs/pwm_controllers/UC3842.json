@@ -1,0 +1,126 @@
+{
+  "record_id": "IC_TI_UC3842",
+  "part_number": "UC3842",
+  "manufacturer": "Texas Instruments / ON Semiconductor (second-source)",
+  "manufacturer_short": "TI/ON",
+  "category": "pwm_controller",
+  "package": "DIP-8 / SOIC-8 / SOP-8",
+  "pin_count": 8,
+  "pinout": {
+    "1": "COMP (error amplifier output / compensation)",
+    "2": "VFB (error amplifier inverting input)",
+    "3": "ISENSE (current-sense input)",
+    "4": "RT/CT (oscillator timing resistor/capacitor)",
+    "5": "GND",
+    "6": "OUTPUT (gate drive output, totem-pole)",
+    "7": "VCC (supply, UVLO monitored)",
+    "8": "VREF (5.0 V reference)"
+  },
+  "pin_functions": [
+    {
+      "name": "comp",
+      "function": "comp",
+      "pin": 1
+    },
+    {
+      "name": "vfb",
+      "function": "vfb",
+      "pin": 2
+    },
+    {
+      "name": "isense",
+      "function": "isense",
+      "pin": 3
+    },
+    {
+      "name": "rt_ct",
+      "function": "rt_ct",
+      "pin": 4
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 5
+    },
+    {
+      "name": "output",
+      "function": "output",
+      "pin": 6
+    },
+    {
+      "name": "vcc",
+      "function": "vcc",
+      "pin": 7
+    },
+    {
+      "name": "vref",
+      "function": "vref",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "switching_frequency_khz": [
+      1
+    ],
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": null,
+        "max": 30.0,
+        "typ": null,
+        "note": "VCC max 30V; UVLO threshold sets min"
+      },
+      "uvlo_threshold_v": {
+        "on": 16.0,
+        "off": 10.0
+      },
+      "vref_v": 5.0,
+      "vref_tolerance_pct": {
+        "min": -1.0,
+        "max": 1.0,
+        "typ": 0.0
+      },
+      "max_duty_cycle_pct": 100,
+      "output_drive_a": {
+        "typ": 1.0,
+        "peak": null,
+        "note": "Peak totem-pole output current ~1A"
+      },
+      "startup_current_ma": 1.0,
+      "operating_current_ma": 11.0,
+      "control_mode": "current_mode"
+    }
+  },
+  "typical_applications": [
+    "Offline flyback SMPS",
+    "DC-DC boost/buck-boost converters",
+    "Battery chargers with current-mode control"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Offline flyback with UC384x",
+      "topology": "flyback",
+      "description": "VCC startup from bulk cap via resistor; aux winding sustains VCC after startup. Current-mode control via ISENSE resistor.",
+      "external_components": [
+        "startup resistor",
+        "RT/CT timing",
+        "current-sense resistor",
+        "gate-drive resistor",
+        "compensation network"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/uc3842.pdf",
+  "datasheet_source": "Texas Instruments UC3842/3/4/5 datasheet (industry standard, multiple second-sources)",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "High UVLO threshold — for direct offline startup from the bulk cap. UVLO and max-duty are the defining differences within the family. VCC max 30V, Vref 5.0V are universal across the family.",
+  "replacement_notes": "Within-family substitutions (e.g. UC3842<->UC3843) change UVLO behavior — a 43 in a 42 socket may not start from the bulk cap. 44/45 force 50% duty (for push-pull); using a 42 in a 44 socket allows 100% duty which may saturate the transformer.",
+  "tags": [
+    "pwm",
+    "current_mode",
+    "offline",
+    "flyback",
+    "8-pin"
+  ],
+  "schema_version": "1.0.0"
+}

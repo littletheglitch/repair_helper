@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ic_component.schema.json",
+  "title": "IC Component Record",
+  "description": "Verified record of an integrated circuit used in laptop motherboard repair. Fields marked in 'required' must be present. Any value that cannot be verified against a manufacturer source must be null with verification_status='unknown'.",
+  "type": "object",
+  "required": [
+    "record_id",
+    "part_number",
+    "manufacturer",
+    "category",
+    "package",
+    "pin_count",
+    "verification_status",
+    "datasheet_url",
+    "datasheet_source",
+    "source_date",
+    "schema_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "description": "Stable internal ID, e.g. 'IC_TI_TPS51200'.",
+      "pattern": "^IC_[A-Z0-9_]+$"
+    },
+    "part_number": { "type": "string", "minLength": 1 },
+    "manufacturer": { "type": "string", "minLength": 1 },
+    "manufacturer_short": { "type": "string" },
+    "category": {
+      "type": "string",
+      "enum": [
+        "pwm_controller",
+        "buck_controller",
+        "charger_ic",
+        "battery_management_ic",
+        "ldo_regulator",
+        "load_switch",
+        "pmic",
+        "bios_spi_flash",
+        "ec_controller",
+        "usb_pd_controller",
+        "voltage_regulator",
+        "boost_controller"
+      ]
+    },
+    "package": { "type": "string" },
+    "pin_count": { "type": "integer", "minimum": 1 },
+    "pinout": {
+      "type": "object",
+      "description": "Map of pin number -> pin name. Empty object means pinout not verified.",
+      "additionalProperties": { "type": "string" }
+    },
+    "pin_functions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pin", "name", "function"],
+        "additionalProperties": false,
+        "properties": {
+          "pin": { "type": ["string", "integer"] },
+          "name": { "type": "string" },
+          "function": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["power", "ground", "input", "output", "bidirectional", "control", "nc"]
+          }
+        }
+      }
+    },
+    "electrical_characteristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_voltage_range_v": {
+          "type": "object",
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] },
+            "typ": { "type": ["number", "null"] }
+          }
+        },
+        "output_voltage_range_v": {
+          "type": "object",
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] },
+            "typ": { "type": ["number", "null"] },
+            "adjustable": { "type": ["boolean", "null"] }
+          }
+        },
+        "maximum_ratings": { "type": "object" },
+        "operating_conditions": { "type": "object" },
+        "quiescent_current_ma": { "type": ["number", "null"] },
+        "switching_frequency_khz": {
+          "type": ["array", "null"],
+          "items": { "type": ["number", "string"] }
+        }
+      }
+    },
+    "typical_applications": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "common_circuit_configurations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string" },
+          "topology": { "type": "string" },
+          "description": { "type": "string" },
+          "external_components": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "important_pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["function", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "function": { "type": "string" },
+          "description": { "type": "string" },
+          "pin_numbers": { "type": "array", "items": { "type": ["string", "integer"] } }
+        }
+      }
+    },
+    "datasheet_url": { "type": "string", "format": "uri" },
+    "datasheet_source": { "type": "string", "minLength": 1 },
+    "source_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "verification_status": {
+      "type": "string",
+      "enum": ["verified", "partial", "unknown"]
+    },
+    "verification_notes": { "type": "string" },
+    "known_compatible_alternatives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Part numbers verified as drop-in compatible. MUST be backed by a ReplacementMappings record."
+    },
+    "conditional_alternatives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "incompatible_alternatives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "replacement_notes": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "schema_version": { "type": "string", "enum": ["1.0.0"] }
+  }
+}

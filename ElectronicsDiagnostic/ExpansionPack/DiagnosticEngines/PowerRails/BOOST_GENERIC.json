@@ -1,0 +1,29 @@
+{
+  "rail_family": "BOOST_GENERIC",
+  "description": "Generic boost-converter output rail (e.g. USB OTG 5V output, LCD backlight boost, audio amplifier boost). The exact output voltage is set per design.",
+  "typical_voltage_v": {
+    "min": 5.0,
+    "typ": 12.0,
+    "max": 40.0,
+    "notes": "Wide range — backlight boosts can exceed 30 V. Treat each boost as its own design."
+  },
+  "typical_topology": "boost_converter",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "+3VALW",
+    "+5VALW",
+    "BATTERY"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present",
+    "switching_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,132 @@
+{
+  "record_id": "IC_TI_TLV70033",
+  "part_number": "TLV70033",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "ldo_regulator",
+  "package": "SOT-23-5 (DBV)",
+  "pin_count": 5,
+  "pinout": {
+    "1": "IN",
+    "2": "GND",
+    "3": "EN",
+    "4": "BP",
+    "5": "OUT"
+  },
+  "pin_functions": [
+    {
+      "pin": 1,
+      "name": "IN",
+      "function": "Input voltage",
+      "type": "power"
+    },
+    {
+      "pin": 2,
+      "name": "GND",
+      "function": "Ground",
+      "type": "ground"
+    },
+    {
+      "pin": 3,
+      "name": "EN",
+      "function": "Enable (active high)",
+      "type": "control"
+    },
+    {
+      "pin": 4,
+      "name": "BP",
+      "function": "Bypass capacitor for internal reference",
+      "type": "input"
+    },
+    {
+      "pin": 5,
+      "name": "OUT",
+      "function": "Regulated output",
+      "type": "output"
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.0,
+      "max": 5.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.3,
+      "max": 3.3,
+      "typ": 3.3,
+      "adjustable": false
+    },
+    "maximum_ratings": {
+      "VIN_v": 6.0,
+      "VOUT_a": 0.3
+    },
+    "operating_conditions": {
+      "output_current_ma_typ": 200,
+      "drop_out_mv": 175
+    },
+    "quiescent_current_ma": 0.038,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Always-on logic rails",
+    "Sensor / pull-up 3.3 V in standby"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Fixed 3.3 V LDO with bypass cap",
+      "topology": "ldo",
+      "description": "1 uF BP cap to GND on pin 4; minimum 1 uF input/output caps required.",
+      "external_components": [
+        "1uF input cap",
+        "1uF output cap",
+        "1uF BP bypass cap"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "IN",
+      "description": "Input supply.",
+      "pin_numbers": [
+        1
+      ]
+    },
+    {
+      "function": "EN",
+      "description": "Enable, active high.",
+      "pin_numbers": [
+        3
+      ]
+    },
+    {
+      "function": "OUT",
+      "description": "Regulated 3.3 V output.",
+      "pin_numbers": [
+        5
+      ]
+    },
+    {
+      "function": "BP",
+      "description": "Reference bypass cap.",
+      "pin_numbers": [
+        4
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tlv700.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Pinout, package, voltage and current ratings verified against TLV700 datasheet table of recommended operating conditions.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Fixed-output LDOs in SOT-23-5 share footprint but output voltage suffix matters (TLV70033 vs TLV70018 etc.). Check EN threshold and dropout for standby use.",
+  "tags": [
+    "ldo",
+    "low_iq",
+    "sot23"
+  ],
+  "schema_version": "1.0.0"
+}

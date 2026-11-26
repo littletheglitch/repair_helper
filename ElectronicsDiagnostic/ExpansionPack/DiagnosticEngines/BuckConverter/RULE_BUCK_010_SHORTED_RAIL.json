@@ -1,0 +1,60 @@
+{
+  "rule_id": "RULE_BUCK_010_SHORTED_RAIL",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD",
+    "+3VALW",
+    "+5VALW",
+    "LCD_VDD",
+    "USB_VBUS"
+  ],
+  "condition": {
+    "expression": "rail_short"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Locate the shorted component before re-applying any power. Use a current-limited bench supply at the rail's nominal voltage set to a low current limit (0.5 A), then thermal camera or freeze spray / finger to find the hot component.",
+      "measure": {
+        "what": "Voltage drop / temperature across candidate components",
+        "where": "Output inductor, low-side MOSFET, output bulk capacitors, load ICs on the rail",
+        "instrument": "Bench supply with current limit + thermal camera or freeze spray",
+        "expected": "Shorted component heats up rapidly; healthy components stay cool.",
+        "safety": "Current-limit the bench supply at 0.5 A or less to avoid burning a trace. Do NOT use the laptop's own adapter."
+      },
+      "interpretations": [
+        {
+          "if_result": "Low-side MOSFET heats up",
+          "then": "Low-side MOSFET likely shorted drain-to-source. Remove and re-measure the rail resistance. Replace only with a verified-compatible part (see ReplacementMappings).",
+          "set_facts": [
+            "faulty_low_side_fet=True"
+          ]
+        },
+        {
+          "if_result": "Output capacitor heats up",
+          "then": "Shorted output capacitor. Replace with same value/voltage/temp rating.",
+          "set_facts": [
+            "faulty_output_cap=True"
+          ]
+        },
+        {
+          "if_result": "Load IC heats up",
+          "then": "Short inside the load IC (e.g. PCH, memory, GPU). Likely board-level write-off unless the IC can be replaced.",
+          "set_facts": [
+            "faulty_load_ic=True"
+          ]
+        },
+        {
+          "if_result": "Nothing heats up at 0.5 A",
+          "then": "Short is in a high-impedance path. Increase current limit gradually and re-scan, or use a milliohm meter to localise by trace drop.",
+          "set_facts": []
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,44 @@
+{
+  "record_id": "AIC_TI_TPS3808G33",
+  "part_number": "TPS3808G33",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "voltage_supervisor",
+  "package": "SOT-23-6",
+  "pin_count": 6,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "vdd",
+      "function": "vdd",
+      "pin": 1
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 2
+    },
+    {
+      "name": "reset_n",
+      "function": "reset_n",
+      "pin": 3
+    },
+    {
+      "name": "mr",
+      "function": "mr",
+      "pin": 4
+    }
+  ],
+  "electrical_characteristics": {},
+  "typical_applications": [],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps3808.pdf",
+  "datasheet_source": "Texas Instruments TPS3808G33 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "3.3V voltage supervisor, adjustable timeout, open-drain. Precision threshold.",
+  "tags": [
+    "supervisor",
+    "reset_ic"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,228 @@
+{
+  "topology_id": "PSUP_flyback",
+  "name": "Flyback (mains, isolated, energy-storage transformer)",
+  "mains_powered": true,
+  "isolated": true,
+  "typical_power_level_w": 100,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "AC inlet, fuse, NTC, EMI filter, MOV",
+      "components": [
+        "fuse",
+        "MOV",
+        "NTC",
+        "X-cap",
+        "Y-cap",
+        "CM-choke"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No AC input reaching the primary. Check the AC inlet, fuse, and NTC. A blown primary fuse indicates a downstream short — do NOT replace without finding it.",
+      "depends_on": [],
+      "side": "primary"
+    },
+    {
+      "id": "rectification",
+      "description": "Bridge rectifier (4 diodes or bridge block)",
+      "components": [
+        "bridge_rectifier"
+      ],
+      "diagnostic_signals": {
+        "bulk_dc": "in_range"
+      },
+      "fail_note": "Bridge rectifier fault. Check the bridge for short/open. A shorted bridge blows the primary fuse.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "input_filter",
+      "description": "Primary bulk capacitor (~160V or ~340V DC)",
+      "components": [
+        "bulk_cap"
+      ],
+      "diagnostic_signals": {
+        "bulk_dc": "in_range"
+      },
+      "fail_note": "Bulk cap voltage wrong. A shorted bulk cap blows the fuse; an open/degraded cap causes low DC and ripple.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "pfc",
+      "description": "PFC pre-regulator (optional on lower-power flybacks)",
+      "components": [
+        "pfc_fet",
+        "pfc_inductor",
+        "pfc_diode",
+        "pfc_bulk"
+      ],
+      "diagnostic_signals": {
+        "pfc_voltage": "in_range"
+      },
+      "fail_note": "PFC stage fault. Check the PFC switch and the PFC bulk voltage (~380V DC).",
+      "depends_on": [
+        "rectification"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "main_switch",
+      "description": "Primary switch driving the transformer primary",
+      "components": [
+        "primary_fet",
+        "gate_driver"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range",
+        "gate_drive": "in_range"
+      },
+      "fail_note": "Primary switch fault. Check gate-drive; a dead primary FET gives no energy transfer.",
+      "depends_on": [
+        "pwm_controller"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "transformer",
+      "description": "Flyback transformer (stores energy in primary, releases to secondary)",
+      "components": [
+        "transformer",
+        "snubber"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range"
+      },
+      "fail_note": "Transformer/snubber fault. An open primary winding gives no transfer; a shorted winding overheats. Check the RCD snubber across the primary — a failed snubber causes avalanche failure of the primary FET.",
+      "depends_on": [
+        "main_switch"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "rectification_secondary",
+      "description": "Secondary rectifier (schottky or sync FET)",
+      "components": [
+        "secondary_diode",
+        "secondary_fet"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range"
+      },
+      "fail_note": "Secondary rectifier fault. An open secondary diode blocks output; a short loads the secondary.",
+      "depends_on": [
+        "main_switch"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "output_filter",
+      "description": "Output cap",
+      "components": [
+        "output_cap"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range",
+        "output_ripple": "in_range"
+      },
+      "fail_note": "Output cap fault.",
+      "depends_on": [
+        "rectification_secondary",
+        "inductor",
+        "transformer"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Isolated feedback: secondary TL431 + optocoupler across isolation barrier",
+      "components": [
+        "TL431",
+        "optocoupler",
+        "fb_divider"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range",
+        "opto_ctr": "in_range"
+      },
+      "fail_note": "Feedback path fault across the isolation barrier. Check the TL431 reference, the optocoupler CTR, and the secondary-side feedback divider. An open optocoupler drives the primary to max duty; a shorted TL431 drives min duty.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "input_protection",
+        "main_switch",
+        "transformer",
+        "feedback"
+      ],
+      "notes": "Flyback: isolated feedback (opto) is a common failure."
+    },
+    {
+      "pattern": "overvoltage",
+      "likely_stages": [
+        "feedback",
+        "main_switch"
+      ],
+      "notes": "Flyback overvoltage = open opto (primary drives max duty)."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

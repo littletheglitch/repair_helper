@@ -1,0 +1,100 @@
+{
+  "record_id": "IC_TI_BQ24780S",
+  "part_number": "BQ24780S",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "charger_ic",
+  "package": "WQFN-32 (3.5x3.5 mm)",
+  "pin_count": 32,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 4.5,
+      "max": 24.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.0,
+      "max": 19.2,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "ACN_ACP_v": 26.0,
+      "BATP_v": 26.0
+    },
+    "operating_conditions": {
+      "switching_frequency_khz_range": "600",
+      "control_mode": "synchronous buck charger"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      600
+    ]
+  },
+  "typical_applications": [
+    "Laptop Li-Ion charger",
+    "USB-C PD charger"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Synchronous buck charger with PROCHOT# boost",
+      "topology": "synchronous_buck_charger",
+      "description": "Adds PROCHOT#-triggered battery boost for system load peaks.",
+      "external_components": [
+        "inductor",
+        "MOSFETs",
+        "sense resistors"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "ACN/ACP",
+      "description": "Adapter current sense inputs.",
+      "pin_numbers": []
+    },
+    {
+      "function": "BATP",
+      "description": "Battery pack voltage sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "SRN/SRP",
+      "description": "Charge current sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PROCHOT#",
+      "description": "Discharge boost trigger.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN",
+      "description": "Enable.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PGOOD",
+      "description": "Power-good.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/bq24780s.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Identified as TI's mainstream notebook charger family. Pin map verified at a high level only.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "BQ24780S is firmware-aware via SMBus; direct cross-vendor replacement is NOT recommended.",
+  "tags": [
+    "charger",
+    "smbus",
+    "prochot",
+    "boost"
+  ],
+  "schema_version": "1.0.0"
+}

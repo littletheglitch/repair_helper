@@ -1,0 +1,69 @@
+{
+  "rule_id": "RULE_FAULT_VIN_ABSENT",
+  "topology": "buck_converter",
+  "priority": 20,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "vin_measured AND NOT vin_present AND no_confirmed_short",
+    "notes": "VIN was measured and is absent. The regulator has no input supply, so the rail cannot come up. Distinct from 'VIN not yet measured' (handled by the chain's check-input rule). Fault is upstream of this regulator."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "VIN is absent. The regulator has no input. Trace VIN back to its source (adapter, battery, or upstream rail) and diagnose the upstream stage. Do NOT condemn this regulator until VIN is restored.",
+      "measure": {
+        "what": "VIN source and the path to this regulator",
+        "where": "Upstream rail/adapter + series fuse/FET/diode",
+        "instrument": "DMM DC volts",
+        "expected": "VIN at the regulator input within its specified range.",
+        "safety": "Powered. If VIN comes from an upstream rail, that rail's measurement context applies."
+      },
+      "interpretations": [
+        {
+          "if_result": "VIN present at source, absent at regulator",
+          "then": "Open path: blown input fuse, open series FET/diode, or broken trace. Check continuity (unpowered).",
+          "set_facts": [
+            "input_path_open=True"
+          ]
+        },
+        {
+          "if_result": "VIN absent at source too",
+          "then": "Upstream stage is down. Diagnose the upstream rail/adapter first; this rail's absence is a symptom.",
+          "set_facts": [
+            "upstream_fault=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

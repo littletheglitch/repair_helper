@@ -1,0 +1,53 @@
+{
+  "circuit_id": "CCT_motor_driver",
+  "name": "Motor driver (H-bridge)",
+  "description": "H-bridge of 4 FETs drives a DC motor bidirectionally. Gate drive + shoot-through protection.",
+  "topology": "4x FET (2x P + 2x N, or 4x N with bootstrap) + gate driver",
+  "main_components": [
+    "4x MOSFET",
+    "gate driver IC",
+    "flyback diodes",
+    "current-sense resistor"
+  ],
+  "input": "Direction + PWM signals",
+  "output": "Bidirectional motor drive",
+  "expected_signal_behavior": "Motor voltage = supply * duty; direction set by which pair is on; shoot-through protection prevents cross-conduction.",
+  "common_failure_modes": [
+    {
+      "mode": "no_drive",
+      "description": "FET dead, gate driver dead"
+    },
+    {
+      "mode": "stuck_one_direction",
+      "description": "one FET shorted"
+    },
+    {
+      "mode": "shoot_through",
+      "description": "gate driver timing wrong, FETs dead"
+    },
+    {
+      "mode": "overcurrent",
+      "description": "motor stalled, sense resistor drift"
+    }
+  ],
+  "diagnostic_measurements": [
+    "motor voltage",
+    "gate-drive waveforms (all 4 FETs)",
+    "current-sense voltage",
+    "shoot-through (dead time)"
+  ],
+  "possible_fault_locations": [
+    "4x MOSFET",
+    "gate driver IC",
+    "flyback diodes",
+    "sense resistor"
+  ],
+  "recommended_next_tests": [
+    "scope all 4 gate drives",
+    "check motor voltage vs PWM duty",
+    "check current-sense",
+    "verify dead-time"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

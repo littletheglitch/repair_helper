@@ -1,0 +1,67 @@
+{
+  "record_id": "IC_RIT_RT919333",
+  "part_number": "RT9193-33",
+  "manufacturer": "Richtek Technology",
+  "manufacturer_short": "Richtek",
+  "category": "ldo_regulator",
+  "package": "SOT-23-5",
+  "pin_count": 5,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "vin",
+      "function": "vin",
+      "pin": 1
+    },
+    {
+      "name": "vout",
+      "function": "vout",
+      "pin": 2
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 3
+    },
+    {
+      "name": "en",
+      "function": "en",
+      "pin": 4
+    },
+    {
+      "name": "bypass",
+      "function": "bypass",
+      "pin": 5
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": null,
+      "max": 6.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.3,
+      "max": 3.3,
+      "typ": 3.3,
+      "adjustable": false
+    },
+    "operating_conditions": {
+      "output_current_a": 0.3,
+      "quiescent_current_ua": 170.0,
+      "output_accuracy_pct": 2.0,
+      "dropout_mv": null
+    }
+  },
+  "typical_applications": [],
+  "datasheet_url": "https://www.richtek.com/assets/product_file/RT9193=RT9193-xx/DS9193-05.pdf",
+  "datasheet_source": "Richtek Technology RT9193-33 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "3.3V LDO, 300mA, low-noise, SOT-23-5. Popular for analog/RF rails.",
+  "replacement_notes": "",
+  "tags": [
+    "ldo"
+  ],
+  "schema_version": "1.0.0"
+}

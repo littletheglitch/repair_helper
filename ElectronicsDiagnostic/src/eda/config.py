@@ -49,10 +49,11 @@ DEFAULT_SETTINGS: Dict[str, Any] = {
     # Local model runtime configuration. The engine tries these in order.
     "engine": {
         # llama.cpp server or main executable. None means "try to locate".
-        "backend": "llama_cpp",          # llama_cpp | openai_api | disabled
+        "backend": "auto",               # auto | llama_server | llama_cli | cloud | disabled
         "model_file": None,              # e.g. "qwen2.5-1.5b-instruct-q4_k_m.gguf"
         "model_dir": "Models",
-        "cli_path": None,                # llama-cli / main executable
+        "server_path": None,             # llama-server executable (optional explicit path)
+        "cli_path": None,                # llama-cli executable (legacy fallback)
         "n_ctx": 2048,
         "n_threads": 4,
         "n_gpu_layers": 0,               # CPU-only target

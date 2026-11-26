@@ -1,0 +1,28 @@
+{
+  "record_id": "TVS_Littelfuse_SMBJ50CA",
+  "part_number": "SMBJ5.0CA",
+  "manufacturer": "Littelfuse / Bourns / various",
+  "manufacturer_short": "Littelfuse",
+  "category": "tvs_diode",
+  "package": "SMB (DO-214AA)",
+  "pin_count": 2,
+  "pinout": {
+    "A": "anode",
+    "K": "cathode"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 5.0,
+    "vbr_v": 6.4,
+    "vc_v": 9.2,
+    "pp_w": 600.0
+  },
+  "datasheet_url": "https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf",
+  "datasheet_source": "Littelfuse / Bourns / various SMBJ5.0CA datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Bidirectional TVS, 5V working, 6.4V breakdown, 9.2V clamp, 600W. 5V rail protection.",
+  "tags": [
+    "tvs"
+  ],
+  "schema_version": "1.0.0"
+}

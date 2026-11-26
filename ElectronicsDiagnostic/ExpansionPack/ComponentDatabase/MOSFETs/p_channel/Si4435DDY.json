@@ -1,0 +1,65 @@
+{
+  "record_id": "MOSFET_VISHAY_SI4435",
+  "part_number": "Si4435DDY",
+  "manufacturer": "Vishay Siliconix",
+  "manufacturer_short": "Vishay",
+  "channel_type": "P-channel",
+  "package": "SO-8",
+  "pin_count": 8,
+  "pinout": {
+    "drain": "pins 5,6,7,8",
+    "source": "pins 1,2,3",
+    "gate": "pin 4",
+    "notes": "Classic SO-8 P-channel footprint."
+  },
+  "vds_v": -30.0,
+  "id_a": -8.5,
+  "id_conditions": "T_C=25 C, V_GS=-10 V. Magnitudes shown.",
+  "rds_on_mohm": 22.0,
+  "rds_on_conditions": {
+    "vgs_v": -10,
+    "id_a": 8.5
+  },
+  "vgs_th_v": -2.0,
+  "vgs_max_v": 20.0,
+  "gate_charge_nc": 11.0,
+  "gate_charge_conditions": {
+    "vds_v": -15,
+    "vgs_v": -10,
+    "id_a": 8.5
+  },
+  "power_dissipation_w": 2.5,
+  "thermal": {
+    "r_theta_ja_c_per_w": 50.0,
+    "r_theta_jc_c_per_w": 15.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "switching_characteristics": {
+    "turn_on_delay_ns": 15.0,
+    "turn_off_delay_ns": 35.0,
+    "rise_time_ns": 60.0,
+    "fall_time_ns": 50.0
+  },
+  "technology": "Trench",
+  "typical_applications": [
+    "Load switch on 3.3 V / 5 V rails",
+    "Battery selection",
+    "USB power gating"
+  ],
+  "datasheet_url": "https://www.vishay.com/docs/72270/si4435ddy.pdf",
+  "datasheet_source": "Vishay Siliconix official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Electrical ratings verified against Vishay datasheet. P-channel SO-8 with classic pinout (pin 4 gate).",
+  "replacement_notes": "Logic-level capable at VGS=-4.5V (RDS_on around 30 mOhm at -4.5V per datasheet). Suitable for 5V-driven high-side switch.",
+  "tags": [
+    "high_side",
+    "load_switch",
+    "so8",
+    "logic_level"
+  ],
+  "schema_version": "1.0.0"
+}

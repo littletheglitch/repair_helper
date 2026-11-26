@@ -1,0 +1,54 @@
+{
+  "rule_id": "RULE_LDO_004_CHECK_LDO",
+  "topology": "ldo",
+  "applies_to_rail_families": [
+    "+VCCRTC",
+    "DDR_VTT",
+    "RAM_VTT_DESKTOP"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND en_present AND NOT rail_voltage_present",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Re-measure LDO VOUT pin directly at the pin (not just at a downstream test point). If VOUT is correct at the pin but missing downstream, the fault is the trace / via / fuse. If VOUT is missing at the pin, the LDO is dead.",
+      "measure": {
+        "what": "LDO VOUT pin voltage (at the pin)",
+        "where": "LDO VOUT pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts",
+        "expected": "Per LDO datasheet fixed-output value (e.g. 3.3 V for TLV70033).",
+        "safety": "Probe the pin, not the via, to isolate trace faults."
+      },
+      "interpretations": [
+        {
+          "if_result": "VOUT correct at the pin",
+          "then": "Trace / via / fuse between LDO and load is open. Repair the trace or replace the fuse.",
+          "set_facts": [
+            "rail_voltage_present=True",
+            "trace_fault=True"
+          ]
+        },
+        {
+          "if_result": "VOUT missing at the pin despite good VIN/EN",
+          "then": "LDO is dead. Replace with a verified-compatible part (check pinout AND output voltage suffix AND EN polarity).",
+          "set_facts": [
+            "faulty_ldo=True"
+          ]
+        },
+        {
+          "if_result": "VOUT present but wrong voltage",
+          "then": "Wrong-output-voltage part installed (e.g. TLV70018 instead of TLV70033) OR feedback divider wrong. Verify the part marking and the divider.",
+          "set_facts": [
+            "rail_voltage_present=True",
+            "voltage_wrong=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need LDO datasheet for VOUT pin number and expected output voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

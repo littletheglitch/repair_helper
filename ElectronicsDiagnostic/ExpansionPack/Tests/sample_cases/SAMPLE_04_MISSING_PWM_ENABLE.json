@@ -1,0 +1,41 @@
+{
+  "case_id": "SAMPLE_04_MISSING_PWM_ENABLE",
+  "description": "+1.8V missing; VIN and VCC good, EN not yet measured. Controller is TPS51224.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_BUCK_004_CHECK_ENABLE",
+  "expected_requires_info": true,
+  "expected_next_step_action_contains": "EN"
+}

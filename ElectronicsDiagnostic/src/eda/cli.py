@@ -136,6 +136,15 @@ def cmd_analyze(args: List[str]) -> str:
     s = _require_session()
     if not s:
         return ""
+    platform = None
+    if "--platform" in args:
+        try:
+            platform_index = args.index("--platform")
+            platform = args[platform_index + 1].strip().lower()
+        except (ValueError, IndexError):
+            return "Usage: analyze [--platform laptop|desktop]"
+        if platform not in {"laptop", "desktop"}:
+            return "Platform must be 'laptop' or 'desktop'."
     syms = sessions.symptoms(s.id)
     ms = M.list_for(s.id)
     if not syms and not ms:
@@ -147,6 +156,22 @@ def cmd_analyze(args: List[str]) -> str:
     para = llm_engine.paraphrase_analysis(text, syms)
     if para:
         text = text + "\n\n--- LLM explanation ---\n" + para
+    # Expansion Pack is an independent specialist pass; it never overrides
+    # the host's evidence-based reasoning result.
+    try:
+        import json
+        from .orchestrator import run_expansion_pack_sequence
+        pack_result, pack_platform, platform_note = run_expansion_pack_sequence(s.id, platform)
+        text += "\n\n--- Expansion Pack: power-on sequence (" + pack_platform + ") ---\n"
+        if pack_result.ok:
+            text += json.dumps(pack_result.value, ensure_ascii=False, indent=2, default=str)
+        else:
+            error = pack_result.error.to_dict() if pack_result.error else "unknown engine error"
+            text += "Not available: " + json.dumps(error, ensure_ascii=False, default=str)
+        if platform_note:
+            text += "\nPlatform note: " + platform_note
+    except Exception as exc:
+        text += "\n\n--- Expansion Pack ---\nCould not run: " + str(exc)
     return text
 
 
@@ -198,8 +223,8 @@ def cmd_add_file(args: List[str]) -> str:
             continue
         results.append(
             f"  {res.file_name}: {res.status} "
-            f"({res.file_type}, {res.size_bytes} bytes, sha256={res.sha256[:12]}…) "
-            f"— {res.message}"
+            f"({res.file_type}, {res.size_bytes} bytes, sha256={res.sha256[:12]}â€¦) "
+            f"â€” {res.message}"
         )
     return "Import results:\n" + "\n".join(results)
 
@@ -217,7 +242,7 @@ def cmd_documents(args: List[str]) -> str:
     for d in docs:
         lines.append(
             f"  #{d['id']}  {d['file_name']}  ({d['file_type']}, {d['status']}, "
-            f"{d['size_bytes']} bytes, sha256={d['sha256'][:12]}…)"
+            f"{d['size_bytes']} bytes, sha256={d['sha256'][:12]}â€¦)"
         )
     return "\n".join(lines)
 
@@ -612,7 +637,7 @@ def cmd_exit(args: List[str]) -> str:
 
 
 _HELP_TEXT = """\
-Electronics Diagnostic Assistant — commands
+Electronics Diagnostic Assistant â€” commands
 
 Session
   new <title> [board model]      Create and open a new repair session
@@ -662,7 +687,7 @@ Phase 2 computational engines (modular, deterministic; LLM only paraphrases)
 
 Phase 3 LLM orchestration + model registry (LLM drives diagnosis; engines compute)
   orchestrate [--iterations N --backend B]   LLM-driven diagnosis via tool calls
-  backend [show|stub|llama_server|llama_cli|cloud|disabled|stop]
+  backend [show|auto|stub|llama_server|llama_cli|cloud|disabled|stop]
                                  Show/switch the LLM backend
   models [list|download <key>|verify <file>|info <key>|bundle <dir>|import <dir>]
                                  Manage GGUF models (explicit download only)
@@ -735,10 +760,18 @@ def cmd_orchestrate(args: List[str]) -> str:
         settings.setdefault("engine", {})["backend"] = backend_override
         LB.shutdown()  # reset singleton so the new backend is built
     backend = LB.get_backend(settings)
+    # StubBackend generates canned/example tool calls. Never execute it
+    # as part of a real repair diagnosis, even when explicitly selected
+    # in settings or supplied through --backend.
+    if isinstance(backend, LB.StubBackend):
+        analysis = reasoning.analyze(s.id, syms, ms)
+        return (analysis.to_text() +
+                "\n\n[LLM skipped: StubBackend is reserved for development/benchmarks. "
+                "The deterministic rule engine was used instead.]")
     if not backend.is_available():
         # Rule engine fallback.
         analysis = reasoning.analyze(s.id, syms, ms)
-        return (analysis.to_text() + "\n\n[backend unavailable: "
+        return (analysis.to_text() + "\n\n[LLM unavailable: "
                 + backend.availability_report() + "]")
     orch = ORCH.Orchestrator(settings, backend=backend)
     result = orch.run(s.id, max_iterations=iters)
@@ -746,15 +779,18 @@ def cmd_orchestrate(args: List[str]) -> str:
 
 
 def cmd_backend(args: List[str]) -> str:
-    """backend [show|stub|llama_server|llama_cli|cloud|disabled|stop]"""
+    """backend [show|auto|stub|llama_server|llama_cli|cloud|disabled|stop]"""
     if not args or args[0] == "show":
         b = LB.get_backend()
         return b.availability_report()
-    cmd = args[0]
+    cmd = args[0].strip().lower()
     if cmd == "stop":
         LB.shutdown()
         return "Backend shut down (next call will rebuild it)."
-    valid = {"stub", "llama_server", "llama_cli", "cloud", "disabled"}
+    # Older setting names are accepted as aliases for automatic local discovery.
+    cmd = {"llama_cpp": "auto", "llama-cpp": "auto",
+           "openai_api": "auto", "openai-api": "auto"}.get(cmd, cmd)
+    valid = {"auto", "stub", "llama_server", "llama_cli", "cloud", "disabled"}
     if cmd not in valid:
         return f"Usage: backend [{'|'.join(sorted(valid))}]|show|stop"
     s = config.load_settings()
@@ -762,7 +798,9 @@ def cmd_backend(args: List[str]) -> str:
     config.save_settings(s)
     LB.shutdown()
     b = LB.get_backend(s)
-    return f"Backend set to '{cmd}'.\n" + b.availability_report()
+    note = ("\nNote: Stub is development/benchmark only; 'orchestrate' will bypass it."
+            if cmd == "stub" else "")
+    return f"Backend set to '{cmd}'.\n" + b.availability_report() + note
 
 
 def cmd_models(args: List[str]) -> str:
@@ -866,12 +904,12 @@ def cmd_model_settings(args: List[str]) -> str:
 
 
 def cmd_model_profile(args: List[str]) -> str:
-    """model-profile [name] — show or apply a CPU-only resource profile.
+    """model-profile [name] â€” show or apply a CPU-only resource profile.
 
-    Profiles (for the 1B–1.5B Q4_K_M class on the 8 GB target):
+    Profiles (for the 1Bâ€“1.5B Q4_K_M class on the 8 GB target):
       low_memory  n_ctx=1024 threads=2 batch=256  (~1.2 GB)
-      balanced    n_ctx=2048 threads=4 batch=512  (~1.5–2 GB)  [start here]
-      diagnostic  n_ctx=4096 threads=4 batch=512  (~2.2–2.8 GB)
+      balanced    n_ctx=2048 threads=4 batch=512  (~1.5â€“2 GB)  [start here]
+      diagnostic  n_ctx=4096 threads=4 batch=512  (~2.2â€“2.8 GB)
 
     No profile is claimed optimal; run the hardware validation harness
     on the target to confirm fit. Applying a profile only changes
@@ -905,7 +943,7 @@ def cmd_model_profile(args: List[str]) -> str:
 
 
 def cmd_ram(args: List[str]) -> str:
-    """ram — show resident memory of the running llama-server/CLI."""
+    """ram â€” show resident memory of the running llama-server/CLI."""
     r = MR.ram_usage_mb()
     if not r["running"]:
         return ("No llama-server/llama-cli process is running. "
@@ -920,7 +958,7 @@ def cmd_ram(args: List[str]) -> str:
 
 
 def cmd_context(args: List[str]) -> str:
-    """context — show the assembled context for the current session."""
+    """context â€” show the assembled context for the current session."""
     s = _require_session()
     if not s:
         return ""
@@ -934,7 +972,7 @@ def cmd_context(args: List[str]) -> str:
 
 
 def cmd_tools(args: List[str]) -> str:
-    """tools — list the tools the orchestrator can call."""
+    """tools â€” list the tools the orchestrator can call."""
     specs = TI.build_catalog()
     lines = [f"{len(specs)} tools available to the orchestrator:", ""]
     for s in specs:
@@ -1043,7 +1081,7 @@ def cmd_learning(args: List[str]) -> str:
 
 
 def _learning_help() -> str:
-    return """learning — Engineering Learning & Skill Development (Phase 4)
+    return """learning â€” Engineering Learning & Skill Development (Phase 4)
 
 Subcommands:
   learning start [ohm_kirchhoff|voltage_divider|mosfet|...]
@@ -1080,7 +1118,7 @@ def _learning_start(args: List[str]) -> str:
         avail = ", ".join(sess.socratic.available_skills())
         return (f"No Socratic path for '{skill}'. Available: {avail}")
     return (f"[Socratic path: {turn.skill_key}, step {turn.step + 1}/"
-            f"{turn.question and '?'} — focus: {turn.focus}]\n{turn.question}")
+            f"{turn.question and '?'} â€” focus: {turn.focus}]\n{turn.question}")
 
 
 def _learning_mode(args: List[str]) -> str:
@@ -1155,7 +1193,7 @@ def _learning_gaps(args: List[str]) -> str:
     sess = _get_learning_session()
     gaps = sess.adaptive.gaps()
     if not gaps:
-        return ("No gaps detected — every skill is at practitioner or "
+        return ("No gaps detected â€” every skill is at practitioner or "
                 "expert. Run 'learning review' for spaced repetition.")
     lines = ["Knowledge gaps (skills below apprentice):"]
     for g in gaps:
@@ -1206,7 +1244,7 @@ def _learning_exercise(args: List[str]) -> str:
     ex = sess.generator.get(rec.exercise_id)
     if not ex:
         return f"Exercise {rec.exercise_id} not found."
-    out = [f"[Exercise #{ex.id} — skill: {ex.skill_key}, "
+    out = [f"[Exercise #{ex.id} â€” skill: {ex.skill_key}, "
            f"difficulty: {ex.difficulty}, source: {ex.source_kind}]",
            ex.prompt, "",
            f"Reason: {rec.reason}", "",
@@ -1291,7 +1329,7 @@ def _learning_case(args: List[str]) -> str:
            f"  Board: {case['board_model']}",
            f"  Symptoms: {', '.join(case['symptoms'][:3])}",
            f"  Confirmed: {case['confirmed']} (outcome: {case['outcome']})",
-           f"  Root cause: {case['confirmed_root_cause'] or '(unconfirmed — not disclosed)'}",
+           f"  Root cause: {case['confirmed_root_cause'] or '(unconfirmed â€” not disclosed)'}",
            f"  Relevant principles: {', '.join(case['relevant_principles'])}",
            f"  Knowledge gaps exposed: {len(case['knowledge_gaps'])}",
            f"  Follow-up exercises generated: {case['exercises_generated']}",

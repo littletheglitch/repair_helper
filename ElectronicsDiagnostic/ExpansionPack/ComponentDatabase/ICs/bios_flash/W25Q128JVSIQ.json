@@ -1,0 +1,86 @@
+{
+  "record_id": "IC_WINBOND_W25Q128",
+  "part_number": "W25Q128JVSIQ",
+  "manufacturer": "Winbond",
+  "manufacturer_short": "Winbond",
+  "category": "bios_spi_flash",
+  "package": "SOIC-16 (300mil)",
+  "pin_count": 16,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.7,
+      "max": 3.6,
+      "typ": 3.3
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "VCC_v": 4.0
+    },
+    "operating_conditions": {
+      "density": "128 Mbit (16 MB)",
+      "interface": "SPI / Dual / Quad",
+      "max_clock_mhz": 133
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "UEFI BIOS storage",
+    "EC / firmware storage"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Standard Quad-SPI",
+      "topology": "spi_flash",
+      "description": "CS#, IO0/IO1/IO2/IO3, CLK, WP/HOLD.",
+      "external_components": [
+        "VCC decoupling"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "CS#",
+      "description": "Chip select.",
+      "pin_numbers": []
+    },
+    {
+      "function": "IO0..IO3",
+      "description": "Bidirectional data lines (DI/DO/WP/HOLD in 1-bit mode).",
+      "pin_numbers": []
+    },
+    {
+      "function": "CLK",
+      "description": "SPI clock.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VCC",
+      "description": "3.3 V supply.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.winbond.com/resource-files/w25q128jv%20revh%2004082019%20plus.pdf",
+  "datasheet_source": "Winbond official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Density and interface verified. WP/HOLD pinout positions need confirmation against the suffix datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "W25Q128 is one of the most common notebook BIOS flash parts. Direct swaps to MX25L12873F are usually pin-compatible but command sets differ; verify erase commands and 4-byte addressing.",
+  "tags": [
+    "spi_flash",
+    "bios",
+    "uefi",
+    "winbond"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,52 @@
+{
+  "circuit_id": "CCT_crystal",
+  "name": "Crystal oscillator",
+  "description": "Piezoelectric crystal + inverting amplifier. Provides a stable clock reference.",
+  "topology": "Crystal + 2x cap + inverting amp",
+  "main_components": [
+    "crystal",
+    "2x load capacitors",
+    "inverting amplifier (in IC)",
+    "feedback resistor (sometimes)"
+  ],
+  "input": "Power",
+  "output": "Stable clock at the crystal frequency",
+  "expected_signal_behavior": "Oscillation at the rated frequency; amplitude rail-to-rail on the output side.",
+  "common_failure_modes": [
+    {
+      "mode": "no_osc",
+      "description": "crystal cracked, amp dead, cap wrong value"
+    },
+    {
+      "mode": "wrong_freq",
+      "description": "cap values drifted, crystal wrong cut"
+    },
+    {
+      "mode": "slow_start",
+      "description": "cap too large, weak amp"
+    }
+  ],
+  "diagnostic_measurements": [
+    "clock output frequency",
+    "crystal pin voltage (AC)",
+    "load cap values"
+  ],
+  "possible_fault_locations": [
+    "crystal",
+    "load capacitors",
+    "inverting amplifier"
+  ],
+  "recommended_next_tests": [
+    "scope the clock output",
+    "verify frequency",
+    "check load cap values vs crystal spec"
+  ],
+  "source_references": [
+    {
+      "title": "Crystal oscillator basics",
+      "url": "https://www.nxp.com/docs/en/application-note/AN3208.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

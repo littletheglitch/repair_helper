@@ -1,0 +1,175 @@
+{
+  "topology_id": "PSUP_linear",
+  "name": "Linear regulator (series pass)",
+  "mains_powered": false,
+  "isolated": false,
+  "typical_power_level_w": 5,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "Input fuse, reverse-polarity diode, input cap",
+      "components": [
+        "fuse",
+        "reverse_diode",
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No input voltage. Check the input fuse, reverse-polarity diode, and the input source.",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "input_filter",
+      "description": "Input filter cap + decoupling",
+      "components": [
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "Input present at connector but wrong at the regulator input pin. Check the input trace and decoupling.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "pass_element",
+      "description": "Series pass transistor (BJT or MOSFET); no switching",
+      "components": [
+        "pass_transistor",
+        "heatsink"
+      ],
+      "diagnostic_signals": {
+        "pass_vdrop": "in_range"
+      },
+      "fail_note": "Pass element fault. A linear regulator has no switching node. Check the pass transistor for open/short and the dropout voltage (input - output must exceed dropout). An open pass element gives zero output; a shorted pass element gives output = input (overvoltage).",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "output_filter",
+      "description": "Output cap (no inductor in a linear regulator)",
+      "components": [
+        "output_cap"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range"
+      },
+      "fail_note": "Output cap fault. A shorted output cap loads the rail; an open cap causes ripple.",
+      "depends_on": [
+        "rectification_secondary",
+        "inductor",
+        "transformer"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Non-isolated feedback: output divider to controller FB pin",
+      "components": [
+        "fb_divider",
+        "fb_cap"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range"
+      },
+      "fail_note": "Feedback pin not at expected voltage. Check the FB divider resistors and FB decoupling cap.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "input_protection",
+        "pass_element",
+        "output_filter"
+      ],
+      "notes": "Linear: no switching. Check pass element dropout first."
+    },
+    {
+      "pattern": "overvoltage",
+      "likely_stages": [
+        "pass_element"
+      ],
+      "notes": "Linear overvoltage = shorted pass element (output=input)."
+    },
+    {
+      "pattern": "overheating",
+      "likely_stages": [
+        "pass_element"
+      ],
+      "notes": "Linear dissipation = (Vin-Vout)*I; check heatsink."
+    },
+    {
+      "pattern": "wrong_voltage",
+      "likely_stages": [
+        "feedback",
+        "output_filter"
+      ],
+      "notes": "Output present but wrong voltage. Check the feedback divider and the reference."
+    },
+    {
+      "pattern": "unstable",
+      "likely_stages": [
+        "output_filter",
+        "feedback"
+      ],
+      "notes": "Output unstable/oscillating. Check output caps, feedback compensation, ESR."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

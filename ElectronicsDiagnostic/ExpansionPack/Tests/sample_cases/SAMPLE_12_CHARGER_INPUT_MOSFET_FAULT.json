@@ -1,0 +1,29 @@
+{
+  "case_id": "SAMPLE_12_CHARGER_INPUT_MOSFET_FAULT",
+  "description": "Adapter at jack is fine, voltage missing at ACIN because the input MOSFET is off. Controller BQ24780S.",
+  "rail_family": "ADAPTER_INPUT",
+  "topology": "charger_input",
+  "controller_part": "BQ24780S",
+  "measurements": [
+    {
+      "name": "vin",
+      "value": 19.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "input_mosfet_off",
+      "value": true,
+      "measured": true
+    },
+    {
+      "name": "vcc",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_FAULT_VCC_ABSENT",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "VCC"
+}

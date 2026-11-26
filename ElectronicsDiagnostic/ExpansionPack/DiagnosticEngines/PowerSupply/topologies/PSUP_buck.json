@@ -1,0 +1,204 @@
+{
+  "topology_id": "PSUP_buck",
+  "name": "Buck converter (step-down, sync or async)",
+  "mains_powered": false,
+  "isolated": false,
+  "typical_power_level_w": 50,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "Input fuse, reverse-polarity diode, input cap",
+      "components": [
+        "fuse",
+        "reverse_diode",
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No input voltage. Check the input fuse, reverse-polarity diode, and the input source.",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "input_filter",
+      "description": "Input filter cap + decoupling",
+      "components": [
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "Input present at connector but wrong at the regulator input pin. Check the input trace and decoupling.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "main_switch",
+      "description": "High-side switch (N-MOSFET) chopping the input",
+      "components": [
+        "high_side_fet",
+        "gate_driver"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range",
+        "gate_drive": "in_range"
+      },
+      "fail_note": "No switching on the high-side FET. Check gate-drive from the controller. Dead gate-drive with VCC+EN good = controller fault.",
+      "depends_on": [
+        "pwm_controller"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "rectification_secondary",
+      "description": "Low-side rectifier: synchronous FET or schottky diode",
+      "components": [
+        "low_side_fet",
+        "schottky"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range"
+      },
+      "fail_note": "Low-side rectifier fault. A sync FET that stays off forces current through the body diode (efficiency loss); an open schottky blocks recirculation.",
+      "depends_on": [
+        "main_switch"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "inductor",
+      "description": "Output inductor (energy storage, buck)",
+      "components": [
+        "inductor"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range"
+      },
+      "fail_note": "Inductor fault. An open inductor gives zero output; a shorted inductor gives high current.",
+      "depends_on": [
+        "main_switch"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "output_filter",
+      "description": "Output cap + ESR",
+      "components": [
+        "output_cap"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range",
+        "output_ripple": "in_range"
+      },
+      "fail_note": "Output cap fault. High ESR causes ripple; a short loads the rail.",
+      "depends_on": [
+        "rectification_secondary",
+        "inductor",
+        "transformer"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Non-isolated feedback: output divider to controller FB pin",
+      "components": [
+        "fb_divider",
+        "fb_cap"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range"
+      },
+      "fail_note": "Feedback pin not at expected voltage. Check the FB divider resistors and FB decoupling cap.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "input_protection",
+        "main_switch",
+        "inductor"
+      ],
+      "notes": "Buck: check switching node first."
+    },
+    {
+      "pattern": "overvoltage",
+      "likely_stages": [
+        "main_switch",
+        "feedback"
+      ],
+      "notes": "Buck overvoltage = shorted high-side FET or open FB."
+    },
+    {
+      "pattern": "wrong_voltage",
+      "likely_stages": [
+        "feedback",
+        "output_filter"
+      ],
+      "notes": "Output present but wrong voltage. Check the feedback divider and the reference."
+    },
+    {
+      "pattern": "unstable",
+      "likely_stages": [
+        "output_filter",
+        "feedback"
+      ],
+      "notes": "Output unstable/oscillating. Check output caps, feedback compensation, ESR."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

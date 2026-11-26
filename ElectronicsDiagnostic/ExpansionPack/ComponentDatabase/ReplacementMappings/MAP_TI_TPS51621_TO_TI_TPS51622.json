@@ -1,0 +1,57 @@
+{
+  "mapping_id": "MAP_TI_TPS51621_TO_TI_TPS51622",
+  "original_part": "TPS51621",
+  "candidate_part": "TPS51622",
+  "component_type": "IC",
+  "classification": "NOT_RECOMMENDED",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "match",
+      "note": "Both are VQFN-40 (RHA) package."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "unknown",
+      "note": "Pin-by-pin compatibility between TPS51621 and TPS51622 is NOT confirmed by the public datasheets reviewed. The two parts are siblings in the family but may differ in phase-count and GPIO mapping."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "match",
+      "note": "Both 4.5-28V VIN range."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "unknown",
+      "note": "N/A for controller (external MOSFETs handle current)."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "mismatch",
+      "note": "Both D-CAP+ family, but the SMBus register map and IMVP profile support differ. TPS51621 vs TPS51622 are typically selected per CPU platform; swapping may break VID / current-sense scaling."
+    },
+    {
+      "criterion": "feedback_topology",
+      "verdict": "conditional",
+      "note": "Both use D-CAP+ with remote sense. If the feedback network is identical the topology matches."
+    },
+    {
+      "criterion": "operating_frequency",
+      "verdict": "match",
+      "note": "Both 300-970 kHz programmable."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/tps51621.pdf",
+    "candidate": "https://www.ti.com/lit/ds/symlink/tps51622.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "Texas Instruments official datasheet"
+  },
+  "verification_status": "partial",
+  "verification_notes": "Despite identical package and overlapping electrical specs, controller ICs are firmware- and CPU-platform-specific. Direct swap is NOT RECOMMENDED without an explicit TI cross-reference document or the board vendor's service note.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

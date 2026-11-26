@@ -30,7 +30,7 @@ _connections: Dict[int, sqlite3.Connection] = {}
 _lock = threading.Lock()
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 4
 
 
 SCHEMA_SQL: List[str] = [
@@ -69,7 +69,8 @@ SCHEMA_SQL: List[str] = [
         status TEXT DEFAULT 'new',
         rejection_reason TEXT DEFAULT ''
     )""",
-    """CREATE UNIQUE INDEX IF NOT EXISTS idx_records_url ON records(source_name, url)""",
+    """CREATE INDEX IF NOT EXISTS idx_records_url ON records(source_name, url)""",
+    """CREATE INDEX IF NOT EXISTS idx_records_post_identity ON records(source_name, thread_id, post_id)""",
     """CREATE INDEX IF NOT EXISTS idx_records_hash ON records(content_hash)""",
     """CREATE INDEX IF NOT EXISTS idx_records_nhash ON records(normalized_hash)""",
     """CREATE INDEX IF NOT EXISTS idx_records_source ON records(source_name)""",
@@ -158,8 +159,41 @@ MIGRATIONS: List[Tuple[int, List[str], List[str], str]] = [
         1,
         [],   # base schema already creates everything
         [],
-        "Initial schema (sources, records, records_fts, documents, "
-        "dedup_index, crawl_state, source_manifest, export_runs, rejections).",
+        "Initial schema.",
+    ),
+    (
+        2,
+        ["ALTER TABLE sources ADD COLUMN settings_json TEXT NOT NULL DEFAULT '{}'"],
+        [],
+        "Per-source connector settings (tag groups, platform metadata, API options).",
+    ),
+    (
+        3,
+        [
+            "CREATE TABLE IF NOT EXISTS repair_attempts (id TEXT PRIMARY KEY, dataset_release TEXT NOT NULL, data_provider TEXT, country TEXT, partner_product_category TEXT, product_category TEXT, product_category_id TEXT, brand TEXT, year_of_manufacture TEXT, product_age TEXT, repair_status TEXT, repair_barrier TEXT, group_identifier TEXT, event_date TEXT, problem TEXT, source_url TEXT NOT NULL, imported_at TEXT NOT NULL)",
+            "CREATE TABLE IF NOT EXISTS dataset_imports (source_name TEXT PRIMARY KEY, dataset_release TEXT NOT NULL, source_url TEXT NOT NULL, source_sha256 TEXT NOT NULL, source_bytes INTEGER NOT NULL, rows_imported INTEGER NOT NULL, license TEXT NOT NULL, imported_at TEXT NOT NULL)",
+            "CREATE INDEX IF NOT EXISTS idx_repair_attempts_category ON repair_attempts(product_category)",
+            "CREATE INDEX IF NOT EXISTS idx_repair_attempts_status ON repair_attempts(repair_status)",
+            "CREATE INDEX IF NOT EXISTS idx_repair_attempts_country ON repair_attempts(country)",
+        ],
+        [],
+        "Separate licensed Open Repair Alliance event-level repair attempts from diagnostic forum records.",
+    ),
+    (
+        4,
+        [
+            "DROP INDEX IF EXISTS idx_records_url",
+            "CREATE INDEX IF NOT EXISTS idx_records_url ON records(source_name, url)",
+            "CREATE INDEX IF NOT EXISTS idx_records_post_identity ON records(source_name, thread_id, post_id)",
+            "DELETE FROM dedup_index WHERE record_id NOT IN (SELECT id FROM records)",
+            "CREATE TRIGGER IF NOT EXISTS records_au AFTER UPDATE ON records BEGIN "
+            "INSERT INTO records_fts(records_fts, rowid, text, title, source_name) "
+            "VALUES ('delete', old.id, old.text, COALESCE(old.title,''), old.source_name); "
+            "INSERT INTO records_fts(rowid, text, title, source_name) "
+            "VALUES (new.id, new.text, COALESCE(new.title,''), new.source_name); END",
+        ],
+        [],
+        "Allow multiple posts per thread URL and maintain records/FTS in place without replacing rows.",
     ),
 ]
 
@@ -255,16 +289,21 @@ def now_iso() -> str:
 def upsert_source(name: str, kind: str, base_url: str, *,
                   enabled: bool = False, license: str = "", terms_url: str = "",
                   attribution: str = "", access_method: str = "",
-                  max_depth: int = 5, rate_per_min: int = 6,
-                  max_records: int = 5000, max_bytes: int = 524288000) -> None:
+                  max_depth: int = 25, rate_per_min: int = 4,
+                  max_records: int = 100000, max_bytes: int = 524288000,
+                  settings: Optional[Dict[str, Any]] = None) -> None:
+    """Insert/update a source without losing its connector-specific settings."""
+    existing = query_one("SELECT settings_json FROM sources WHERE name=?", (name,))
+    settings_json = json.dumps(settings, ensure_ascii=False) if settings is not None else (
+        existing.get("settings_json", "{}") if existing else "{}")
     execute(
         "INSERT OR REPLACE INTO sources(name, kind, base_url, enabled, "
         "license, terms_url, attribution, access_method, max_depth, "
-        "rate_per_min, max_records, max_bytes, added_at) "
-        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        "rate_per_min, max_records, max_bytes, added_at, settings_json) "
+        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
         (name, kind, base_url, int(enabled), license, terms_url, attribution,
          access_method, max_depth, rate_per_min, max_records, max_bytes,
-         now_iso()),
+         now_iso(), settings_json),
     )
 
 
@@ -283,33 +322,88 @@ def enable_source(name: str, enabled: bool) -> None:
 
 
 def store_record(rec) -> int:
-    """Insert a record; returns the row id. The records_fts trigger fires
-    automatically. If (source_name, url) already exists, the row is
-    replaced (re-crawl updates in place)."""
-    from .schemas import Record, Classification
+    """Insert or update one logical post without deleting its row.
+
+    Forum threads often expose the same topic URL for many posts. Identity is
+    therefore (source_name, thread_id, post_id) when both IDs are present;
+    URL is only the fallback for non-post documents or legacy records.
+    Existing variants and cross-source references are retained on re-crawl.
+    """
+    from .schemas import Record
     if not isinstance(rec, Record):
         raise TypeError("store_record expects a Record")
+
     cls_json = json.dumps(rec.classification.to_dict(), ensure_ascii=False) if rec.classification else None
     struct_json = json.dumps(rec.structured.to_dict(), ensure_ascii=False)
-    cur = execute(
-        "INSERT OR REPLACE INTO records(source_name, url, thread_id, post_id, "
-        "title, author, published_at, collected_at, text, structured, "
-        "classification, content_hash, normalized_hash, also_seen_at, "
-        "variants, status, rejection_reason) "
-        "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        (rec.source_name, rec.url, rec.thread_id, rec.post_id, rec.title,
-         rec.author, rec.published_at, rec.collected_at, rec.text,
-         struct_json, cls_json, rec.content_hash, rec.normalized_hash,
-         json.dumps(rec.also_seen_at, ensure_ascii=False),
-         json.dumps(rec.variants, ensure_ascii=False),
-         rec.status, rec.rejection_reason),
-    )
-    rid = int(cur.lastrowid)
-    # Update dedup_index.
-    execute("INSERT OR IGNORE INTO dedup_index(content_hash, normalized_hash, "
-            "record_id, source_name) VALUES(?,?,?,?)",
-            (rec.content_hash, rec.normalized_hash, rid, rec.source_name))
-    return rid
+    conn = connect()
+    conn.execute("BEGIN IMMEDIATE")
+    try:
+        if rec.thread_id and rec.post_id:
+            existing = conn.execute(
+                "SELECT id, also_seen_at, variants FROM records "
+                "WHERE source_name=? AND thread_id=? AND post_id=? "
+                "ORDER BY id DESC LIMIT 1",
+                (rec.source_name, rec.thread_id, rec.post_id),
+            ).fetchone()
+        else:
+            existing = conn.execute(
+                "SELECT id, also_seen_at, variants FROM records "
+                "WHERE source_name=? AND url=? ORDER BY id DESC LIMIT 1",
+                (rec.source_name, rec.url),
+            ).fetchone()
+
+        def _merge_json_list(old_raw, new_values):
+            try:
+                old_values = json.loads(old_raw) if old_raw else []
+            except (TypeError, ValueError):
+                old_values = []
+            if not isinstance(old_values, list):
+                old_values = []
+            merged = list(old_values)
+            for value in (new_values or []):
+                if value not in merged:
+                    merged.append(value)
+            return json.dumps(merged, ensure_ascii=False)
+
+        if existing:
+            rid = int(existing["id"])
+            also_seen = _merge_json_list(existing["also_seen_at"], rec.also_seen_at)
+            variants = _merge_json_list(existing["variants"], rec.variants)
+            conn.execute(
+                "UPDATE records SET url=?, thread_id=?, post_id=?, title=?, author=?, "
+                "published_at=?, collected_at=?, text=?, structured=?, classification=?, "
+                "content_hash=?, normalized_hash=?, also_seen_at=?, variants=?, status=?, "
+                "rejection_reason=? WHERE id=?",
+                (rec.url, rec.thread_id, rec.post_id, rec.title, rec.author,
+                 rec.published_at, rec.collected_at, rec.text, struct_json, cls_json,
+                 rec.content_hash, rec.normalized_hash, also_seen, variants,
+                 rec.status, rec.rejection_reason, rid),
+            )
+            conn.execute("DELETE FROM dedup_index WHERE record_id=?", (rid,))
+        else:
+            cur = conn.execute(
+                "INSERT INTO records(source_name, url, thread_id, post_id, title, author, "
+                "published_at, collected_at, text, structured, classification, content_hash, "
+                "normalized_hash, also_seen_at, variants, status, rejection_reason) "
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (rec.source_name, rec.url, rec.thread_id, rec.post_id, rec.title,
+                 rec.author, rec.published_at, rec.collected_at, rec.text, struct_json,
+                 cls_json, rec.content_hash, rec.normalized_hash,
+                 json.dumps(rec.also_seen_at, ensure_ascii=False),
+                 json.dumps(rec.variants, ensure_ascii=False), rec.status, rec.rejection_reason),
+            )
+            rid = int(cur.lastrowid)
+
+        conn.execute(
+            "INSERT OR IGNORE INTO dedup_index(content_hash, normalized_hash, record_id, source_name) "
+            "VALUES(?,?,?,?)",
+            (rec.content_hash, rec.normalized_hash, rid, rec.source_name),
+        )
+        conn.commit()
+        return rid
+    except Exception:
+        conn.rollback()
+        raise
 
 
 def find_duplicate(content_hash: str, normalized_hash: str,
@@ -324,29 +418,55 @@ def find_duplicate(content_hash: str, normalized_hash: str,
 
 
 def find_near_duplicate(text: str, source_name: str, threshold: float = 0.9) -> Optional[Dict[str, Any]]:
-    """Cheap near-duplicate check via normalized-hash prefix + Jaccard
-    on shingles. Scans only records from the same source first, then
-    cross-source. Returns the first near-dup or None."""
-    from .dedup import jaccard_3shingle
+    """Find likely near-duplicates without a full-table scan.
+
+    The previous implementation compared every new record with every prior
+    record from the same source (quadratic growth). FTS5 now narrows the
+    candidates by shared technical terms; Jaccard shingles remain the final
+    decision, so retrieval is only a candidate-generation optimization.
+    """
+    import re
     norm = _normalize_for_dedup(text)
     if not norm:
         return None
-    # Same-source candidates: same normalized_hash.
-    cands = query_all(
-        "SELECT * FROM records WHERE source_name=? AND status != 'rejected' "
-        "ORDER BY id", (source_name,)
-    )
-    for r in cands:
-        if _jaccard(norm, _normalize_for_dedup(r["text"] or "")) >= threshold:
-            return r
-    # Cross-source candidates: scan a bounded sample.
-    cands2 = query_all(
-        "SELECT * FROM records WHERE source_name != ? AND status != 'rejected' "
-        "ORDER BY id LIMIT 2000", (source_name,)
-    )
-    for r in cands2:
-        if _jaccard(norm, _normalize_for_dedup(r["text"] or "")) >= threshold:
-            return r
+    tokens = list(dict.fromkeys(re.findall(r"[\w]{3,}", norm.lower(), flags=re.UNICODE)))
+    # Longer technical tokens are generally more discriminative than common
+    # words. Keep a bounded OR query so SQLite's FTS expression stays small.
+    tokens = sorted(tokens, key=lambda token: (-len(token), token))[:20]
+    if not tokens:
+        return None
+    match_expr = " OR ".join('"' + token.replace('"', '""') + '"' for token in tokens)
+
+    def candidates(same_source: bool) -> List[Dict[str, Any]]:
+        if same_source:
+            where = "r.source_name=?"
+            params = (match_expr, source_name)
+        else:
+            where = "r.source_name != ?"
+            params = (match_expr, source_name)
+        try:
+            return query_all(
+                "SELECT r.* FROM records_fts f JOIN records r ON r.id=f.rowid "
+                "WHERE records_fts MATCH ? AND " + where +
+                " AND r.status NOT IN ('rejected','duplicate','near_duplicate') "
+                "ORDER BY bm25(records_fts) LIMIT 400", params)
+        except Exception:
+            # A damaged or unavailable FTS index must not break collection.
+            # Fall back to a bounded recent sample, never a full-source scan.
+            if same_source:
+                return query_all(
+                    "SELECT * FROM records WHERE source_name=? "
+                    "AND status NOT IN ('rejected','duplicate','near_duplicate') "
+                    "ORDER BY id DESC LIMIT 400", (source_name,))
+            return query_all(
+                "SELECT * FROM records WHERE source_name != ? "
+                "AND status NOT IN ('rejected','duplicate','near_duplicate') "
+                "ORDER BY id DESC LIMIT 400", (source_name,))
+
+    for group in (candidates(True), candidates(False)):
+        for row in group:
+            if _jaccard(norm, _normalize_for_dedup(row.get("text") or "")) >= threshold:
+                return row
     return None
 
 
@@ -540,6 +660,8 @@ def record_counts() -> Dict[str, int]:
     out["documents_rejected"] = int(query_one(
         "SELECT COUNT(*) AS n FROM documents WHERE status='rejected'")["n"])
     out["rejections_total"] = int(query_one("SELECT COUNT(*) AS n FROM rejections")["n"])
+    out["repair_attempts_total"] = int(query_one(
+        "SELECT COUNT(*) AS n FROM repair_attempts")["n"])
     return out
 
 

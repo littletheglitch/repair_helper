@@ -1,0 +1,29 @@
+{
+  "rail_family": "USB_VBUS",
+  "description": "5 V VBUS for USB ports (and 5 V USB OTG output). Sourced from +5VALW through a load switch / current limit. USB-C ports negotiate via PD controller.",
+  "typical_voltage_v": {
+    "min": 4.75,
+    "typ": 5.0,
+    "max": 5.25,
+    "notes": "USB 2.0/3.0 spec."
+  },
+  "typical_topology": "load_switch",
+  "always_on": false,
+  "common_controllers": [
+    "TPS22918",
+    "AON6500",
+    "Si4435DDY"
+  ],
+  "upstream_rails": [
+    "+5VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,41 @@
+{
+  "rule_id": "RULE_FAULT_OVERLOAD_READING",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW",
+    "+1.8V",
+    "+VCCRTC",
+    "VCORE"
+  ],
+  "priority": 5,
+  "condition": {
+    "expression": "rail_voltage_overload"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "The rail-voltage measurement showed meter OVERLOAD (OL) — the voltage exceeds the meter's selected range. This is NOT a normal reading. Either switch to a higher range, or the rail is genuinely overvoltage (a dangerous condition). Re-measure on a higher DC range before proceeding.",
+      "measure": {
+        "what": "Rail voltage on a higher range",
+        "where": "Rail test point",
+        "instrument": "DMM DC volts, higher range (e.g. 1000 V)",
+        "expected": "A finite reading within the rail's nominal tolerance, OR a confirmed overvoltage.",
+        "safety": "Overvoltage rails can damage downstream ICs. Disconnect load if overvoltage is confirmed."
+      },
+      "interpretations": [
+        {
+          "if_result": "Finite in-tolerance reading",
+          "then": "Previous OL was a range error. Re-run diagnosis."
+        },
+        {
+          "if_result": "Confirmed overvoltage",
+          "then": "Regulation failure. Disconnect load. Suspect feedback divider open or controller dead.",
+          "next_rule": "RULE_VOLTAGE_HIGH_OUTPUT"
+        }
+      ],
+      "requires_info": true
+    }
+  ],
+  "schema_version": "1.0.0"
+}

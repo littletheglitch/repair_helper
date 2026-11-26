@@ -1,0 +1,69 @@
+{
+  "rule_id": "RULE_FAULT_SWITCHING_ABSENT",
+  "topology": "buck_converter",
+  "priority": 20,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "switching_measured AND NOT switching_present AND vin_present AND vcc_present AND en_present AND no_confirmed_short",
+    "notes": "Switching was measured and is absent with VIN+VCC+EN all present. The controller is not driving the switch. Either the controller IC is faulty (no gate drive) or the switch FET is open / its gate resistor is open."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "No switching with VIN+VCC+EN present. Probe the gate-drive pin(s) with a scope. If gate-drive is dead, the controller IC is faulty. If gate-drive is present but the switch node doesn't toggle, the switch FET is open or its gate resistor is open.",
+      "measure": {
+        "what": "Gate-drive waveform + switch node",
+        "where": "Controller gate-drive pin + switch node (inductor input)",
+        "instrument": "Oscilloscope (10x probe)",
+        "expected": "Gate-drive toggling at the switching frequency; switch node toggling between VIN and ground.",
+        "safety": "Powered. Use a 10x probe; ground near the switch node."
+      },
+      "interpretations": [
+        {
+          "if_result": "Gate-drive dead",
+          "then": "Controller IC is not driving the gate. Replace the controller (verify with the replacement engine).",
+          "set_facts": [
+            "controller_gate_drive_dead=True"
+          ]
+        },
+        {
+          "if_result": "Gate-drive present, switch node dead",
+          "then": "Switch FET is open or gate resistor is open. Check the FET (unpowered resistance) and the gate resistor.",
+          "set_facts": [
+            "switch_fet_open=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

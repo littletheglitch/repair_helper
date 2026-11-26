@@ -1,0 +1,43 @@
+{
+  "rule_id": "RULE_VRM_007_CHECK_PGOOD",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "switching_present AND fb_present AND rail_voltage_present AND NOT pgood_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the VRM controller PGOOD pin.",
+      "measure": {
+        "what": "PGOOD pin voltage",
+        "where": "Controller PGOOD pin (consult datasheet)",
+        "instrument": "DMM DC volts + oscilloscope to check for chatter",
+        "expected": "High (= pull-up rail, typically 3.3 V) when rail is in regulation.",
+        "safety": "VRM PGOOD feeds CPU VR_READY; if low, the CPU will not start."
+      },
+      "interpretations": [
+        {
+          "if_result": "PGOOD high",
+          "then": "Rail is good. If CPU still does not start, the issue is downstream (CPU socket, reset, BIOS).",
+          "set_facts": [
+            "pgood_present=True"
+          ]
+        },
+        {
+          "if_result": "PGOOD low while rail voltage is correct",
+          "then": "Controller is not declaring PGOOD. Could be the controller's PGOOD comparator threshold, or a secondary monitor (current limit, thermal) is tripping. Check controller fault registers if accessible.",
+          "set_facts": [
+            "pgood_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for PGOOD pin and assertion conditions."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

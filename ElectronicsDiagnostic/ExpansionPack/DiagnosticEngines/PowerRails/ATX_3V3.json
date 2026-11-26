@@ -1,0 +1,30 @@
+{
+  "rail_family": "ATX_3V3",
+  "description": "Desktop ATX +3.3V main rail. Enabled by the PSU when PS_ON# is pulled low by the motherboard. PWR_OK must assert before the CPU reset is released.",
+  "typical_voltage_v": {
+    "min": 3.14,
+    "typ": 3.3,
+    "max": 3.47,
+    "notes": "ATX12V: +/-5%."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_PSU_3V3"
+  ],
+  "downstream_rails": [
+    "CHIPSET_3V3",
+    "PCIE_3V3"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "ps_on_signal_state",
+    "pwr_ok_signal_state"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop",
+  "psu_signal_notes": "Absent until PS_ON# is asserted. If absent with PS_ON# low, the PSU is the prime suspect; if absent with PS_ON# high, the motherboard is not asserting PS_ON#."
+}

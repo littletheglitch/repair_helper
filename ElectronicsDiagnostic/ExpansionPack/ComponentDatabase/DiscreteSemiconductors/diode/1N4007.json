@@ -1,0 +1,41 @@
+{
+  "record_id": "DISC_ON_1N4007",
+  "part_number": "1N4007",
+  "manufacturer": "onsemi",
+  "manufacturer_short": "onsemi",
+  "category": "diode",
+  "package": "DO-41",
+  "pin_count": 2,
+  "pinout": {
+    "anode": "pin 1 (cathode marked with band)",
+    "cathode": "pin 2 (banded end)"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 1000.0,
+    "if_avg_a": 1.0,
+    "ifsm_a": 30.0,
+    "vf_v": 1.1,
+    "vf_conditions": "IF = 1 A, T_J = 25 C",
+    "pd_w": 3.0,
+    "thermal_r_ja_c_per_w": 50.0,
+    "operating_temp_range_c": {
+      "min": -65,
+      "max": 175
+    }
+  },
+  "typical_applications": [
+    "General-purpose rectification",
+    "Reverse-polarity protection (low-frequency)"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/1n4001-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VRRM, IF, Vf, package all verified against the onsemi 1N400x datasheet.",
+  "replacement_notes": "1N400x family differs only in VRRM (50-1000V). A higher-VRRM part (e.g. 1N4007) is a safe substitute for a lower-VRRM part (e.g. 1N4001) at the same current; the reverse is NOT safe.",
+  "tags": [
+    "rectifier",
+    "general_purpose"
+  ],
+  "schema_version": "1.0.0"
+}

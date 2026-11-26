@@ -18,7 +18,8 @@ from __future__ import annotations
 import re
 from typing import Iterator, Optional
 
-from .base import BaseConnector, RawItem, ParsedItem
+from .base import (BaseConnector, RawItem, ParsedItem, stable_post_id,
+                    legacy_start_page, legacy_checkpoint)
 from .. import database, config
 from ..schemas import SourceKind
 from .. import filtering
@@ -38,15 +39,16 @@ class EEvblogConnector(BaseConnector):
         max_pages = self.max_depth()
         max_records = self.max_records()
         count = 0
+        start_page = legacy_start_page(self.name, "eevblog", 0)
         for board_url in self.REPAIR_BOARD_URLS:
-            for page in range(0, max_pages):
+            for page in range(start_page, start_page + max_pages):
                 if count >= max_records:
                     return
                 url = f"{board_url}index.php/board,40.{page*30}.html"
                 html = self.fetch_html(url)
                 if not html:
                     database.update_crawl_state(self.name, status="failed",
-                                                error="board fetch failed")
+                                                error=self.fetch_failure("EEVblog board fetch failed", url))
                     return
                 thread_links = _extract_thread_links(html, board_url)
                 if not thread_links:
@@ -61,22 +63,26 @@ class EEvblogConnector(BaseConnector):
                     # highly relevant.
                     thread_html = self.fetch_html(thread_url)
                     if not thread_html:
-                        continue
+                        database.update_crawl_state(self.name, status="failed",
+                                                    error=self.fetch_failure("EEVblog thread fetch failed", thread_url))
+                        return
                     for post_text, author, date in _extract_posts(thread_html):
                         if count >= max_records:
                             return
+                        tid = _thread_id_from_url(thread_url)
+                        pid = stable_post_id(tid, author, date, post_text)
                         yield RawItem(
-                            url=thread_url,
-                            thread_id=_thread_id_from_url(thread_url),
-                            post_id=f"{_thread_id_from_url(thread_url)}_{count}",
+                            url=f"{thread_url}#kc-post-{pid}",
+                            thread_id=tid,
+                            post_id=pid,
                             raw=post_text,
                             meta={"author": author, "date": date,
                                   "title": title, "kind": "post"},
                         )
                         count += 1
-                database.update_crawl_state(self.name, last_page=page,
-                                            status="running")
-        database.update_crawl_state(self.name, status="done")
+                legacy_checkpoint(self.name, "eevblog", page, page + 1)
+        database.update_crawl_state(self.name, status="paused",
+                                    error="configured board pagination depth reached; resume to continue")
 
     def parse(self, raw: RawItem) -> Optional[ParsedItem]:
         if not raw.raw or not isinstance(raw.raw, str):

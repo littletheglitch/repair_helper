@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_LDO_001_RESISTANCE_FIRST",
+  "topology": "ldo",
+  "applies_to_rail_families": [
+    "+VCCRTC",
+    "DDR_VTT",
+    "RAM_VTT_DESKTOP"
+  ],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect all power. Measure resistance from rail to ground.",
+      "measure": {
+        "what": "Resistance from rail to ground",
+        "where": "LDO output pin / rail test point",
+        "instrument": "DMM resistance mode",
+        "expected": "LDO rails typically >50 ohm to ground; <10 ohm suggests a shorted load or output cap.",
+        "safety": "Discharge all caps first; never measure resistance on a powered rail."
+      },
+      "interpretations": [
+        {
+          "if_result": "Resistance < 10 ohm",
+          "then": "Short on the LDO output. Hunt the shorted component before re-applying power.",
+          "set_facts": [
+            "rail_short=True"
+          ],
+          "next_rule": "RULE_LDO_010_SHORTED_RAIL"
+        },
+        {
+          "if_result": "Resistance > 50 ohm",
+          "then": "No short. Proceed to check LDO input.",
+          "set_facts": [
+            "rail_short=False"
+          ],
+          "next_rule": "RULE_LDO_002_CHECK_INPUT"
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

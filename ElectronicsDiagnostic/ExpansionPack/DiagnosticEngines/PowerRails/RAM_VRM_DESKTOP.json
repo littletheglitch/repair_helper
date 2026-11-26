@@ -1,0 +1,36 @@
+{
+  "rail_family": "RAM_VRM_DESKTOP",
+  "description": "Desktop DDR VDD rail (1.2 V DDR4 / 1.1 V DDR5). Synchronous buck from ATX_3V3 or ATX_5V.",
+  "typical_voltage_v": {
+    "min": 1.1,
+    "typ": 1.2,
+    "max": 1.5,
+    "notes": "DDR generation specific."
+  },
+  "typical_topology": "memory_power",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51224",
+    "ISL95831"
+  ],
+  "upstream_rails": [
+    "ATX_3V3",
+    "ATX_5V"
+  ],
+  "downstream_rails": [
+    "RAM_VTT_DESKTOP"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

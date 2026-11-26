@@ -1,0 +1,62 @@
+{
+  "mapping_id": "MAP_VISHAY_SI4435DDY_TO_AOS_AOD4185",
+  "original_part": "Si4435DDY",
+  "candidate_part": "AOD4185",
+  "component_type": "MOSFET",
+  "classification": "NOT_RECOMMENDED",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "mismatch",
+      "note": "Si4435DDY is SO-8 (8-pin); AOD4185 is DPAK-3 (3-pin). Footprint and land pattern are completely different."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "mismatch",
+      "note": "SO-8 has separate gate/source/drain on different pins; DPAK consolidates and uses the tab as drain."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "conditional",
+      "note": "Si4435DDY VDS=-30V; AOD4185 VDS=-40V. Voltage rating alone is acceptable but does not fix the package mismatch."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "conditional",
+      "note": "Si4435DDY ID=-8.5A; AOD4185 ID=-12A. Current rating alone is acceptable."
+    },
+    {
+      "criterion": "rds_on",
+      "verdict": "conditional",
+      "note": "Both specified at VGS=-10V (22 mOhm vs 35 mOhm). Si4435DDY has lower RDS_on, but neither value alone resolves the package mismatch."
+    },
+    {
+      "criterion": "gate_drive",
+      "verdict": "conditional",
+      "note": "Both P-channel, logic-level compatible at VGS=-4.5V with derated RDS_on."
+    },
+    {
+      "criterion": "gate_charge",
+      "verdict": "conditional",
+      "note": "Si4435DDY Qg=11 nC; AOD4185 Qg=12 nC — within 10%."
+    },
+    {
+      "criterion": "thermal",
+      "verdict": "conditional",
+      "note": "Si4435DDY Rtheta_ja=50 C/W; AOD4185 Rtheta_ja=75 C/W — AOD4185 is thermally weaker in still air."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.vishay.com/docs/72270/si4435ddy.pdf",
+    "candidate": "https://www.aosmd.com/res/data_sheets/AOD4185.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Vishay Siliconix official datasheet",
+    "candidate": "Alpha & Omega Semiconductor official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Package and pinout mismatch makes direct substitution impossible without board rework. NOT_RECOMMENDED for direct swap.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

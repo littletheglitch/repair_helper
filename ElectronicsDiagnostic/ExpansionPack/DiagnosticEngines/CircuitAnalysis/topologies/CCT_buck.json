@@ -1,0 +1,71 @@
+{
+  "circuit_id": "CCT_buck",
+  "name": "Buck converter (synchronous)",
+  "description": "Step-down switching regulator. High-side FET chops the input; inductor stores energy; low-side FET (or diode) freewheels.",
+  "topology": "Synchronous buck: 2x MOSFET + inductor + output cap + controller",
+  "main_components": [
+    "high-side MOSFET",
+    "low-side MOSFET (or Schottky)",
+    "inductor",
+    "output cap",
+    "buck controller",
+    "feedback divider"
+  ],
+  "input": "DC (e.g. 5-19 V)",
+  "output": "Lower DC (e.g. 1.0-3.3 V)",
+  "expected_signal_behavior": "Output within tolerance; switching node swings 0 to VIN at Fsw; ripple <30 mVpp typical.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "controller dead, EN missing, fuse open"
+    },
+    {
+      "mode": "low_output",
+      "description": "overload, FB drift"
+    },
+    {
+      "mode": "high_output",
+      "description": "low-side FET short, FB open"
+    },
+    {
+      "mode": "no_switching",
+      "description": "controller dead, gate-drive fault"
+    },
+    {
+      "mode": "shorted_output",
+      "description": "low-side FET short, output cap short"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage (VIN)",
+    "output voltage",
+    "switching node waveform",
+    "FB pin voltage",
+    "PGOOD",
+    "output ripple"
+  ],
+  "possible_fault_locations": [
+    "high-side MOSFET",
+    "low-side MOSFET",
+    "output inductor",
+    "output cap",
+    "buck controller"
+  ],
+  "recommended_next_tests": [
+    "measure resistance to ground first",
+    "check VIN",
+    "check VCC",
+    "check EN",
+    "check switching node",
+    "check FB",
+    "check PGOOD"
+  ],
+  "source_references": [
+    {
+      "title": "TI Buck Converter Design",
+      "url": "https://www.ti.com/lit/an/slva861/slva861.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

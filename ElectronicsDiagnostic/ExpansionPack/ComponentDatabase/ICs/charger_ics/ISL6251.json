@@ -1,0 +1,110 @@
+{
+  "record_id": "IC_REN_ISL6251",
+  "part_number": "ISL6251",
+  "manufacturer": "Renesas Electronics (formerly Intersil)",
+  "manufacturer_short": "Renesas",
+  "category": "charger_ic",
+  "package": "QFN-32 / TSSOP-28",
+  "pin_count": 32,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "ac_in_sense",
+      "function": "ac_in_sense",
+      "pin": 1
+    },
+    {
+      "name": "battery_drive",
+      "function": "battery_drive",
+      "pin": 2
+    },
+    {
+      "name": "smbus_or_analog_ctrl",
+      "function": "smbus_or_analog_ctrl",
+      "pin": 3
+    },
+    {
+      "name": "current_sense",
+      "function": "current_sense",
+      "pin": 4
+    },
+    {
+      "name": "gate_drive_hi",
+      "function": "gate_drive_hi",
+      "pin": 5
+    },
+    {
+      "name": "gate_drive_lo",
+      "function": "gate_drive_lo",
+      "pin": 6
+    },
+    {
+      "name": "adapter_select",
+      "function": "adapter_select",
+      "pin": 7
+    },
+    {
+      "name": "charge_current_limit",
+      "function": "charge_current_limit",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 4.5,
+      "max": 25.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.0,
+      "max": 19.2,
+      "typ": null,
+      "adjustable": true
+    },
+    "switching_frequency_khz": [
+      400
+    ],
+    "operating_conditions": {
+      "charge_current_a": {
+        "max": 10.0,
+        "note": "Set by sense resistor"
+      },
+      "control_mode": "synchronous_buck_charger",
+      "protection_features": [
+        "input current limit",
+        "OCP",
+        "thermal"
+      ]
+    }
+  },
+  "typical_applications": [
+    "Laptop Li-Ion charger (Intersil/Renesas platforms)",
+    "Notebook adapter current limiting"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Synchronous buck charger (ISL6251)",
+      "topology": "synchronous_buck_charger",
+      "description": "Buck charger with analog control (some variants) or SMBus. Adapter current limiting for thermal management.",
+      "external_components": [
+        "inductor",
+        "current-sense resistors",
+        "MOSFETs"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.renesas.com/us/en/document/dst/isl6251-datasheet",
+  "datasheet_source": "Renesas/Intersil ISL6251 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "QFN-32 charger. NOT pin-compatible with BQ247xx (different vendor, different pinout, different control interface).",
+  "replacement_notes": "ISL6251 and BQ247xx are functionally similar (laptop chargers) but NOT interchangeable — different pinout, different control interface (analog vs SMBus variants), different register maps.",
+  "tags": [
+    "charger",
+    "synchronous_buck",
+    "laptop",
+    "intersil",
+    "qfn32"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,52 @@
+{
+  "case_id": "SAMPLE_08_SWITCHING_NO_OUTPUT",
+  "description": "+1.8V missing; switching present but output not yet checked. Controller TPS51224.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "en",
+      "value": 3.3,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "switching",
+      "value": true,
+      "measured": true
+    }
+  ],
+  "expected_fired_rule": "RULE_FAULT_RAIL_DEAD_WITH_SWITCHING",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "FB"
+}

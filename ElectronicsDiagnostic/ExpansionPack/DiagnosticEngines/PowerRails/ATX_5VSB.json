@@ -1,0 +1,32 @@
+{
+  "rail_family": "ATX_5VSB",
+  "description": "Desktop ATX +5VSB standby rail. Always present whenever the PSU is plugged into mains (even when the system is 'off'). Powers the RTC, super-IO, EC, wake-on-LAN, and the PS_ON# pull-up. Distinct from the laptop +5VALW concept — laptops derive standby from the adapter/battery through an on-board buck; desktops get it pre-regulated from the PSU.",
+  "typical_voltage_v": {
+    "min": 4.75,
+    "typ": 5.0,
+    "max": 5.25,
+    "notes": "ATX12V spec: 4.75-5.25 V. Must be present whenever the PSU IEC lead is live."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": true,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_PSU_5VSB"
+  ],
+  "downstream_rails": [
+    "ATX_3V3",
+    "ATX_5V",
+    "RTC_VCC",
+    "SUPER_IO_VCC"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "ps_on_signal_state",
+    "pwr_ok_signal_state"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop",
+  "psu_signal_notes": "5VSB must NOT be loaded beyond the ATX spec (typically 2 A max for older PSUs, 3 A for modern). Overloading 5VSB causes the PSU to drop it and the board will not start."
+}

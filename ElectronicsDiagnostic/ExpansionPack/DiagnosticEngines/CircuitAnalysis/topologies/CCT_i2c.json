@@ -1,0 +1,57 @@
+{
+  "circuit_id": "CCT_i2c",
+  "name": "I2C interface",
+  "description": "2-wire serial: SDA + SCL. Open-drain with pull-ups. Multi-master, addressed.",
+  "topology": "SDA + SCL + pull-ups + controller",
+  "main_components": [
+    "I2C controller",
+    "pull-up resistors (2x)",
+    "SDA/SCL buffers (optional)"
+  ],
+  "input": "SDA + SCL (open-drain)",
+  "output": "Addressed data transfers",
+  "expected_signal_behavior": "Idle high (pull-ups); start = SDA falls while SCL high; 7-bit or 10-bit address; ACK from slave.",
+  "common_failure_modes": [
+    {
+      "mode": "no_clock",
+      "description": "SCL stuck low (slave holding clock), pull-up open"
+    },
+    {
+      "mode": "no_data",
+      "description": "SDA stuck low, slave dead"
+    },
+    {
+      "mode": "no_ack",
+      "description": "address wrong, slave dead"
+    },
+    {
+      "mode": "slow",
+      "description": "pull-ups too weak, too much capacitance"
+    }
+  ],
+  "diagnostic_measurements": [
+    "SCL idle level",
+    "SDA idle level",
+    "SCL frequency",
+    "signal edges (scope)",
+    "pull-up resistance"
+  ],
+  "possible_fault_locations": [
+    "pull-up resistors",
+    "I2C controller",
+    "slave devices"
+  ],
+  "recommended_next_tests": [
+    "check SCL/SDA idle = high (pull-ups OK)",
+    "scope SCL for clock stretching",
+    "check pull-up values vs bus capacitance"
+  ],
+  "source_references": [
+    {
+      "title": "I2C-bus spec",
+      "url": "https://www.nxp.com/docs/en/user-guide/UM10204.pdf",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

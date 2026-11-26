@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_ALW_003_CHECK_CONTROLLER_VCC",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND NOT vcc_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the standby controller's VCC pin (internal LDO output, typically 5 V).",
+      "measure": {
+        "what": "Controller VCC pin voltage",
+        "where": "Controller VCC pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts",
+        "expected": "5.0 V typical for ALW controllers (some use 3.3 V).",
+        "safety": "VCC LDO is internally derived; if it is missing the controller itself is likely dead."
+      },
+      "interpretations": [
+        {
+          "if_result": "VCC present",
+          "then": "Controller is alive. Proceed to check EN.",
+          "set_facts": [
+            "vcc_present=True"
+          ],
+          "next_rule": "RULE_ALW_004_CHECK_EN"
+        },
+        {
+          "if_result": "VCC missing",
+          "then": "Controller internal LDO is dead — replace controller. Confirm with a re-measurement after removing the controller (in case VCC was loaded down by a downstream short).",
+          "set_facts": [
+            "vcc_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for VCC pin and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

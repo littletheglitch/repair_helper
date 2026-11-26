@@ -15,6 +15,8 @@ The fetcher is the ONLY module that performs network access. It:
 - Detects JavaScript-rendered pages (no <p> in the body, but a
   <script> tag) and returns a ``JavaScriptRequired`` result so the
   connector can disable the source rather than scrape unreliably.
+- Fails closed when robots.txt cannot be retrieved or parsed; inability
+  to read a site's policy is not treated as permission to crawl.
 - Supports resume via a per-host cursor that the connector passes
   back in; the fetcher doesn't itself store state (the orchestrator
   writes crawl_state).
@@ -68,16 +70,15 @@ class FetchResult:
 # ----------------------------------------------------------------------
 
 class RobotsCache:
-    """Per-host robots.txt cache. Uses urllib.robotparser (stdlib).
+    """Per-host robots.txt cache. Fails closed on retrieval or parse errors.
 
-    On a fetch failure, robots.txt is assumed to ALLOW (the permissive
-    default per RFC 9309 §2.1: "if the crawler cannot retrieve the
-    robots.txt, it may assume it is allowed"). We log the failure but
-    do not block.
+    If a site's robots.txt cannot be read, the collector refuses to crawl
+    that host until its access policy can be checked.
     """
     def __init__(self, user_agent: str):
         self.user_agent = user_agent
         self._cache: Dict[str, "urllib.robotparser.RobotFileParser"] = {}
+        self._unavailable: set[str] = set()
 
     def _parser_for(self, host_root: str) -> "urllib.robotparser.RobotFileParser":
         if host_root in self._cache:
@@ -88,9 +89,8 @@ class RobotsCache:
         try:
             rp.read()
         except Exception:
-            # Permissive default: leave the parser as-is; urllib.robotparser
-            # treats an unread robots.txt as "allow all" by default.
-            pass
+            # Fail closed: an unavailable policy file is not permission to crawl.
+            self._unavailable.add(host_root)
         self._cache[host_root] = rp
         return rp
 
@@ -98,10 +98,12 @@ class RobotsCache:
         parsed = urllib.parse.urlparse(url)
         host_root = f"{parsed.scheme}://{parsed.netloc}"
         rp = self._parser_for(host_root)
+        if host_root in self._unavailable:
+            return False, "robots.txt unavailable; refusing to crawl (fail-closed)"
         try:
             ok = rp.can_fetch(self.user_agent, url)
         except Exception:
-            return True, "robots.txt unreadable; default-allow"
+            return False, "robots.txt unreadable; refusing to crawl (fail-closed)"
         return ok, ("allowed" if ok else "disallowed by robots.txt")
 
 
@@ -147,7 +149,7 @@ class Fetcher:
         cap = float(self.settings.get("retry_backoff_cap", 60.0))
         max_retry = int(self.settings.get("retry_max", 3))
         timeout = float(self.settings.get("request_timeout", 20.0))
-        headers = {"User-Agent": self.user_agent}
+        headers = {"User-Agent": self.user_agent, "Accept-Encoding": "gzip, deflate"}
         if extra_headers:
             headers.update(extra_headers)
         last_err = ""
@@ -158,6 +160,14 @@ class Fetcher:
                 else:
                     status, body, hdrs, final_url = _urllib_fetch(
                         url, headers, timeout, allow_binary)
+                # urllib does not transparently decode gzip/deflate. Decode
+                # before JSON/HTML parsing so compressed API bodies are usable.
+                if not allow_binary and body:
+                    body, decode_error = _decode_content(body, hdrs)
+                    if decode_error:
+                        return FetchResult(url=url, status=status, body=b"",
+                                           headers=hdrs, final_url=final_url,
+                                           kind="error", error=decode_error)
                 # 5xx / 429 -> retry
                 if status in (429, 500, 502, 503, 504) and attempt < max_retry:
                     last_err = f"HTTP {status}"
@@ -212,9 +222,9 @@ class Fetcher:
         return FetchResult(url=url, status=0, error=last_err, kind="error")
 
     def download(self, url: str, dest: Path, *, rate_per_min: int = 6,
-                 max_bytes: int = 524288000) -> FetchResult:
+                 max_bytes: int = 524288000, progress=None) -> FetchResult:
         """Download a binary file to ``dest``. Honors rate limit and
-        robots.txt. Returns a FetchResult with body=b"" on success."""
+        robots.txt. Optional progress callback receives (bytes_read, total_bytes)."""
         allowed, reason = self.robots.allowed(url)
         if not allowed:
             return FetchResult(url=url, status=0, kind="robots_blocked",
@@ -225,6 +235,8 @@ class Fetcher:
             req = urllib.request.Request(url, headers={"User-Agent": self.user_agent})
             with urllib.request.urlopen(req, timeout=float(self.settings.get("request_timeout", 20.0))) as resp:
                 total = 0
+                content_length = resp.headers.get("Content-Length")
+                total_expected = int(content_length) if content_length and content_length.isdigit() else 0
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 with open(dest, "wb") as f:
                     while True:
@@ -239,6 +251,10 @@ class Fetcher:
                                               kind="error",
                                               error=f"exceeded max_bytes={max_bytes}")
                         f.write(chunk)
+                        if progress is not None and (total % (1024 * 1024) < len(chunk)):
+                            progress(total, total_expected)
+                if progress is not None:
+                    progress(total, total_expected or total)
                 return FetchResult(url=url, status=resp.status, kind="ok",
                                    final_url=resp.url)
         except urllib.error.HTTPError as e:
@@ -263,6 +279,26 @@ def _urllib_fetch(url: str, headers: Dict[str, str], timeout: float,
             body = body[:10 * 1024 * 1024]
         hdrs = {k: v for k, v in resp.headers.items()}
         return resp.status, body, hdrs, resp.url
+
+
+def _decode_content(body: bytes, headers: Dict[str, str]):
+    """Decode HTTP content encodings used by APIs such as Stack Exchange."""
+    import gzip
+    import zlib
+    encoding = (headers.get("Content-Encoding") or headers.get("content-encoding") or "").lower().strip()
+    if not encoding or encoding == "identity":
+        return body, ""
+    try:
+        if encoding == "gzip":
+            return gzip.decompress(body), ""
+        if encoding == "deflate":
+            try:
+                return zlib.decompress(body), ""
+            except zlib.error:
+                return zlib.decompress(body, -zlib.MAX_WBITS), ""
+        return b"", f"unsupported HTTP Content-Encoding: {encoding}"
+    except (OSError, zlib.error) as exc:
+        return b"", f"could not decode HTTP Content-Encoding {encoding}: {exc}"
 
 
 def _looks_like_login_wall(body: bytes) -> bool:

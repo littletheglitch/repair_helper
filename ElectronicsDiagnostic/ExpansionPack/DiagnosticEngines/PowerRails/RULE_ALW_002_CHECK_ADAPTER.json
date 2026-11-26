@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_ALW_002_CHECK_ADAPTER",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT vin_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the adapter/battery voltage reaching the standby controller's VIN. Confirm the adapter itself is good and the DC jack / input MOSFETs are passing it.",
+      "measure": {
+        "what": "Adapter input voltage at the standby controller VIN",
+        "where": "Standby controller VIN pin or the main input inductor pad",
+        "instrument": "DMM DC volts",
+        "expected": "Adapter nominal (typically 19-20 V) OR battery nominal (typically 12.6 V for 3S Li-Ion).",
+        "safety": "Adapter rails can carry 19 V at several amps. Probe carefully; a slip can short to ground and burn the probe."
+      },
+      "interpretations": [
+        {
+          "if_result": "Adapter voltage present at VIN",
+          "then": "Input supply is good. Proceed to check standby controller VCC (logic supply).",
+          "set_facts": [
+            "vin_present=True"
+          ],
+          "next_rule": "RULE_ALW_003_CHECK_CONTROLLER_VCC"
+        },
+        {
+          "if_result": "Adapter voltage missing at VIN",
+          "then": "Adapter / DC jack / input MOSFET / fuse path is open. Check the DC jack voltage first, then the input fuse, then the input MOSFET gate drive. A dead charger IC can keep the input MOSFET off.",
+          "set_facts": [
+            "vin_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need the standby controller datasheet for VIN pin and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

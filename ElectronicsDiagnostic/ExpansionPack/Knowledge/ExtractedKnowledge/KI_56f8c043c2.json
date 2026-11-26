@@ -1,0 +1,20 @@
+{
+  "item_id": "KI_56f8c043c2",
+  "title": "Buck",
+  "source_title": "Buck",
+  "source_author": "TI",
+  "source_edition": "",
+  "source_publication_date": "",
+  "source_page_or_section": "",
+  "source_url": "https://ti.com",
+  "local_source_reference": "",
+  "extraction_status": "extracted",
+  "verification_status": "unverified",
+  "category": "app_note",
+  "technical_classification": "",
+  "content_text": "buck converter design",
+  "tags": [
+    "buck"
+  ],
+  "extracted_at_utc": "2026-11-25T05:14:35+00:00"
+}

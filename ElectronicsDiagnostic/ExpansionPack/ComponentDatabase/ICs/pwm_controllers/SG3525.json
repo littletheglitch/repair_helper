@@ -1,0 +1,125 @@
+{
+  "record_id": "IC_ON_SG3525",
+  "part_number": "SG3525",
+  "manufacturer": "ON Semiconductor / Microsemi (originally Silicon General)",
+  "manufacturer_short": "ON",
+  "category": "pwm_controller",
+  "package": "DIP-16 / SOIC-16",
+  "pin_count": 16,
+  "pinout": {
+    "1": "INV INPUT (-)",
+    "2": "NONINV INPUT (+)",
+    "3": "SYNC",
+    "4": "OSC OUTPUT",
+    "5": "CT",
+    "6": "RT",
+    "7": "DISCHARGE",
+    "8": "SOFT START",
+    "9": "COMPENSATION",
+    "10": "SHUTDOWN",
+    "11": "OUTPUT A",
+    "12": "GROUND",
+    "13": "VC (output stage supply)",
+    "14": "OUTPUT B",
+    "15": "VCC (supply)",
+    "16": "VREF (5.1V)"
+  },
+  "pin_functions": [
+    {
+      "name": "error_amp",
+      "function": "error_amp",
+      "pin": 1
+    },
+    {
+      "name": "sync",
+      "function": "sync",
+      "pin": 2
+    },
+    {
+      "name": "oscillator",
+      "function": "oscillator",
+      "pin": 3
+    },
+    {
+      "name": "soft_start",
+      "function": "soft_start",
+      "pin": 4
+    },
+    {
+      "name": "shutdown",
+      "function": "shutdown",
+      "pin": 5
+    },
+    {
+      "name": "output_a",
+      "function": "output_a",
+      "pin": 6
+    },
+    {
+      "name": "output_b",
+      "function": "output_b",
+      "pin": 7
+    },
+    {
+      "name": "vcc",
+      "function": "vcc",
+      "pin": 8
+    },
+    {
+      "name": "vref",
+      "function": "vref",
+      "pin": 9
+    }
+  ],
+  "electrical_characteristics": {
+    "switching_frequency_khz": [
+      1
+    ],
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": 8.0,
+        "max": 35.0,
+        "typ": null
+      },
+      "vref_v": 5.1,
+      "max_duty_cycle_pct": 49,
+      "output_drive_a": {
+        "typ": 0.5,
+        "peak": null,
+        "note": "Totem-pole, ~0.5A per output"
+      },
+      "control_mode": "voltage_mode"
+    }
+  },
+  "typical_applications": [
+    "Push-pull and half-bridge SMPS",
+    "DC-DC converters with transformer isolation",
+    "Inverter front-ends"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Push-pull SMPS with SG3525",
+      "topology": "push_pull",
+      "description": "Two complementary outputs drive a push-pull transformer primary. Soft-start ramps duty. Shutdown pin for protection.",
+      "external_components": [
+        "RT/CT timing",
+        "soft-start cap",
+        "error-amp compensation",
+        "gate-drive transformers/transistors"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.onsemi.com/pub/Collateral/SG3525A-D.pdf",
+  "datasheet_source": "ON Semiconductor SG3525A datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Industry-standard voltage-mode push-pull PWM. 16-pin. Vref 5.1V. Max duty 49% per output (push-pull).",
+  "replacement_notes": "Not pin-compatible with TL494 (different pinout). SG3525A is the common revision. Substituting TL494 changes pinout AND control architecture.",
+  "tags": [
+    "pwm",
+    "voltage_mode",
+    "push_pull",
+    "16-pin"
+  ],
+  "schema_version": "1.0.0"
+}

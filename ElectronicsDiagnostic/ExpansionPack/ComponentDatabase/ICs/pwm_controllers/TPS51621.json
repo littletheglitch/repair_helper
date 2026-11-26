@@ -1,0 +1,104 @@
+{
+  "record_id": "IC_TI_TPS51621",
+  "part_number": "TPS51621",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "pwm_controller",
+  "package": "VQFN (RHA) 40-pin",
+  "pin_count": 40,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 4.5,
+      "max": 28.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 0.25,
+      "max": null,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VIN_v": 28.0,
+      "VDD_v": 6.0,
+      "note": "Absolute maximum ratings per TPS51621 datasheet."
+    },
+    "operating_conditions": {
+      "VIN_v": "4.5 to 24",
+      "switching_frequency_khz_range": "300 to 970 (programmable)"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      300,
+      970
+    ]
+  },
+  "typical_applications": [
+    "Laptop CPU core VRM (Intel IMVP-7 / IMVP-8)",
+    "Multi-phase buck for high-current core rails"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "2-phase CPU core VRM",
+      "topology": "multi_phase_buck",
+      "description": "Dual-phase synchronous buck with TI proprietary D-CAP+ control.",
+      "external_components": [
+        "2x high-side MOSFET",
+        "2x low-side MOSFET",
+        "output inductors",
+        "feedback divider",
+        "compensation"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Controller power input from battery/adapter rail.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VDD",
+      "description": "Internal logic supply, typically 5 V.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN/VMON",
+      "description": "Enable / voltage monitor.",
+      "pin_numbers": []
+    },
+    {
+      "function": "FB",
+      "description": "Feedback sense input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PGOOD",
+      "description": "Power-good open-drain output.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PWM1/PWM2",
+      "description": "PWM drive outputs to MOSFET drivers.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps51621.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part number, manufacturer, package, voltage ranges, and topology verified from TI datasheet index. Pin numbers intentionally left empty (verify against the specific datasheet revision before board-level work).",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "CPU VRM controllers are tightly tied to the CPU platform's IMVP profile. Do NOT assume interchangeability across controllers without matching the IMVP version and GPIO/SMbus mapping.",
+  "tags": [
+    "cpu_vrm",
+    "imvp",
+    "multi_phase",
+    "d-cap"
+  ],
+  "schema_version": "1.0.0"
+}

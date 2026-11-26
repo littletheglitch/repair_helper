@@ -1,0 +1,117 @@
+{
+  "record_id": "IC_TI_TPS51125",
+  "part_number": "TPS51125",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "buck_controller",
+  "package": "QFN-24 (4x4 mm)",
+  "pin_count": 24,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "voltage_supply",
+      "function": "voltage_supply",
+      "pin": 1
+    },
+    {
+      "name": "smbus",
+      "function": "smbus",
+      "pin": 2
+    },
+    {
+      "name": "enable",
+      "function": "enable",
+      "pin": 3
+    },
+    {
+      "name": "feedback",
+      "function": "feedback",
+      "pin": 4
+    },
+    {
+      "name": "soft_start",
+      "function": "soft_start",
+      "pin": 5
+    },
+    {
+      "name": "current_sense",
+      "function": "current_sense",
+      "pin": 6
+    },
+    {
+      "name": "gate_drive_hi",
+      "function": "gate_drive_hi",
+      "pin": 7
+    },
+    {
+      "name": "gate_drive_lo",
+      "function": "gate_drive_lo",
+      "pin": 8
+    },
+    {
+      "name": "pgood",
+      "function": "pgood",
+      "pin": 9
+    }
+  ],
+  "electrical_characteristics": {
+    "output_voltage_range_v": {
+      "min": 0.7,
+      "max": 5.5,
+      "typ": null,
+      "adjustable": true,
+      "note": "Two independent bucks; output set by feedback divider"
+    },
+    "switching_frequency_khz": [
+      300
+    ],
+    "quiescent_current_ma": null,
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": 4.5,
+        "max": 28.0,
+        "typ": null,
+        "note": "VIN for the controller supply"
+      },
+      "control_mode": "D-CAP (current-mode-like, no external compensation)",
+      "protection_features": [
+        "OCP",
+        "OVP",
+        "UVLO",
+        "thermal shutdown"
+      ]
+    }
+  },
+  "typical_applications": [
+    "Laptop 3.3V/5V system rails (dual buck)",
+    "Notebook chipset power"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Dual buck for 3.3V + 5V system rails",
+      "topology": "dual_synchronous_buck",
+      "description": "Two independent synchronous bucks from a single VIN. D-CAP mode for fast transient response. SMBus for Vout trim.",
+      "external_components": [
+        "2x inductor",
+        "2x current-sense resistor",
+        "feedback dividers",
+        "soft-start caps",
+        "MOSFETs (internal or external)"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps51125.pdf",
+  "datasheet_source": "Texas Instruments TPS51125 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "QFN-24 dual buck. VIN 4.5-28V. D-CAP mode. SMBus-programmable output. Pin-compatible within TPS5112x family but register maps differ.",
+  "replacement_notes": "TPS51125 vs TPS51123/TPS51124: pin-compatible variants but SMBus register addresses may differ — EC firmware may break. Verify the EC firmware supports the candidate.",
+  "tags": [
+    "buck_controller",
+    "dual",
+    "laptop",
+    "smbus",
+    "qfn24"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,51 @@
+{
+  "circuit_id": "CCT_comparator",
+  "name": "Comparator circuit",
+  "description": "Open-loop amplifier that compares two inputs and drives a logic output. Often open-collector/open-drain with external pull-up.",
+  "topology": "Comparator + reference + pull-up",
+  "main_components": [
+    "comparator IC",
+    "reference (divider or ref IC)",
+    "pull-up resistor"
+  ],
+  "input": "Two analog inputs",
+  "output": "Logic output (high/low)",
+  "expected_signal_behavior": "Output swings rail-to-rail (with pull-up); switching threshold set by reference.",
+  "common_failure_modes": [
+    {
+      "mode": "no_switching",
+      "description": "comparator dead, ref drift"
+    },
+    {
+      "mode": "stuck_high",
+      "description": "pull-up missing, output shorted high"
+    },
+    {
+      "mode": "stuck_low",
+      "description": "output shorted low"
+    },
+    {
+      "mode": "chattering",
+      "description": "noise at threshold, no hysteresis"
+    }
+  ],
+  "diagnostic_measurements": [
+    "comparator supplies",
+    "output voltage",
+    "input voltages",
+    "reference voltage"
+  ],
+  "possible_fault_locations": [
+    "comparator IC",
+    "reference divider",
+    "pull-up resistor"
+  ],
+  "recommended_next_tests": [
+    "check supplies",
+    "check inputs vs reference",
+    "check pull-up voltage",
+    "add hysteresis if chattering"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

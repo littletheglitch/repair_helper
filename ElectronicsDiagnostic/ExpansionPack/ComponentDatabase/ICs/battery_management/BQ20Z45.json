@@ -1,0 +1,87 @@
+{
+  "record_id": "IC_TI_BQ20Z45",
+  "part_number": "BQ20Z45",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "battery_management_ic",
+  "package": "TSSOP-30",
+  "pin_count": 30,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 6.0,
+      "max": 25.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "PACK_v": 25.0
+    },
+    "operating_conditions": {
+      "cells": "2S to 4S Li-Ion pack",
+      "interface": "SMBus 1.1"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Smart battery pack fuel gauge and protection",
+    "Notebook battery pack (2S-4S)"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Pack-side gas gauge + protector",
+      "topology": "battery_management",
+      "description": "Drives 2 or 3 protection FETs and coulomb counter in the battery pack.",
+      "external_components": [
+        "protection MOSFETs",
+        "current sense resistor",
+        "thermistors",
+        "cell taps"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "PACK+/PACK-",
+      "description": "Pack terminal sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "SRN/SRP",
+      "description": "Coulomb counter sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "DSG/CHG",
+      "description": "Discharge / charge FET gate drives.",
+      "pin_numbers": []
+    },
+    {
+      "function": "HDQ/SMBC/SMBD",
+      "description": "1-wire HDQ or SMBus comms.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/bq20z45-r1.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part and family verified. Detailed register map and pin map must be confirmed against the live datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Pack-side gas gauges carry programmed chemistry/flash data; replacement requires matching the firmware image and protection profile.",
+  "tags": [
+    "gas_gauge",
+    "smbus",
+    "pack_protection"
+  ],
+  "schema_version": "1.0.0"
+}

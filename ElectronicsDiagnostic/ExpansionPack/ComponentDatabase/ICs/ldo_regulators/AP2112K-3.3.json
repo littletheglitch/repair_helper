@@ -1,0 +1,67 @@
+{
+  "record_id": "IC_DIO_AP2112K33",
+  "part_number": "AP2112K-3.3",
+  "manufacturer": "Diodes Incorporated / BCD",
+  "manufacturer_short": "Diodes",
+  "category": "ldo_regulator",
+  "package": "SOT-23-5",
+  "pin_count": 5,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "vin",
+      "function": "vin",
+      "pin": 1
+    },
+    {
+      "name": "vout",
+      "function": "vout",
+      "pin": 2
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 3
+    },
+    {
+      "name": "en",
+      "function": "en",
+      "pin": 4
+    },
+    {
+      "name": "bypass",
+      "function": "bypass",
+      "pin": 5
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": null,
+      "max": 6.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.3,
+      "max": 3.3,
+      "typ": 3.3,
+      "adjustable": false
+    },
+    "operating_conditions": {
+      "output_current_a": 0.6,
+      "quiescent_current_ua": 55.0,
+      "output_accuracy_pct": 1.0,
+      "dropout_mv": null
+    }
+  },
+  "typical_applications": [],
+  "datasheet_url": "https://www.diodes.com/assets/Datasheets/AP2112.pdf",
+  "datasheet_source": "Diodes Incorporated / BCD AP2112K-3.3 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "3.3V LDO, 600mA, SOT-23-5. Low-cost, popular in consumer electronics.",
+  "replacement_notes": "",
+  "tags": [
+    "ldo"
+  ],
+  "schema_version": "1.0.0"
+}

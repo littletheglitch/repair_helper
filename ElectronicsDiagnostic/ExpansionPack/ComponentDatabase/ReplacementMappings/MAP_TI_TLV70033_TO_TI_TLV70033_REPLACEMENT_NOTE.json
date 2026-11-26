@@ -1,0 +1,47 @@
+{
+  "mapping_id": "MAP_TI_TLV70033_TO_TI_TLV70033_REPLACEMENT_NOTE",
+  "original_part": "TLV70033",
+  "candidate_part": "TLV74333",
+  "component_type": "IC",
+  "classification": "UNKNOWN",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "unknown",
+      "note": "TLV74333 is in the TLV743 family; package options overlap with TLV700 but exact package code for the candidate was not verified against a datasheet in this build."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "unknown",
+      "note": "Not verified."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "unknown",
+      "note": "Not verified."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "unknown",
+      "note": "Not verified."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "unknown",
+      "note": "Not verified."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/tlv700.pdf",
+    "candidate": "https://www.ti.com/product/TLV743"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "Texas Instruments product page (datasheet not opened during this build)"
+  },
+  "verification_status": "unknown",
+  "verification_notes": "Example of an UNKNOWN mapping: a candidate was identified by family resemblance but its datasheet was not consulted, so no classification is asserted. Replace with a verified mapping before relying on it.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

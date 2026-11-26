@@ -1,0 +1,64 @@
+{
+  "record_id": "MOSFET_VISHAY_SI4442DY",
+  "part_number": "Si4442DY",
+  "manufacturer": "Vishay Siliconix",
+  "manufacturer_short": "Vishay",
+  "channel_type": "N-channel",
+  "package": "SO-8",
+  "pin_count": 8,
+  "pinout": {
+    "drain": "pins 5,6,7,8 + exposed pad (on variants with pad)",
+    "source": "pins 1,2,3",
+    "gate": "pin 4",
+    "notes": "Classic SO-8 footprint — pin 4 gate, pins 1/2/3 source, pins 5/6/7/8 drain."
+  },
+  "vds_v": 30.0,
+  "id_a": 12.0,
+  "id_conditions": "T_C=25 C, V_GS=10 V.",
+  "rds_on_mohm": 7.5,
+  "rds_on_conditions": {
+    "vgs_v": 10,
+    "id_a": 12
+  },
+  "vgs_th_v": 2.0,
+  "vgs_max_v": 20.0,
+  "gate_charge_nc": 14.0,
+  "gate_charge_conditions": {
+    "vds_v": 15,
+    "vgs_v": 10,
+    "id_a": 12
+  },
+  "power_dissipation_w": 2.5,
+  "thermal": {
+    "r_theta_ja_c_per_w": 50.0,
+    "r_theta_jc_c_per_w": 15.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "switching_characteristics": {
+    "turn_on_delay_ns": 12.0,
+    "turn_off_delay_ns": 30.0,
+    "rise_time_ns": 70.0,
+    "fall_time_ns": 40.0
+  },
+  "technology": "Trench",
+  "typical_applications": [
+    "Buck converter low-side switch",
+    "5 V / 3.3 V load switch",
+    "Charger input MOSFET (with proper VDS margin)"
+  ],
+  "datasheet_url": "https://www.vishay.com/docs/71205/71205.pdf",
+  "datasheet_source": "Vishay Siliconix official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Electrical ratings verified against Vishay datasheet. NOTE: this is NOT a logic-level FET — RDS_on specified at VGS=10V. Driving from a 5V or lower gate will not fully enhance the FET.",
+  "replacement_notes": "Not logic-level. Replacement candidates must match the gate-drive voltage of the controller: a 5V-driven replacement MUST be logic-level (RDS_on specified at VGS=4.5V).",
+  "tags": [
+    "low_side",
+    "buck",
+    "so8"
+  ],
+  "schema_version": "1.0.0"
+}

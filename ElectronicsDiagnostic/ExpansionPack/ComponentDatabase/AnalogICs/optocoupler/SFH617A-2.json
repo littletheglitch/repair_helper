@@ -1,0 +1,46 @@
+{
+  "record_id": "AIC_VISHAY_SFH617A",
+  "part_number": "SFH617A-2",
+  "manufacturer": "Vishay (formerly Infineon)",
+  "manufacturer_short": "Vishay",
+  "category": "optocoupler",
+  "package": "DIP-4 / SMD-4",
+  "pin_count": 4,
+  "pinout": {
+    "1": "Anode (LED+)",
+    "2": "Cathode (LED-)",
+    "3": "Emitter",
+    "4": "Collector",
+    "notes": "Standard phototransistor optocoupler pinout."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": null,
+      "max": 70.0
+    },
+    "supply_current_ma": null,
+    "ctr_min": 50.0,
+    "isolation_voltage_vrms": 5000,
+    "propagation_delay_ns": 3000,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 110
+    }
+  },
+  "typical_applications": [
+    "SMPS feedback (across isolation barrier)",
+    "Galvanic isolation of control signals"
+  ],
+  "datasheet_url": "https://www.vishay.com/docs/83740/sfh617a.pdf",
+  "datasheet_source": "Vishay official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Phototransistor optocoupler. CTR_min=50% for the -2 rank. Isolation 5000 Vrms. Pinout verified.",
+  "replacement_notes": "Optocoupler replacement MUST match: CTR_min (rank suffix), isolation voltage, propagation delay (for fast loops), and pinout. SMPS feedback loops are tuned for a specific CTR; a wrong rank will detune the loop.",
+  "tags": [
+    "optocoupler",
+    "phototransistor",
+    "smps_feedback"
+  ],
+  "schema_version": "1.0.0"
+}

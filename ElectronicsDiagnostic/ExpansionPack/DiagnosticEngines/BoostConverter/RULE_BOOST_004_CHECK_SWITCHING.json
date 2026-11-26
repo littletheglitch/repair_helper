@@ -1,0 +1,44 @@
+{
+  "rule_id": "RULE_BOOST_004_CHECK_SWITCHING",
+  "topology": "boost_converter",
+  "applies_to_rail_families": [
+    "BOOST_GENERIC"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND en_present AND NOT switching_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Probe the switching node (junction of input, inductor, switch pin, output diode anode).",
+      "measure": {
+        "what": "Boost switching node waveform",
+        "where": "Inductor output / switch pin / diode anode",
+        "instrument": "Oscilloscope 100 MHz, 10x probe, ground spring",
+        "expected": "Square wave swinging between ~0 V and (Vout + Vdiode).",
+        "safety": "Boost switch nodes can ring high; 10x probe essential."
+      },
+      "interpretations": [
+        {
+          "if_result": "Switching present",
+          "then": "Boost is switching. Proceed to check output diode + feedback.",
+          "set_facts": [
+            "switching_present=True"
+          ],
+          "next_rule": "RULE_BOOST_005_CHECK_DIODE_FB"
+        },
+        {
+          "if_result": "No switching",
+          "then": "Boost IC not running despite good VIN/EN. Likely dead; verify SS/ILIM pins not shorted first.",
+          "set_facts": [
+            "switching_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need boost IC datasheet for switching frequency and pinout."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

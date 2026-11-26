@@ -1,0 +1,23 @@
+{
+  "item_id": "KI_206cd1b106",
+  "title": "Test",
+  "source_title": "Test",
+  "source_author": "X",
+  "source_edition": "",
+  "source_publication_date": "",
+  "source_page_or_section": "",
+  "source_url": "https://example.com",
+  "local_source_reference": "",
+  "extraction_status": "extracted",
+  "verification_status": "unverified",
+  "category": "app_note",
+  "technical_classification": "buck",
+  "content_text": "buck converter",
+  "tags": [],
+  "source_sha256": "",
+  "source_mime_type": "",
+  "extraction_method": "caller_supplied_text",
+  "extraction_warnings": [],
+  "source_image_references": [],
+  "extracted_at_utc": "2026-11-26T04:26:41+00:00"
+}

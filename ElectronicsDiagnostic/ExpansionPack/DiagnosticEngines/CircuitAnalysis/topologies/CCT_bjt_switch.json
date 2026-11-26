@@ -1,0 +1,51 @@
+{
+  "circuit_id": "CCT_bjt_switch",
+  "name": "BJT switching circuit",
+  "description": "BJT used as on/off switch. Saturated when on (VCE_sat ~0.2V); cutoff when off.",
+  "topology": "BJT + base resistor + load",
+  "main_components": [
+    "BJT",
+    "base resistor",
+    "base pull-down",
+    "flyback diode (for inductive load)"
+  ],
+  "input": "Base drive signal",
+  "output": "Switched load current",
+  "expected_signal_behavior": "When on: VCE_sat ~0.2 V; when off: VCE = supply. Base current must exceed Ic/hFE_min for saturation.",
+  "common_failure_modes": [
+    {
+      "mode": "stuck_on",
+      "description": "base drive high, BJT shorted C-E"
+    },
+    {
+      "mode": "stuck_off",
+      "description": "base drive low, base resistor open"
+    },
+    {
+      "mode": "not_saturating",
+      "description": "base current insufficient"
+    },
+    {
+      "mode": "overheating",
+      "description": "not saturated, dissipating (VCE * Ic)"
+    }
+  ],
+  "diagnostic_measurements": [
+    "base voltage",
+    "collector voltage",
+    "emitter voltage",
+    "VCE when on"
+  ],
+  "possible_fault_locations": [
+    "BJT",
+    "base resistor",
+    "flyback diode"
+  ],
+  "recommended_next_tests": [
+    "check base drive",
+    "check VCE_sat",
+    "verify base current > Ic/hFE_min"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

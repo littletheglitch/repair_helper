@@ -1,0 +1,56 @@
+{
+  "rule_id": "RULE_BUCK_001_RESISTANCE_FIRST",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured",
+    "notes": "Rail is reported missing and resistance has not yet been measured. Always start with resistance-to-ground with power disconnected."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect all power sources (adapter, battery, coin cell). Wait 30 s for rails to discharge.",
+      "measure": {
+        "what": "Resistance from rail to ground",
+        "where": "Rail test point or output inductor pad",
+        "instrument": "DMM in resistance mode (200 ohm range first, then 2 kOhm)",
+        "expected": "Topology-dependent: a healthy buck output is typically >100 ohm to ground; <10 ohm indicates a hard short. Compare with a known-good board if available.",
+        "safety": "Capacitors must be fully discharged before measuring; never measure resistance on a powered rail."
+      },
+      "interpretations": [
+        {
+          "if_result": "Resistance < 10 ohm",
+          "then": "Hard short on the rail. Do NOT re-apply power. Hunt the shorted component (output cap, low-side FET, load IC) before any further diagnosis.",
+          "set_facts": [
+            "rail_short=True"
+          ],
+          "next_rule": "RULE_BUCK_010_SHORTED_RAIL"
+        },
+        {
+          "if_result": "Resistance 10-100 ohm",
+          "then": "Marginal / soft short. Could be a partially failed FET, low-impedance load, or just the normal rail characteristic. Compare to a known-good board.",
+          "set_facts": [
+            "rail_short=False",
+            "rail_resistance_marginal=True"
+          ],
+          "next_rule": "RULE_BUCK_002_CHECK_INPUT_SUPPLY"
+        },
+        {
+          "if_result": "Resistance > 100 ohm",
+          "then": "No short. Proceed to check input supply.",
+          "set_facts": [
+            "rail_short=False"
+          ],
+          "next_rule": "RULE_BUCK_002_CHECK_INPUT_SUPPLY"
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

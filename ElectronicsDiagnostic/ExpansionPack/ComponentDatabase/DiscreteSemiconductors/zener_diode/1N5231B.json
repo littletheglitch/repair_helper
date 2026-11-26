@@ -1,0 +1,46 @@
+{
+  "record_id": "DISC_ON_1N5231B",
+  "part_number": "1N5231B",
+  "manufacturer": "onsemi",
+  "manufacturer_short": "onsemi",
+  "category": "zener_diode",
+  "package": "DO-35",
+  "pin_count": 2,
+  "pinout": {
+    "anode": "pin 1",
+    "cathode": "pin 2 (banded)"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 5.1,
+    "vbr_v": 5.1,
+    "vc_v": null,
+    "pp_w": 0.5,
+    "if_avg_a": 0.02,
+    "vf_v": 0.8,
+    "vf_conditions": "IF = 200 mA",
+    "pd_w": 0.5,
+    "thermal_r_ja_c_per_w": 100.0,
+    "operating_temp_range_c": {
+      "min": -65,
+      "max": 175
+    },
+    "vz_v": 5.1,
+    "izt_a": 0.02
+  },
+  "typical_applications": [
+    "5.1V voltage reference",
+    "Clamp / bias"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/1n5221b-d.pdf",
+  "datasheet_source": "onsemi official datasheet (1N52xx family, PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VZ = 5.1V at IZT = 20 mA (now stored in vz_v), Pd = 500 mW verified against the 1N52xx family datasheet. VRRM (=Vz for a Zener) retained in vrrm_v for backward-compat.",
+  "replacement_notes": "Zener voltage tolerance: 'B' suffix = +/-5%, no suffix = +/-10%. Replacement must match VZ AND tolerance for reference applications.",
+  "tags": [
+    "zener",
+    "reference",
+    "5v1"
+  ],
+  "schema_version": "1.0.0"
+}

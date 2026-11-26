@@ -1,0 +1,53 @@
+{
+  "case_id": "SAMPLE_07_EN_PRESENT_NO_SWITCHING",
+  "description": "+1.8V missing; VIN + VCC + EN good, switching measured as absent.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "en",
+      "value": 3.3,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "switching",
+      "value": false,
+      "measured": true
+    }
+  ],
+  "expected_fired_rule": "RULE_FAULT_SWITCHING_ABSENT",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": null,
+  "notes": "No rule fires because the workflow has reached a terminal interpretation: RULE_BUCK_005's interpretation for 'no switching' already told the engineer to suspect a dead controller or a latched fault (check SS/ILIM). The engine surfaces that the workflow is blocked at this measurement combination."
+}

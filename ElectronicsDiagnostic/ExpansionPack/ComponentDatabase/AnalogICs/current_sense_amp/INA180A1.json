@@ -1,0 +1,47 @@
+{
+  "record_id": "AIC_TI_INA180",
+  "part_number": "INA180A1",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "current_sense_amp",
+  "package": "SOT-23-5",
+  "pin_count": 5,
+  "pinout": {
+    "1": "IN+",
+    "2": "GND",
+    "3": "IN-",
+    "4": "V+",
+    "5": "OUT",
+    "notes": "Verify against datasheet; some variants differ."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 2.7,
+      "max": 5.5
+    },
+    "supply_current_ma": 0.26,
+    "bandwidth_mhz": 0.26,
+    "offset_voltage_mv": 0.5,
+    "slew_rate_v_per_us": 2.0,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 125
+    }
+  },
+  "typical_applications": [
+    "Current sensing via shunt resistor",
+    "Over-current detection"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/ina180.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Gain variant A1=20 V/V, A2=50, A3=100, A4=200. Supply range and pinout verified.",
+  "replacement_notes": "INA180 gain is set by the suffix (A1/A2/A3/A4 = 20/50/100/200 V/V). Replacement must match the gain AND the shunt resistor value; otherwise the reading will be wrong.",
+  "tags": [
+    "current_sense",
+    "shunt",
+    "sot23"
+  ],
+  "schema_version": "1.0.0"
+}

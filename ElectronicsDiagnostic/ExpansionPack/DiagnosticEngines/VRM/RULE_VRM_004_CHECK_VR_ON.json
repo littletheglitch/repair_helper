@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_VRM_004_CHECK_VR_ON",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND NOT en_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the VR_ON enable pin. VRM enable is gated by the PCH/EC after earlier rails (especially DDR_VDD, VCCSA) are good.",
+      "measure": {
+        "what": "VR_ON pin voltage",
+        "where": "Controller VR_ON pin (consult datasheet)",
+        "instrument": "DMM DC volts + oscilloscope single-shot",
+        "expected": "Active-high VR_ON asserted high (>2 V) once upstream rails are good.",
+        "safety": "VR_ON is asserted during the power-up sequence; use scope single-shot if DMM shows low."
+      },
+      "interpretations": [
+        {
+          "if_result": "VR_ON high",
+          "then": "Controller is enabled. Proceed to check switching.",
+          "set_facts": [
+            "en_present=True"
+          ],
+          "next_rule": "RULE_VRM_005_CHECK_SWITCHING"
+        },
+        {
+          "if_result": "VR_ON low",
+          "then": "PCH/EC is not asserting VR_ON. Means an earlier rail's PGOOD is missing, or the PCH is held in reset, or sequencing is stuck. Diagnose the missing PGOOD upstream.",
+          "set_facts": [
+            "en_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet and the board sequencing table to know which upstream PGOOD gates VR_ON."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

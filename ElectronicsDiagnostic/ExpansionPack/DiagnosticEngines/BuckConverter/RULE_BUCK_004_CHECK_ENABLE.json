@@ -1,0 +1,55 @@
+{
+  "rule_id": "RULE_BUCK_004_CHECK_ENABLE",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND NOT en_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller's EN pin voltage relative to ground. Most laptop controllers use active-high EN; some use active-low EN#. The polarity is set by the controller part number.",
+      "measure": {
+        "what": "Controller EN pin voltage",
+        "where": "Controller EN pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts or oscilloscope (single-shot, to catch sequencing)",
+        "expected": "Active-high EN: at VIH (typically >2 V) when enabled. Active-low EN#: <0.4 V when enabled.",
+        "safety": "Watch for EN signals that are only asserted during the power-up sequence — use oscilloscope single-shot."
+      },
+      "interpretations": [
+        {
+          "if_result": "EN at enabled level",
+          "then": "Enable is asserted. Proceed to check switching activity.",
+          "set_facts": [
+            "en_present=True"
+          ],
+          "next_rule": "RULE_BUCK_005_CHECK_SWITCHING"
+        },
+        {
+          "if_result": "EN at disabled level",
+          "then": "The EC is not asserting EN. Could be: upstream power-good missing, sequencing stuck earlier, EC firmware fault, or a sensor pulling EN down. Trace the EN signal back to its driver.",
+          "set_facts": [
+            "en_present=False"
+          ]
+        },
+        {
+          "if_result": "EN floating or mid-level",
+          "then": "EN driver is open or tri-stated. Trace the EN net; possible open via or failed pull-up.",
+          "set_facts": [
+            "en_present=False",
+            "en_floating=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for EN pin number and active polarity."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

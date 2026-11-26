@@ -1,0 +1,50 @@
+{
+  "rule_id": "RULE_LDO_010_SHORTED_RAIL",
+  "topology": "ldo",
+  "applies_to_rail_families": [
+    "+VCCRTC",
+    "DDR_VTT",
+    "RAM_VTT_DESKTOP"
+  ],
+  "condition": {
+    "expression": "rail_short"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Current-limited bench supply at the rail's nominal voltage (e.g. 3.0 V for VCCRTC) limited to 100-200 mA. Thermal-scan the LDO output cap, the LDO itself, and the load ICs.",
+      "measure": {
+        "what": "Hot component identification",
+        "where": "LDO output cap, LDO itself, load ICs (RTC, VTT load = DRAM)",
+        "instrument": "Bench supply + thermal camera / finger",
+        "expected": "Shorted component heats up.",
+        "safety": "VCCRTC rails are very low current; 100 mA is plenty. Higher current risks burning the trace."
+      },
+      "interpretations": [
+        {
+          "if_result": "LDO itself heats up",
+          "then": "LDO is shorted input-to-output OR the load is shorted and the LDO is just conducting. Remove LDO and re-measure the output rail resistance to distinguish.",
+          "set_facts": [
+            "faulty_ldo=True"
+          ]
+        },
+        {
+          "if_result": "Output capacitor heats up",
+          "then": "Shorted output capacitor. Replace same value/voltage.",
+          "set_facts": [
+            "faulty_output_cap=True"
+          ]
+        },
+        {
+          "if_result": "Load IC heats up",
+          "then": "Shorted load (PCH RTC pin, DRAM). Board-level write-off unless the IC can be replaced.",
+          "set_facts": [
+            "faulty_load_ic=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

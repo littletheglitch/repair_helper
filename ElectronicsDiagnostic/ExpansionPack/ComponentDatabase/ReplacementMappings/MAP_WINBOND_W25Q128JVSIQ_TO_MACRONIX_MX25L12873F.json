@@ -1,0 +1,51 @@
+{
+  "mapping_id": "MAP_WINBOND_W25Q128JVSIQ_TO_MACRONIX_MX25L12873F",
+  "original_part": "W25Q128JVSIQ",
+  "candidate_part": "MX25L12873F",
+  "component_type": "IC",
+  "classification": "CONDITIONAL",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "match",
+      "note": "Both SOIC-16 300mil for the JVSIQ / 73F suffix."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "conditional",
+      "note": "Standard SPI flash pinout matches for CS#/CLK/IO0-IO3/VCC/GND on SOIC-16, but WP#/HOLD#/RESET# pin positions and active polarity differ between Winbond and Macronix families."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "match",
+      "note": "Both 2.7-3.6V VCC."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "conditional",
+      "note": "Both support standard SPI + Dual + Quad commands. Erase block sizes (4 KB / 32 KB / 64 KB) overlap but command opcodes for 4-byte addressing and QPI mode differ."
+    },
+    {
+      "criterion": "operating_frequency",
+      "verdict": "match",
+      "note": "Both up to 133 MHz."
+    }
+  ],
+  "conditions": [
+    "WP#/HOLD# routing on the board must tolerate the pinout difference (typically WP#=pin 3, HOLD#=pin 7 on Winbond; verify against the Macronix datasheet for the chosen density).",
+    "BIOS image must be reprogrammed for the new chip's command set (especially 4KB erase opcode and QPI entry sequence).",
+    "Boot ROM must not depend on Winbond-specific security registers or unique IDs."
+  ],
+  "datasheet_urls": {
+    "original": "https://www.winbond.com/resource-files/w25q128jv%20revh%2004082019%20plus.pdf",
+    "candidate": "https://www.macronix.com/Lists/Datasheet/Attachments/7404/MX25L12873F,%201.8V-3.3V,%20128Mb,%20v1.2.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Winbond official datasheet",
+    "candidate": "Macronix official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Cross-vendor BIOS flash swaps are common practice but conditional on the WP/HOLD pinout and on reprogramming the BIOS image. Never assume bit-for-bit compatibility without reflashing.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

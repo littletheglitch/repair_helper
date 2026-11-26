@@ -1,0 +1,25 @@
+{
+  "item_id": "KI_f488cc1c5a",
+  "title": "Buck converter design",
+  "source_title": "",
+  "source_author": "TI",
+  "source_edition": "",
+  "source_publication_date": "",
+  "source_page_or_section": "",
+  "source_url": "",
+  "local_source_reference": "",
+  "extraction_status": "pending",
+  "verification_status": "verified",
+  "category": "app_note",
+  "technical_classification": "",
+  "content_text": "A buck converter steps down voltage using an inductor and switch.",
+  "tags": [
+    "buck",
+    "converter"
+  ],
+  "source_sha256": "",
+  "source_mime_type": "",
+  "extraction_method": "",
+  "extraction_warnings": [],
+  "extracted_at_utc": "2026-11-26T04:18:27+00:00"
+}

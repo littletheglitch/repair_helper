@@ -1,0 +1,78 @@
+{
+  "rule_id": "RULE_VOLTAGE_UNSTABLE",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "rail_voltage_unstable AND rail_voltage_in_tolerance",
+    "notes": "Rail voltage is present and nominally in tolerance but unstable (oscillating / drooping). The DC reading is fine but the AC content is excessive. Common causes: output capacitor ESR high (dried electrolytic), feedback compensation network degraded, or load transients the loop cannot track."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Rail voltage is UNSTABLE (in tolerance on the DMM but oscillating on the scope). Measure the output ripple with an oscilloscope (AC-coupled, 20 MHz bandwidth limit) and check the output capacitor ESR.",
+      "measure": {
+        "what": "Output ripple (peak-to-peak mV) and output capacitor ESR",
+        "where": "Output capacitor + terminal to ground (scope); output cap legs (ESR meter or DMM)",
+        "instrument": "Oscilloscope AC-coupled 20MHz BW + ESR meter (or DMM resistance as a rough proxy)",
+        "expected": "Ripple typically <30 mVpp for a buck, <50 mVpp for an LDO. Output cap ESR typically <0.1 ohm for a good polymer/tantalum, <0.5 ohm for aluminium. Values much higher indicate a dried cap.",
+        "safety": "Powered measurement. Use a 10x probe; ground the probe tip to the ground plane near the cap, not at a remote point."
+      },
+      "interpretations": [
+        {
+          "if_result": "Ripple > 100 mVpp AND ESR high",
+          "then": "Output capacitor is degraded (dried electrolytic). Replace with a cap of the same value, voltage rating, AND low ESR (polymer or low-ESR aluminium). Verify ripple drops after replacement.",
+          "set_facts": [
+            "output_cap_degraded=True"
+          ]
+        },
+        {
+          "if_result": "Ripple > 100 mVpp AND ESR normal",
+          "then": "Loop is unstable — likely a feedback compensation cap dried or the wrong compensation. Check the controller's compensation network (Type II/Type III components). This requires the controller datasheet.",
+          "set_facts": [
+            "compensation_fault=True"
+          ],
+          "requires_info": true,
+          "requires_info_note": "Compensation network values are controller-specific; consult the controller datasheet."
+        },
+        {
+          "if_result": "Ripple normal (<30 mVpp)",
+          "then": "The 'unstable' reading may have been a measurement artifact (probe ground loop, aliasing). Re-measure with a short ground spring. If still unstable, the issue may be load transients — capture a single-shot trigger on the transient.",
+          "set_facts": [
+            "measurement_artifact=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0",
+  "priority": 10
+}

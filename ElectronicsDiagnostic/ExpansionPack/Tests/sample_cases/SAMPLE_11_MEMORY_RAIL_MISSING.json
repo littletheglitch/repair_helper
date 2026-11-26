@@ -1,0 +1,18 @@
+{
+  "case_id": "SAMPLE_11_MEMORY_RAIL_MISSING",
+  "description": "DDR_VDD missing on first observation. Controller TPS51224.",
+  "rail_family": "DDR_VDD",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_BUCK_001_RESISTANCE_FIRST",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "Disconnect"
+}

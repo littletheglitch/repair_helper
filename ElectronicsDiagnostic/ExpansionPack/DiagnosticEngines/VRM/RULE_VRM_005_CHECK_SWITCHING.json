@@ -1,0 +1,53 @@
+{
+  "rule_id": "RULE_VRM_005_CHECK_SWITCHING",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND en_present AND NOT switching_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Probe each phase's switching node. Multi-phase VRMs should show staggered switching on each phase.",
+      "measure": {
+        "what": "Per-phase switching node waveforms",
+        "where": "Each phase inductor input pad",
+        "instrument": "Oscilloscope 200 MHz, 10x probe, ground spring",
+        "expected": "All phases switching at the controller's per-phase frequency, staggered by 360/N degrees. Each swings 0 to VRM input voltage.",
+        "safety": "Beware shorting adjacent pads; VRM phases are tightly packed."
+      },
+      "interpretations": [
+        {
+          "if_result": "All phases switching cleanly",
+          "then": "Controller is alive. Proceed to check FB/VID and PGOOD.",
+          "set_facts": [
+            "switching_present=True"
+          ],
+          "next_rule": "RULE_VRM_006_CHECK_FB"
+        },
+        {
+          "if_result": "Some phases switching, some not",
+          "then": "Phase-rotator or specific driver FET is dead. The disabled phase can pull down the rail; isolate by checking each driver's PWM input.",
+          "set_facts": [
+            "switching_present=True",
+            "phase_fault=True"
+          ]
+        },
+        {
+          "if_result": "No switching on any phase",
+          "then": "Controller is not running. Could be a fault latched (OCP/OVP/UVP/thermal). Check the controller's fault registers if accessible; otherwise suspect dead controller.",
+          "set_facts": [
+            "switching_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for phase count, switching frequency and PWM pinout."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

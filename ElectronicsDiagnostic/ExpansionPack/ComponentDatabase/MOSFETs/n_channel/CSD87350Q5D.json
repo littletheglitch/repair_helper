@@ -1,0 +1,64 @@
+{
+  "record_id": "MOSFET_TI_CSD87350",
+  "part_number": "CSD87350Q5D",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "channel_type": "N-channel",
+  "package": "VSON-8 (5x6 mm) PowerLFET",
+  "pin_count": 8,
+  "pinout": {
+    "drain": "pins 1,2,3 (high-side drain) and exposed pad",
+    "source": "pins 4,5,6",
+    "gate": "pin 7 (high-side) / pin 8 (low-side)",
+    "notes": "Dual-die part: high-side + low-side MOSFET in one package; pinout is for the COMBO package."
+  },
+  "vds_v": 25.0,
+  "id_a": 12.0,
+  "id_conditions": "Per die, T_J=25 C; derate above 25 C. Combo part — see datasheet table for high-side vs low-side specs.",
+  "rds_on_mohm": 6.5,
+  "rds_on_conditions": {
+    "vgs_v": 4.5,
+    "id_a": 10
+  },
+  "vgs_th_v": 1.2,
+  "vgs_max_v": 12.0,
+  "gate_charge_nc": 5.4,
+  "gate_charge_conditions": {
+    "vds_v": 15,
+    "vgs_v": 4.5,
+    "id_a": 10
+  },
+  "power_dissipation_w": 2.5,
+  "thermal": {
+    "r_theta_ja_c_per_w": 50.0,
+    "r_theta_jc_c_per_w": 2.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "switching_characteristics": {
+    "turn_on_delay_ns": null,
+    "turn_off_delay_ns": null,
+    "rise_time_ns": null,
+    "fall_time_ns": null
+  },
+  "technology": "TrenchFET PowerBlock (combo high-side + low-side)",
+  "typical_applications": [
+    "Laptop CPU VRM phases",
+    "Buck converter power stage for VCC_CORE"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/csd87350q5d.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VDS, RDS_on, Qg, package and combo topology verified against TI datasheet. Combo part means a single component carries BOTH high-side and low-side FETs — do not treat as a single discrete FET.",
+  "replacement_notes": "Combo PowerBlock parts are electrically equivalent only to another combo part with the same pinout and gate-drive compatibility. Replacing with two discretes requires board layout changes.",
+  "tags": [
+    "vrm",
+    "cpu_power",
+    "combo",
+    "powerblock"
+  ],
+  "schema_version": "1.0.0"
+}

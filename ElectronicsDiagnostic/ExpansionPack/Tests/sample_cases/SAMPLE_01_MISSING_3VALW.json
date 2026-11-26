@@ -1,0 +1,18 @@
+{
+  "case_id": "SAMPLE_01_MISSING_3VALW",
+  "description": "+3VALW missing on a Clevo/Compal board. Technician has just observed the symptom.",
+  "rail_family": "+3VALW",
+  "topology": null,
+  "controller_part": null,
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_ALW_001_RESISTANCE_FIRST",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "Disconnect"
+}

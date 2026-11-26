@@ -1,0 +1,53 @@
+{
+  "circuit_id": "CCT_audio",
+  "name": "Audio circuit",
+  "description": "Codec + amp + coupling caps + speaker/load. Class-AB or Class-D amp typical.",
+  "topology": "Codec + amp + coupling",
+  "main_components": [
+    "audio codec",
+    "amplifier (Class-AB or Class-D)",
+    "coupling caps",
+    "speaker/load"
+  ],
+  "input": "Digital audio (I2S) or analog",
+  "output": "Analog audio to speaker",
+  "expected_signal_behavior": "Output within codec/amp spec; THD+N within spec; no clicks/pops on power-up.",
+  "common_failure_modes": [
+    {
+      "mode": "no_sound",
+      "description": "codec dead, amp dead, coupling cap open"
+    },
+    {
+      "mode": "distorted",
+      "description": "amp clipped, cap dried"
+    },
+    {
+      "mode": "noise",
+      "description": "VDD noise, ground loop"
+    },
+    {
+      "mode": "Class_D_fault",
+      "description": "output filter cap failed"
+    }
+  ],
+  "diagnostic_measurements": [
+    "codec supplies",
+    "amp supplies",
+    "output waveform (scope)",
+    "coupling cap ESR"
+  ],
+  "possible_fault_locations": [
+    "codec",
+    "amplifier",
+    "coupling caps",
+    "output filter (Class-D)"
+  ],
+  "recommended_next_tests": [
+    "check codec/amp supplies",
+    "scope output for clipping",
+    "check coupling caps",
+    "check Class-D output filter"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

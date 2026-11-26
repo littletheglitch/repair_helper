@@ -1,0 +1,55 @@
+{
+  "rule_id": "RULE_BUCK_005_CHECK_SWITCHING",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND en_present AND NOT switching_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Probe the switching node (the junction of high-side drain, low-side drain, and inductor) with an oscilloscope. Also probe the high-side and low-side gate-drive pins.",
+      "measure": {
+        "what": "Switching node voltage waveform + gate-drive waveforms",
+        "where": "Switching node = inductor input pad; gate-drive pins per controller datasheet",
+        "instrument": "Oscilloscope, 100 MHz bandwidth, 10x probe, ground spring",
+        "expected": "Square wave at the controller's switching frequency (typically 300-1500 kHz for laptop bucks), swinging between ~0 V and VIN. Gate-drive pins should show clean transitions.",
+        "safety": "Use a ground spring, not the long alligator clip. Beware shorting adjacent pads with the probe tip."
+      },
+      "interpretations": [
+        {
+          "if_result": "Switching present, clean waveform",
+          "then": "Controller is switching. Proceed to check feedback and output voltage.",
+          "set_facts": [
+            "switching_present=True"
+          ],
+          "next_rule": "RULE_BUCK_006_CHECK_FEEDBACK"
+        },
+        {
+          "if_result": "No switching at all",
+          "then": "Controller is not switching despite VIN/VCC/EN all good. Likely causes: controller dead, soft-start cap shorted, fault flag latched (over-current / thermal). Check the SS/ILIM pins per datasheet before condemning the controller.",
+          "set_facts": [
+            "switching_present=False"
+          ]
+        },
+        {
+          "if_result": "Switching present but distorted or low amplitude",
+          "then": "Gate drive is failing or one FET is open. Check high-side and low-side gate-drive pins individually.",
+          "set_facts": [
+            "switching_present=True",
+            "switching_distorted=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for switching-frequency range and gate-drive pin locations."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,47 @@
+{
+  "mapping_id": "MAP_TI_TLV70033_TO_TOREX_XC6219A332MR",
+  "original_part": "TLV70033",
+  "candidate_part": "XC6219A332MR",
+  "component_type": "IC",
+  "classification": "NOT_RECOMMENDED",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "match",
+      "note": "Both SOT-23-5."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "mismatch",
+      "note": "TLV70033: pin1 VIN, pin2 GND, pin3 EN, pin4 BP, pin5 OUT. XC6219A332MR: pin1 VIN, pin2 VOUT, pin3 GND, pin4 NC, pin5 CE. Output and ground are on different pins."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "conditional",
+      "note": "Both fixed 3.3V with VIN up to 5.5-6V."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "conditional",
+      "note": "TLV70033 200 mA; XC6219 300 mA."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "conditional",
+      "note": "Both active-high enable (EN vs CE)."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/tlv700.pdf",
+    "candidate": "https://www.torexsemi.com/product/linear-ics/ldo-300ma-low-consumption/xc6219/"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "Torex Semiconductor official product page"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Pinout mismatch — VOUT and GND are on different pins. Direct swap will short the input to ground and lift the output. NOT_RECOMMENDED for direct substitution; requires board rework.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

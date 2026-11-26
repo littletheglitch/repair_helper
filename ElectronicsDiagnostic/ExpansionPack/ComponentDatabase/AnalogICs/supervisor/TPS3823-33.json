@@ -1,0 +1,45 @@
+{
+  "record_id": "AIC_TI_TPS3823",
+  "part_number": "TPS3823-33",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "supervisor",
+  "package": "SOT-23-3",
+  "pin_count": 3,
+  "pinout": {
+    "1": "RESET",
+    "2": "GND",
+    "3": "VDD"
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 2.0,
+      "max": 6.0
+    },
+    "supply_current_ma": 0.03,
+    "threshold_v": 2.93,
+    "reset_delay_ms": 200,
+    "propagation_delay_ns": null,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 85
+    }
+  },
+  "typical_applications": [
+    "3.3V microcontroller reset supervisor",
+    "Brown-out detection"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps3823.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Threshold 2.93V (for 3.3V systems), 200 ms reset delay, active-low push-pull RESET output. Suffix -33 = 3.3V; -50 = 5.0V; -18 = 1.8V.",
+  "replacement_notes": "Supervisor replacement MUST match threshold voltage (suffix), reset delay, and output type (push-pull vs open-drain, active-high vs active-low). A wrong-suffix part will hold the CPU in reset or never assert reset.",
+  "tags": [
+    "supervisor",
+    "reset",
+    "3v3",
+    "push_pull"
+  ],
+  "schema_version": "1.0.0"
+}

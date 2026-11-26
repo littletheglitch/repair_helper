@@ -1,0 +1,27 @@
+{
+  "rail_family": "EPS_12V",
+  "description": "EPS 8-pin +12V CPU power input. Dedicated 12V feed to the CPU VRM, separate from the 24-pin ATX_12V. Some boards will not boot without it.",
+  "typical_voltage_v": {
+    "min": 11.4,
+    "typ": 12.0,
+    "max": 12.6,
+    "notes": "Same as ATX_12V; both come from the PSU 12V rail."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_PSU_12V"
+  ],
+  "downstream_rails": [
+    "CPU_VRM_INPUT"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop",
+  "cable_note": "The EPS 8-pin and PCIe 8-pin connectors are keyed differently but a mis-keyed cable can be forced. Verify the cable is the CPU EPS cable, not a PCIe cable, before powering."
+}

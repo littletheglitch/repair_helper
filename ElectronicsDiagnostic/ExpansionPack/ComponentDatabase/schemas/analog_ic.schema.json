@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "analog_ic.schema.json",
+  "title": "Analog IC Record (op-amp / comparator / supervisor / reset / current-sense / protection / gate driver / interface / clock)",
+  "description": "Verified record of an analog or small-signal IC. All electrical specs must be sourced from a manufacturer datasheet.",
+  "type": "object",
+  "required": [
+    "record_id", "part_number", "manufacturer", "category", "package",
+    "pin_count", "verification_status", "datasheet_url",
+    "datasheet_source", "source_date", "schema_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": { "type": "string", "pattern": "^AIC_[A-Z0-9_]+$" },
+    "part_number": { "type": "string", "minLength": 1 },
+    "manufacturer": { "type": "string", "minLength": 1 },
+    "manufacturer_short": { "type": "string" },
+    "category": {
+      "type": "string",
+      "enum": ["op_amp", "comparator", "supervisor", "reset_ic", "current_sense_amp",
+               "protection_ic", "gate_driver", "interface_ic", "clock_generator",
+               "optocoupler", "power_stage"]
+    },
+    "package": { "type": "string", "minLength": 1 },
+    "pin_count": { "type": "integer", "minimum": 1 },
+    "pinout": { "type": "object", "additionalProperties": { "type": "string" } },
+    "electrical_characteristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supply_voltage_range_v": {
+          "type": "object",
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] }
+          }
+        },
+        "supply_current_ma": { "type": ["number", "null"] },
+        "bandwidth_mhz": { "type": ["number", "null"], "description": "Op-amps: GBW." },
+        "slew_rate_v_per_us": { "type": ["number", "null"], "description": "Op-amps." },
+        "offset_voltage_mv": { "type": ["number", "null"], "description": "Op-amps." },
+        "input_bias_current_pa": { "type": ["number", "null"] },
+        "output_current_ma": { "type": ["number", "null"] },
+        "propagation_delay_ns": { "type": ["number", "null"], "description": "Comparators / optocouplers / drivers." },
+        "ctr_min": { "type": ["number", "null"], "description": "Optocoupler current transfer ratio min (%)." },
+        "isolation_voltage_vrms": { "type": ["number", "null"], "description": "Optocouplers / isolated drivers." },
+        "threshold_v": { "type": ["number", "null"], "description": "Supervisors / reset ICs." },
+        "reset_delay_ms": { "type": ["number", "null"], "description": "Reset ICs." },
+        "gate_drive_a": { "type": ["number", "null"], "description": "Gate drivers: peak source/sink." },
+        "maximum_ratings": { "type": "object" },
+        "operating_temp_range_c": {
+          "type": "object",
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] }
+          }
+        }
+      }
+    },
+    "typical_applications": { "type": "array", "items": { "type": "string" } },
+    "datasheet_url": { "type": "string", "format": "uri" },
+    "datasheet_source": { "type": "string", "minLength": 1 },
+    "source_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "verification_status": { "type": "string", "enum": ["verified", "partial", "unknown"] },
+    "verification_notes": { "type": "string" },
+    "replacement_notes": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "schema_version": { "type": "string", "enum": ["1.0.0"] }
+  }
+}

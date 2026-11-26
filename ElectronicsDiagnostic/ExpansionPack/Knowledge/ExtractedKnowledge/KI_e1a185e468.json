@@ -1,0 +1,21 @@
+{
+  "item_id": "KI_e1a185e468",
+  "title": "LDO basics",
+  "source_title": "",
+  "source_author": "community",
+  "source_edition": "",
+  "source_publication_date": "",
+  "source_page_or_section": "",
+  "source_url": "",
+  "local_source_reference": "",
+  "extraction_status": "pending",
+  "verification_status": "unverified",
+  "category": "forum_post",
+  "technical_classification": "",
+  "content_text": "A linear regulator drops voltage via a pass transistor.",
+  "tags": [
+    "ldo",
+    "linear"
+  ],
+  "extracted_at_utc": "2026-11-25T05:57:41+00:00"
+}

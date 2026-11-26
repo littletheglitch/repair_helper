@@ -1,0 +1,109 @@
+{
+  "record_id": "IC_TI_TPS51716",
+  "part_number": "TPS51716",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "buck_controller",
+  "package": "QFN-24 (4x4 mm)",
+  "pin_count": 24,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "voltage_supply",
+      "function": "voltage_supply",
+      "pin": 1
+    },
+    {
+      "name": "smbus",
+      "function": "smbus",
+      "pin": 2
+    },
+    {
+      "name": "enable",
+      "function": "enable",
+      "pin": 3
+    },
+    {
+      "name": "feedback",
+      "function": "feedback",
+      "pin": 4
+    },
+    {
+      "name": "soft_start",
+      "function": "soft_start",
+      "pin": 5
+    },
+    {
+      "name": "gate_drive_hi",
+      "function": "gate_drive_hi",
+      "pin": 6
+    },
+    {
+      "name": "gate_drive_lo",
+      "function": "gate_drive_lo",
+      "pin": 7
+    },
+    {
+      "name": "pgood",
+      "function": "pgood",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "output_voltage_range_v": {
+      "min": 0.3,
+      "max": 3.5,
+      "typ": null,
+      "adjustable": true,
+      "note": "VDDQ for DDR4; SMBus VSET"
+    },
+    "switching_frequency_khz": [
+      500
+    ],
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": 4.5,
+        "max": 28.0,
+        "typ": null
+      },
+      "control_mode": "D-CAP2",
+      "protection_features": [
+        "OCP",
+        "OVP",
+        "UVLO",
+        "thermal shutdown"
+      ]
+    }
+  },
+  "typical_applications": [
+    "Laptop DDR4 VDDQ/VTT rails",
+    "Notebook memory power (newer platforms)"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "DDR4 VDDQ buck with VTT LDO",
+      "topology": "synchronous_buck",
+      "description": "Buck for VDDQ + integrated LDO for VTT (termination). D-CAP2.",
+      "external_components": [
+        "inductor",
+        "feedback divider",
+        "VTT cap"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps51716.pdf",
+  "datasheet_source": "Texas Instruments TPS51716 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "QFN-24 DDR4 memory controller. D-CAP2. NOT pin-compatible with TPS51216 (different pinout despite same DDR use).",
+  "replacement_notes": "Not interchangeable with TPS51216. The '51716' is DDR4-specific; '51216' was DDR3-era.",
+  "tags": [
+    "buck_controller",
+    "laptop",
+    "memory",
+    "ddr4",
+    "smbus",
+    "qfn24"
+  ],
+  "schema_version": "1.0.0"
+}

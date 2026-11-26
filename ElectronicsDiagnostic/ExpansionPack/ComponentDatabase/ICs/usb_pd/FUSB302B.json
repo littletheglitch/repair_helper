@@ -1,0 +1,91 @@
+{
+  "record_id": "IC_ON_FUSB302",
+  "part_number": "FUSB302B",
+  "manufacturer": "onsemi",
+  "manufacturer_short": "onsemi",
+  "category": "usb_pd_controller",
+  "package": "WLCSP-9 / MLP-14",
+  "pin_count": 14,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.7,
+      "max": 5.5,
+      "typ": 3.3
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "VDD_v": 6.0,
+      "VBUS_v": 30.0
+    },
+    "operating_conditions": {
+      "control": "USB PD phy only (no internal power path)",
+      "interface": "I2C"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "USB-C / PD BMC PHY controlled by external MCU/EC",
+    "Chromebook PD front-end"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "PD PHY with external EC",
+      "topology": "usb_pd_phy",
+      "description": "FUSB302 handles CC/BMC; EC runs the policy engine.",
+      "external_components": [
+        "CC1/CC2 ESD",
+        "I2C pull-ups"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "CC1/CC2",
+      "description": "Configuration channel.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VBUS",
+      "description": "VBUS sense input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "SDA/SCL",
+      "description": "I2C.",
+      "pin_numbers": []
+    },
+    {
+      "function": "INT",
+      "description": "Interrupt to EC.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VDD/VBUS",
+      "description": "3.3 V logic / VBUS sense.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/fusb302b-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part family and PD-PHY role verified. Pin-by-pin map must be confirmed against the live datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "FUSB302 is a PHY-only part and needs an external policy engine (EC). Not a replacement for a full PD controller like TPS25750.",
+  "tags": [
+    "usb_pd",
+    "pd_phy",
+    "fusb302"
+  ],
+  "schema_version": "1.0.0"
+}

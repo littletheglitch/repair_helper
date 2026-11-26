@@ -1,0 +1,47 @@
+{
+  "mapping_id": "MAP_TI_BQ24737_TO_TI_BQ24780S",
+  "original_part": "BQ24737",
+  "candidate_part": "BQ24780S",
+  "component_type": "IC",
+  "classification": "NOT_RECOMMENDED",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "conditional",
+      "note": "BQ24737 is QFN-32 5x5; BQ24780S is WQFN-32 3.5x3.5. Same pin count but different outline and land pattern."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "mismatch",
+      "note": "Pin assignments differ between the two families (PROCHOT# and PROCHOT support added on BQ24780S)."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "match",
+      "note": "Both 4.5-24V input range."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "mismatch",
+      "note": "BQ24780S adds PROCHOT#-triggered discharge boost; BQ24737 does not. The EC firmware expects one or the other and will misbehave."
+    },
+    {
+      "criterion": "feedback_topology",
+      "verdict": "match",
+      "note": "Both synchronous buck chargers with current-sense resistor."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/bq24737.pdf",
+    "candidate": "https://www.ti.com/lit/ds/symlink/bq24780s.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "Texas Instruments official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Charger ICs are firmware-tuned via SMBus and the EC firmware depends on the exact part. Even same-family swaps break the chemistry tables and current limit. NOT_RECOMMENDED.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

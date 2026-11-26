@@ -1,0 +1,99 @@
+{
+  "record_id": "IC_TI_TPS51224",
+  "part_number": "TPS51224",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "buck_controller",
+  "package": "WQFN (RTE) 24-pin",
+  "pin_count": 24,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 3.0,
+      "max": 28.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 0.6,
+      "max": 5.5,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VIN_v": 30.0
+    },
+    "operating_conditions": {
+      "switching_frequency_khz_range": "300 / 500 (selectable)"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      300,
+      500
+    ]
+  },
+  "typical_applications": [
+    "Notebook system power: 1.8 V, 1.05 V, 1.2 V rails",
+    "DDR VTT and chipset rails"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Synchronous buck",
+      "topology": "synchronous_buck",
+      "description": "D-CAP2 mode, no external compensation required for typical designs.",
+      "external_components": [
+        "high-side MOSFET",
+        "low-side MOSFET",
+        "inductor",
+        "feedback divider"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Input supply for the high-side driver.",
+      "pin_numbers": []
+    },
+    {
+      "function": "V5IN",
+      "description": "5 V supply for internal logic / low-side driver.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN",
+      "description": "Enable input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "FB",
+      "description": "Feedback sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PGOOD",
+      "description": "Power-good open-drain output.",
+      "pin_numbers": []
+    },
+    {
+      "function": "DRVH/DRVL",
+      "description": "High-side / low-side gate drives.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps51224.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part number, family, package, voltage ranges verified. Pin numbers not enumerated here — confirm on the live datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "D-CAP2 controllers depend on output inductor DCR / sense resistor and the VFB/VREF setting; replacement must match control mode and FB reference.",
+  "tags": [
+    "d-cap2",
+    "system_power",
+    "buck"
+  ],
+  "schema_version": "1.0.0"
+}

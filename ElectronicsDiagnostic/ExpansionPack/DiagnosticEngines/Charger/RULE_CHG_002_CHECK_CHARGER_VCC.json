@@ -1,0 +1,44 @@
+{
+  "rule_id": "RULE_CHG_002_CHECK_CHARGER_VCC",
+  "topology": "charger_input",
+  "applies_to_rail_families": [
+    "ADAPTER_INPUT"
+  ],
+  "condition": {
+    "expression": "input_mosfet_off AND NOT vcc_present",
+    "notes": "Input MOSFET has been confirmed off (voltage present at drain but missing at ACIN) and charger VCC has not been confirmed good. Check the charger's logic supply next."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the charger IC VCC pin (logic supply, typically 3.3 V from +3VALW).",
+      "measure": {
+        "what": "Charger IC VCC pin voltage",
+        "where": "Charger IC VCC pin (consult datasheet)",
+        "instrument": "DMM DC volts",
+        "expected": "3.3 V typical; some chargers derive VCC from ACIN via an internal LDO.",
+        "safety": "Charger IC pins are dense; use fine probes."
+      },
+      "interpretations": [
+        {
+          "if_result": "VCC present",
+          "then": "Charger logic supply is good. Proceed to check charger enable / SMBus state.",
+          "set_facts": [
+            "vcc_present=True"
+          ],
+          "next_rule": "RULE_CHG_003_CHECK_EN"
+        },
+        {
+          "if_result": "VCC missing",
+          "then": "+3VALW is dead. The charger IC has no logic supply and cannot drive the input MOSFET. Diagnose +3VALW first.",
+          "set_facts": [
+            "vcc_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need charger datasheet for VCC pin and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

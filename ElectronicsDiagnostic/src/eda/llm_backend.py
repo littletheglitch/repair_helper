@@ -3,11 +3,9 @@
 A single :class:`Backend` protocol the orchestrator talks to, with
 several concrete implementations:
 
-* :class:`StubBackend` — deterministic, no model. Used by tests and as
-  the fallback when no model is configured. It emits *correct* tool
-  calls for the diagnostic cases it knows and an honest "I don't have
-  enough information" refusal otherwise. This is the upper-bound
-  reference for the benchmark: a perfect tool-caller.
+* :class:`StubBackend` — deterministic, no model. Reserved for tests,
+  explicit development use, and benchmarks. It is never an automatic
+  fallback for a real repair diagnosis.
 * :class:`CloudBackend` — calls an external OpenAI-compatible chat CLI
   (``z-ai chat`` in this sandbox). Used only as a *reference* to prove
   the architecture works with a real model; the target deployment does
@@ -101,14 +99,11 @@ class Backend(Protocol):
 # ---------------------------------------------------------------------------
 
 class StubBackend:
-    """Deterministic backend used by tests and as the no-model fallback.
+    """Deterministic synthetic backend for tests, development, and benchmarks.
 
-    It does not call any model. For a small set of well-known diagnostic
-    shapes it emits the *correct* sequence of tool calls and a final
-    answer grounded in the tool results; for anything else it emits an
-    honest refusal. This makes the orchestrator + tool interface testable
-    without a real model, and gives the benchmark a "perfect tool-caller"
-    reference to compare real models against.
+    It does not call a model and must not be used for real repair diagnosis.
+    For a small set of known shapes it emits canned tool calls, which makes
+    it useful as a deterministic benchmark fixture only.
     """
     name = "stub"
     model = "stub-1.0"
@@ -226,7 +221,8 @@ class ServerRuntime:
 
     # -- discovery -------------------------------------------------------
     def server_path(self) -> Optional[Path]:
-        cfg_path = self.cfg.get("server_path") or self.cfg.get("cli_path")
+        # cli_path is reserved for llama-cli; never launch it as llama-server.
+        cfg_path = self.cfg.get("server_path")
         if cfg_path:
             p = Path(cfg_path)
             if p.exists():
@@ -252,6 +248,14 @@ class ServerRuntime:
         if not p.is_absolute():
             p = config.app_dir(self.cfg.get("model_dir", "Models")) / name
         return p if p.exists() else None
+
+    def is_available(self) -> bool:
+        """Return whether the server executable and GGUF model exist.
+
+        This is a non-starting availability check. The server is launched
+        lazily by chat(), not while displaying backend status.
+        """
+        return self.server_path() is not None and self.model_path() is not None
 
     # -- lifecycle -------------------------------------------------------
     def is_running(self) -> bool:
@@ -390,7 +394,7 @@ class ServerRuntime:
                 f"Model:  {model if model else 'NOT FOUND'}\n"
                 f"Running: {self.is_running()}\n"
                 f"Endpoint: http://{self._host}:{self._port}/v1/chat/completions\n"
-                f"Available: {cli is not None and model is not None}")
+                f"Available: {self.is_available()}")
 
 
 # ---------------------------------------------------------------------------
@@ -581,13 +585,19 @@ class DisabledBackend:
     name = "disabled"
     model = ""
 
+    def __init__(self, reason: str = ""):
+        self.reason = reason
+
     def is_available(self) -> bool:
         return False
 
     def availability_report(self) -> str:
-        return ("Backend: disabled\n"
-                "The deterministic rule engine does all reasoning. "
-                "No LLM is loaded.")
+        report = ("Backend: disabled\n"
+                  "The deterministic rule engine does all reasoning. "
+                  "No LLM is loaded.")
+        if self.reason:
+            report += f"\nReason: {self.reason}"
+        return report
 
     def chat(self, messages: List[Message],
              max_tokens: Optional[int] = None,
@@ -607,19 +617,22 @@ _backend: Optional[Backend] = None
 
 
 def get_backend(settings: Optional[Dict[str, Any]] = None) -> Backend:
-    """Return the configured backend, constructing it on first use.
+    """Return the configured backend without silently selecting a Stub.
 
-    Backends, in priority order if ``backend == 'auto'``:
-    1. ``llama_server`` — if a model AND server binary are present.
-    2. ``llama_cli`` — if a model AND CLI binary are present (legacy).
-    3. ``stub`` — always available (deterministic reference / fallback).
+    In auto mode, prefer a local llama-server, then legacy llama-cli. If
+    neither is present, use DisabledBackend so the CLI falls back to the
+    deterministic rule engine. StubBackend is opt-in for development and
+    benchmarks only; it is never an automatic fallback.
     """
     global _backend, _runtime
     if _backend is not None:
         return _backend
     s = settings or config.load_settings()
     cfg = s.get("engine", {})
-    choice = cfg.get("backend", "auto")
+    requested = str(cfg.get("backend", "auto")).strip().lower()
+    # Compatibility with settings written by older releases.
+    choice = {"llama_cpp": "auto", "llama-cpp": "auto",
+              "openai_api": "auto", "openai-api": "auto"}.get(requested, requested)
     if choice == "disabled":
         _backend = DisabledBackend()
     elif choice == "stub":
@@ -631,9 +644,9 @@ def get_backend(settings: Optional[Dict[str, Any]] = None) -> Backend:
         _backend = _runtime
     elif choice == "llama_cli":
         _backend = LlamaCliBackend(s)
-    else:  # auto
+    elif choice == "auto":
         rt = ServerRuntime(s)
-        if rt.server_path() and rt.model_path():
+        if rt.is_available():
             _runtime = rt
             _backend = rt
         else:
@@ -641,7 +654,12 @@ def get_backend(settings: Optional[Dict[str, Any]] = None) -> Backend:
             if cli.is_available():
                 _backend = cli
             else:
-                _backend = StubBackend(s)
+                _backend = DisabledBackend(
+                    "Auto mode found neither a usable llama-server + GGUF model nor a llama-cli + GGUF model. The deterministic rule engine will be used; StubBackend is not an automatic fallback.")
+    else:
+        _backend = DisabledBackend(
+            f"Unsupported backend setting {requested!r}; no LLM will be loaded. "
+            "Choose auto, llama_server, llama_cli, cloud, disabled, or stub.")
     return _backend
 
 
