@@ -1,0 +1,27 @@
+{
+  "rail_family": "CPU_VRM_INPUT",
+  "description": "Input rail to the desktop CPU VRM. Derived from EPS_12V / ATX_12V. The VRM steps this down to VCORE.",
+  "typical_voltage_v": {
+    "min": 11.4,
+    "typ": 12.0,
+    "max": 12.6,
+    "notes": "Same as ATX_12V."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "EPS_12V",
+    "ATX_12V"
+  ],
+  "downstream_rails": [
+    "VCORE_DESKTOP"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

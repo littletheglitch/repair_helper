@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_VRM_002_CHECK_INPUT",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT vin_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the VRM input voltage at the high-side FET drains (typically +VCC_CORE_IN, often derived from adapter/battery through a small buck or directly).",
+      "measure": {
+        "what": "VRM input voltage",
+        "where": "High-side FET drain pads (all phases share the same VIN)",
+        "instrument": "DMM DC volts",
+        "expected": "Typically the adapter/battery rail (19 V / 12.6 V) or a dedicated +VCC_CORE_IN buck (typically 5-12 V).",
+        "safety": "High-side FET drain is at adapter potential; probe with care."
+      },
+      "interpretations": [
+        {
+          "if_result": "VRM input present",
+          "then": "Input supply good. Proceed to check controller VCC.",
+          "set_facts": [
+            "vin_present=True"
+          ],
+          "next_rule": "RULE_VRM_003_CHECK_VCC"
+        },
+        {
+          "if_result": "VRM input missing",
+          "then": "Upstream +VCC_CORE_IN buck or input path is dead. Diagnose that rail first.",
+          "set_facts": [
+            "vin_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need board schematic or controller datasheet to know the expected VRM input voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

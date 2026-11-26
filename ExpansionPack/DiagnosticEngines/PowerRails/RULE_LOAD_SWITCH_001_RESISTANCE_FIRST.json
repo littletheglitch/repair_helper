@@ -1,0 +1,28 @@
+{
+  "rule_id": "RULE_LOAD_SWITCH_001_RESISTANCE_FIRST",
+  "topology": "load_switch",
+  "applies_to_rail_families": ["LCD_VDD", "USB_VBUS", "PCIE_12V"],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured",
+    "notes": "Load-switch rail missing (LCD VDD, USB VBUS, or PCIe 12V slot power). First step is always resistance to ground with power disconnected."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect all power. For desktop PCIe, unplug from mains and wait 60 s. For laptop USB/LCD, disconnect adapter and battery. Measure resistance from the rail to ground.",
+      "measure": {
+        "what": "Resistance from rail to ground",
+        "where": "Rail test point: PCIe slot B1/B2/B3 pins (12V), USB VBUS pin, or LCD VDD fuse",
+        "instrument": "DMM resistance mode (200 ohm then 2 kohm)",
+        "expected": "PCIe 12V typically >100 ohm; USB VBUS typically >50 ohm; LCD VDD typically >50 ohm. <10 ohm indicates a hard short on the rail or its load.",
+        "safety": "Discharge all caps before measuring. PCIe slots carry 12V at significant current — never short adjacent pins."
+      },
+      "interpretations": [
+        {"if_result": "Resistance < 10 ohm", "then": "Hard short. For PCIe, suspect a shorted GPU/add-in card or a shorted slot cap. For USB, suspect a shorted port protector or a shorted peripheral. Do NOT apply power until the short is found.", "set_facts": ["rail_short=True"], "next_rule": "RULE_BUCK_010_SHORTED_RAIL"},
+        {"if_result": "Resistance normal", "then": "No short. For PCIe 12V, the rail comes directly from ATX_12V — check that ATX_12V is up (RULE_ATX_003_CHECK_PS_ON). For USB VBUS / LCD VDD, proceed to check the load-switch input and EN.", "set_facts": ["rail_short=False"], "next_rule": "RULE_BUCK_002_CHECK_INPUT_SUPPLY"}
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

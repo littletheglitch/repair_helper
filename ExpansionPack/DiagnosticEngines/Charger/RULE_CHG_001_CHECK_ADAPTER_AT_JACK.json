@@ -1,0 +1,49 @@
+{
+  "rule_id": "RULE_CHG_001_CHECK_ADAPTER_AT_JACK",
+  "topology": "charger_input",
+  "applies_to_rail_families": [
+    "ADAPTER_INPUT"
+  ],
+  "condition": {
+    "expression": "NOT vin_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the adapter voltage at the DC jack first, then at the input MOSFET drain, then at the charger IC ACIN pin. Walk forward until the voltage stops.",
+      "measure": {
+        "what": "Adapter voltage at jack, MOSFET drain, charger ACIN",
+        "where": "DC jack center pin -> input fuse -> input MOSFET drain -> charger ACIN pin",
+        "instrument": "DMM DC volts",
+        "expected": "Adapter nominal at every point along the path (typically 19-20 V).",
+        "safety": "Adapter input is high-current at 19 V. Probe carefully; do not short the jack tip to the chassis."
+      },
+      "interpretations": [
+        {
+          "if_result": "Voltage present at the jack but missing at MOSFET drain",
+          "then": "Input fuse or current-sense resistor is open. Replace with same rating.",
+          "set_facts": [
+            "input_fuse_open=True"
+          ]
+        },
+        {
+          "if_result": "Voltage present at MOSFET drain but missing at charger ACIN",
+          "then": "Input MOSFET is off. Charger IC is not driving the gate. Diagnose charger IC enable (see RULE_CHG_002).",
+          "set_facts": [
+            "input_mosfet_off=True"
+          ],
+          "next_rule": "RULE_CHG_002_CHECK_CHARGER_VCC"
+        },
+        {
+          "if_result": "Voltage present everywhere",
+          "then": "Input path is good. If adapter rail still considered faulty, look at the charger's buck output (battery charge path) instead.",
+          "set_facts": [
+            "vin_present=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

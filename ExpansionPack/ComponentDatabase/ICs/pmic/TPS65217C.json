@@ -1,0 +1,97 @@
+{
+  "record_id": "IC_TI_TPS65217",
+  "part_number": "TPS65217C",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "pmic",
+  "package": "VQFN-48 (6x6 mm)",
+  "pin_count": 48,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.5,
+      "max": 5.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 0.6,
+      "max": 3.3,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VIN_v": 6.0
+    },
+    "operating_conditions": {
+      "rails": "4 buck + LDO + RTC + load switch",
+      "interface": "I2C"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      2200
+    ]
+  },
+  "typical_applications": [
+    "TI Sitara AM335x PMIC (BeagleBone, embedded ARM)",
+    "Multi-rail SoC companion PMIC"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Multi-rail PMIC driven by I2C from SoC",
+      "topology": "pmic",
+      "description": "Power-up sequence defined by the PMIC's hardwired profile selected by the SoC.",
+      "external_components": [
+        "4 inductors",
+        "decoupling"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Main 5 V input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VDD_I/O",
+      "description": "I/O supply for the PMIC interface.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PWR_EN",
+      "description": "Power enable from SoC.",
+      "pin_numbers": []
+    },
+    {
+      "function": "nWAKEUP/nRST",
+      "description": "Wake / reset to SoC.",
+      "pin_numbers": []
+    },
+    {
+      "function": "LDO1..LDO4",
+      "description": "LDO outputs.",
+      "pin_numbers": []
+    },
+    {
+      "function": "BUCK1..BUCK4",
+      "description": "Buck outputs.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps65217.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family, topology, rail count and voltage ranges verified. Pin-by-pin map and I2C register sequence not enumerated.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "PMICs are platform-specific. TPS65217A/B/C/D differ in default power-up profiles; a cross-suffix swap changes the rail sequence and will hang the SoC.",
+  "tags": [
+    "pmic",
+    "sitara",
+    "multi_rail"
+  ],
+  "schema_version": "1.0.0"
+}

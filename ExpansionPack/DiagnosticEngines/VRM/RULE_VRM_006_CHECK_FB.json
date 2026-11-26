@@ -1,0 +1,53 @@
+{
+  "rule_id": "RULE_VRM_006_CHECK_FB",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "switching_present AND NOT fb_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller FB / VSEN / ISEN pins. For CPU VRM, also confirm the VID bits from the CPU are valid (consult CPU datasheet — VID set is platform-specific).",
+      "measure": {
+        "what": "FB / VSEN / ISEN pin voltages + VID bus state",
+        "where": "Controller FB, VSEN, ISEN pins; CPU VID pins",
+        "instrument": "DMM DC volts + oscilloscope for VID bus",
+        "expected": "FB at VREF per datasheet; VSEN should reflect the rail voltage; ISEN pins reflect per-phase current sense.",
+        "safety": "VID is set by the CPU and is board/CPU-specific. Never assume a VID value."
+      },
+      "interpretations": [
+        {
+          "if_result": "FB at VREF and rail voltage present",
+          "then": "Regulating. Proceed to check PGOOD.",
+          "set_facts": [
+            "fb_present=True"
+          ],
+          "next_rule": "RULE_VRM_007_CHECK_PGOOD"
+        },
+        {
+          "if_result": "FB correct but rail still missing",
+          "then": "Switching is happening but no energy reaches output. Open inductor, blown current-sense resistor, or shorted output FET pulling rail down. Inspect output stage.",
+          "set_facts": [
+            "fb_present=True",
+            "output_stage_fault=True"
+          ]
+        },
+        {
+          "if_result": "VID bus all-zero or all-one",
+          "then": "CPU is not driving VID (CPU socket contact issue or dead CPU). Cannot diagnose VRM without valid VID.",
+          "set_facts": [
+            "fb_present=False",
+            "vid_invalid=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet (FB/VSEN/ISEN pins, VREF) AND CPU datasheet (VID encoding) to interpret."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

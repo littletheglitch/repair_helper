@@ -1,0 +1,58 @@
+{
+  "case_id": "SAMPLE_09_OUTPUT_PRESENT_PGOOD_MISSING",
+  "description": "+1.8V present (1.8 V), FB good, PGOOD not yet checked.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 1.8,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "en",
+      "value": 3.3,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "switching",
+      "value": true,
+      "measured": true
+    },
+    {
+      "name": "fb",
+      "value": 0.7,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_RAIL_HEALTHY",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "HEALTHY"
+}

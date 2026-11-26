@@ -1,0 +1,45 @@
+{
+  "circuit_id": "CCT_voltage_sense",
+  "name": "Voltage-sense circuit",
+  "description": "Resistive divider + buffer (or ADC input). Scales high voltage down to a measurable range.",
+  "topology": "Divider + op-amp buffer or direct ADC",
+  "main_components": [
+    "divider resistors",
+    "buffer op-amp (optional)",
+    "filter cap"
+  ],
+  "input": "High voltage",
+  "output": "Scaled-down voltage for ADC/amp",
+  "expected_signal_behavior": "Vout = Vin * R_low / (R_high + R_low). Tolerance set by resistor tolerance.",
+  "common_failure_modes": [
+    {
+      "mode": "wrong_reading",
+      "description": "divider drifted"
+    },
+    {
+      "mode": "no_output",
+      "description": "divider open"
+    },
+    {
+      "mode": "noisy",
+      "description": "filter cap failed"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "divider tap voltage",
+    "ADC reading (if applicable)"
+  ],
+  "possible_fault_locations": [
+    "divider resistors",
+    "filter cap",
+    "buffer op-amp (if present)"
+  ],
+  "recommended_next_tests": [
+    "measure input vs tap voltage",
+    "verify divider ratio",
+    "check resistor values"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

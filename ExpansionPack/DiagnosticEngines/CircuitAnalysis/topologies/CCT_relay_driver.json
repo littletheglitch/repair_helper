@@ -1,0 +1,47 @@
+{
+  "circuit_id": "CCT_relay_driver",
+  "name": "Relay driver",
+  "description": "Transistor drives a relay coil. Flyback diode protects the transistor from inductive kickback.",
+  "topology": "BJT/MOSFET + flyback diode + relay coil",
+  "main_components": [
+    "driver transistor",
+    "flyback diode",
+    "relay coil",
+    "base/gate resistor"
+  ],
+  "input": "Control signal",
+  "output": "Switched relay contacts",
+  "expected_signal_behavior": "Relay energises when driver on; flyback diode clamps kickback to ~0.7V above supply.",
+  "common_failure_modes": [
+    {
+      "mode": "relay_not_energising",
+      "description": "driver dead, coil open"
+    },
+    {
+      "mode": "relay_chattering",
+      "description": "driver weak, supply low"
+    },
+    {
+      "mode": "transistor_failure",
+      "description": "flyback diode open, transistor avalanched"
+    }
+  ],
+  "diagnostic_measurements": [
+    "driver gate/base voltage",
+    "collector/drain voltage",
+    "relay coil voltage",
+    "flyback diode forward voltage"
+  ],
+  "possible_fault_locations": [
+    "driver transistor",
+    "flyback diode",
+    "relay coil"
+  ],
+  "recommended_next_tests": [
+    "check driver gate/base",
+    "check coil voltage when energised",
+    "verify flyback diode present and oriented correctly"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

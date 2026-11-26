@@ -1,0 +1,31 @@
+{
+  "rail_family": "ATX_12V",
+  "description": "Desktop ATX +12V main rail. Feeds CPU VRM (via EPS 8-pin), fans, and (on modern boards) the GPU PCIe slot. Enabled by the PSU on PS_ON#.",
+  "typical_voltage_v": {
+    "min": 11.4,
+    "typ": 12.0,
+    "max": 12.6,
+    "notes": "ATX12V: +/-5%."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_PSU_12V"
+  ],
+  "downstream_rails": [
+    "EPS_12V",
+    "CPU_VRM_INPUT",
+    "FAN_12V",
+    "PCIE_12V"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "ps_on_signal_state",
+    "pwr_ok_signal_state"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

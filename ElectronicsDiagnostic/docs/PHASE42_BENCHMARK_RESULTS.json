@@ -1,0 +1,137 @@
+{
+  "phase": "4.2",
+  "measured_at": "2026-11-24 (Linux sandbox, Python 3.12, offline)",
+  "purpose": "Engineering knowledge transfer & real-world learning integration — wire the 24 validated scenarios into gradable exercises, expand transfer to all 16 skills, improve reasoning evaluation, add datasheet exercises, and benchmark independently.",
+  "transfer_benchmark": {
+    "total_cases": 128,
+    "skills_covered": 16,
+    "seeds_per_skill": 8,
+    "per_skill": {
+      "electrical_math": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "ohm_kirchhoff": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "series_parallel": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "voltage_divider": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "rc_rl": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "mosfet": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "diodes_bjt": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "opamps_comparators": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "buck_boost": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "pwm_controllers": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "battery_charging": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "power_sequencing": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "datasheet_interp": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "schematic_topology": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "measurement_interp": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"},
+      "fault_isolation": {"correct_pass": "8/8 (100%)", "wrong_reject": "8/8 (100%)"}
+    },
+    "overall_correct_pass_rate": "100%",
+    "overall_wrong_reject_rate": "100%",
+    "invalid_exercises_detected": 0,
+    "wrong_references_detected": "1 caught and fixed during benchmarking (datasheet prompt showed rounded rds_max that disagreed with the computed reference; display precision corrected)",
+    "exceeds_minimum": "128 >= 100"
+  },
+  "reasoning_benchmark": {
+    "total_cases": 56,
+    "exceeds_minimum": "56 >= 50",
+    "categories": {"multi_step": 13, "correlation_causation": 13, "datasheet_value_class": 23, "hidden_assumptions": 3, "measurement_misinterp": 2, "wrong_units": 1, "no_reasoning": 1},
+    "accuracy": "56/56 (100%)",
+    "central_rule_verified": "correct number + wrong/no reasoning -> not correct, across all 56 cases"
+  },
+  "scenario_integration": {
+    "scenarios_wired": 24,
+    "as_gradable_exercises": true,
+    "synthetic_distinct_from_confirmed": true,
+    "synthetic_count": 20,
+    "confirmed_count": 4,
+    "all_hidden_by_default": true,
+    "skills_covered": 9,
+    "skill_distribution": {"measurement_interp": 6, "mosfet": 3, "datasheet_interp": 3, "battery_charging": 2, "buck_boost": 3, "diodes_bjt": 2, "fault_isolation": 3, "opamps_comparators": 1, "power_sequencing": 1}
+  },
+  "transfer_expansion": {
+    "skills_with_transfer": 16,
+    "new_shapes_added": 12,
+    "pre_existing_shapes": 4,
+    "each_shape_is_distinct": true,
+    "physically_validated": true,
+    "shapes": {
+      "electrical_math": "P = V*I (power, not resistance)",
+      "ohm_kirchhoff": "I = V/R (inverse of base R=V/I)",
+      "series_parallel": "branch current I1 = V/R1 (not equivalent resistance)",
+      "voltage_divider": "loaded divider R2||R_L (not open-circuit)",
+      "rc_rl": "C = tau/R (inverse of base tau=R*C)",
+      "mosfet": "conduction loss P = Id^2*Rds (not Vgs threshold)",
+      "diodes_bjt": "forced-beta base current Ib = Ic/beta (not forward drop)",
+      "opamps_comparators": "inverting gain -Rf/Rin (not non-inverting)",
+      "buck_boost": "boost duty D = 1 - Vin/Vout (not buck)",
+      "pwm_controllers": "soft-start time t = Vref/(dV/dt) (not feedback)",
+      "battery_charging": "CC charge time t = Capacity/I (not CC/CV phases)",
+      "power_sequencing": "RC enable delay t = -RC*ln(1-Vth/Vfinal) (not rail origin)",
+      "datasheet_interp": "worst-case (max, not typ) loss (not value extraction)",
+      "schematic_topology": "rail dependency ordering (not net tracing)",
+      "measurement_interp": "ground-reference verification (not reading meaning)",
+      "fault_isolation": "symptom-vs-root-cause (not hypothesis ranking)"
+    }
+  },
+  "reasoning_evaluator_improvements": {
+    "multi_step_check": "flags a single-step answer to a multi-step problem (>= 2 distinct steps required)",
+    "correlation_causation_check": "flags treating a symptom as the root cause; requires both 'symptom' and 'root cause' or a negation",
+    "datasheet_value_class_check": "flags 'yes safe' to abs-max, 'use typical' for worst-case, etc.",
+    "bare_number_gate": "added 'no reasoning chain' and 'no evidence cited' to the critical-gate so a bare number is never correct (caught by the independent benchmark)",
+    "power_formula_accepted": "electrical_math principle check now accepts P = V*I (was only Ohm's law)",
+    "branch_ohm_accepted": "series_parallel principle check now accepts I = V/R on a branch",
+    "qualitative_answer_in_range": "qualitative exercises (prose reference) default answer_in_range=True so reasoning is the gate"
+  },
+  "datasheet_exercises": {
+    "count": 11,
+    "value_classes_covered": ["abs_max", "recommended", "typical", "guaranteed"],
+    "parts_cited": ["AO3400A", "LM317", "TP4056"],
+    "every_exercise_cites": "part number, revision, page, source URL",
+    "no_value_without_source": true,
+    "registry_url_cited": true
+  },
+  "mastery_growth": {
+    "repeated_same_exercise_distinct": 1,
+    "distinct_transfer_exercises_raise_distinct": true,
+    "memorized_answer_fails_transfer": true,
+    "scenario_and_transfer_keys_distinct": true,
+    "memorization_does_not_raise_mastery": true
+  },
+  "architectural_boundaries": {
+    "datasheet_exercises_do_not_add_kb_facts": true,
+    "scenario_exercises_do_not_add_kb_facts": true,
+    "transfer_exercises_do_not_add_kb_facts": true,
+    "importing_document_adds_no_kb_facts": true,
+    "phase3_commands_unchanged": true,
+    "no_duplicate_datasheet_keys": true
+  },
+  "phase4_benchmark_rerun": {
+    "all_10_metrics_pass": true,
+    "regression": false
+  },
+  "test_suite": {
+    "total_tests": 671,
+    "phase41_baseline": 582,
+    "phase42_new_tests": 89,
+    "regressions": 0,
+    "all_offline": true
+  },
+  "rule_based_evaluator_limits": [
+    "The reasoning evaluator is rule-based (regex heuristics). The 128 transfer + 56 reasoning independent cases pass 100%, but a sufficiently subtle wrong reasoning with all the right keywords could slip through. The independent sets are a strong signal, not proof of perfection.",
+    "Multi-step detection relies on the exercise being flagged (prompt/assumptions contain 'two hypotheses'/'step 1'/etc.). A multi-step problem phrased without those markers is not detected as multi-step.",
+    "Correlation/causation detection requires the exercise to be flagged (assumptions contain 'correlation'/'symptom'/'root cause'). A general reasoning question is not checked for the distinction.",
+    "Datasheet value-class detection requires the exercise's assumptions to name the class. A datasheet question without the marker is graded only on the generic checks.",
+    "No semantic understanding: the evaluator cannot tell that 'the voltage divided by the current' means 'Ohm's law' unless the words match. It grades surface form, not meaning. A claim of full semantic understanding without independent validation is forbidden by the spec and not made here.",
+    "The DATASHEET_REGISTRY holds 11 verified values across 3 parts. Datasheet exercises are limited to those values; the generator never invents a datasheet value. Expanding the registry is a content task, not a code task."
+  ],
+  "what_this_proves": [
+    "All 16 skills now have a transfer exercise that poses a genuinely different physical question (verified distinct formula + unit; not a number swap).",
+    "128 independent transfer tests (16 skills x 8 seeds): 100% correct reasoned answers pass, 100% wrong answers rejected, 0 invalid exercises.",
+    "56 independent reasoning tests: 100% accuracy across multi-step, correlation/causation, datasheet value-class, hidden assumptions, misinterpretation, wrong units, no-reasoning.",
+    "A wrong reference was caught by the benchmark itself (datasheet prompt showed a rounded rds_max that disagreed with the computed reference) and fixed — the benchmark detects reference errors, not just grades answers.",
+    "The 24 validated scenarios are wired as gradable exercises; synthetic and confirmed are distinct; answers are hidden by default.",
+    "Datasheet exercises cite part, revision, page, and source URL; no value without a valid source.",
+    "Mastery grows only via independent exercises; repetition does not inflate it; a memorized answer fails the transfer exercise.",
+    "Architectural boundaries hold: scenario/transfer/datasheet generation adds 0 KB facts; documents are not auto-imported; Phase 3 unchanged.",
+    "The Phase 4 benchmark still passes 10/10; 671 tests total, 0 regressions."
+  ]
+}

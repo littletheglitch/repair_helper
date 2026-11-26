@@ -1,0 +1,36 @@
+{
+  "record_id": "DIO_Generic_SS34",
+  "part_number": "SS34",
+  "manufacturer": "Multicomp / various (Taiwan Semi, etc.)",
+  "manufacturer_short": "Generic",
+  "category": "diode",
+  "sub_category": "schottky",
+  "package": "SMB (DO-214AA)",
+  "pin_count": 2,
+  "pinout": {
+    "A": "anode",
+    "K": "cathode"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 40,
+    "if_avg_a": 3.0,
+    "vf_v": 0.55,
+    "trr_ns": null,
+    "pd_w": 2.5,
+    "thermal_r_ja_c_per_w": 75.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "datasheet_url": null,
+  "datasheet_source": "Multicomp / various (Taiwan Semi, etc.) SS34 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Schottky rectifier, 40V/3A, SMB. Common buck output / flyback secondary rectifier.",
+  "tags": [
+    "diode",
+    "schottky"
+  ],
+  "schema_version": "1.0.0"
+}

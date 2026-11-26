@@ -1,0 +1,38 @@
+{
+  "rail_family": "+3VALW",
+  "description": "Always-on 3.3 V rail derived from the adapter/battery through a standby buck or LDO. Present whenever the board has power, even in S5/G3.",
+  "typical_voltage_v": {
+    "min": 3.2,
+    "typ": 3.3,
+    "max": 3.4,
+    "notes": "Tolerance typically +/-3% from nominal."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": true,
+  "common_controllers": [
+    "RT8205",
+    "RT8206",
+    "TPS51224",
+    "ISL95831"
+  ],
+  "upstream_rails": [
+    "ADAPTER",
+    "BATTERY"
+  ],
+  "downstream_rails": [
+    "+3VS",
+    "+3VPCU"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0"
+}

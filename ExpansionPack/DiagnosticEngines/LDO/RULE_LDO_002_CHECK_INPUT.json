@@ -1,0 +1,46 @@
+{
+  "rule_id": "RULE_LDO_002_CHECK_INPUT",
+  "topology": "ldo",
+  "applies_to_rail_families": [
+    "+VCCRTC",
+    "DDR_VTT",
+    "RAM_VTT_DESKTOP"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT vin_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the LDO's VIN pin voltage.",
+      "measure": {
+        "what": "LDO VIN voltage",
+        "where": "LDO VIN pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts",
+        "expected": "Per LDO datasheet — e.g. +3VALW (3.3 V) or +5VALW (5 V) or coin cell (3.0 V).",
+        "safety": "Probe carefully to avoid shorting adjacent pins."
+      },
+      "interpretations": [
+        {
+          "if_result": "VIN present and at expected voltage",
+          "then": "Input supply is good. Proceed to check EN.",
+          "set_facts": [
+            "vin_present=True"
+          ],
+          "next_rule": "RULE_LDO_003_CHECK_EN"
+        },
+        {
+          "if_result": "VIN missing",
+          "then": "Upstream rail is dead. For VCCRTC also check the coin cell (~3.0 V) and the diode-OR that selects between coin cell and +3VALW. Diagnose upstream rail first.",
+          "set_facts": [
+            "vin_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need LDO datasheet for VIN pin number and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

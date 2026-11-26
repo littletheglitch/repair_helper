@@ -1,0 +1,143 @@
+{
+  "source": {
+    "title": "EDA Built-in Knowledge: Power Conversion and Regulation",
+    "url": "",
+    "date": "2026-11-23"
+  },
+  "provenance": "verified-reference",
+  "sections": [
+    {
+      "category": "power-conversion",
+      "topic": "voltage-regulators-linear",
+      "facts": [
+        {
+          "text": "A linear regulator (e.g. 1117, 2951 family) drops excess voltage across a pass transistor; the output is held at a fixed or set value. Efficiency is approximately Vout/Vin; the difference is dissipated as heat.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["linear","regulator"]
+        },
+        {
+          "text": "A linear regulator needs its input to be at least its dropout voltage above the output (often ~1 V for older parts, <300 mV for low-dropout parts); if the input collapses the output cannot be maintained.",
+          "confidence": "verified",
+          "tags": ["linear","dropout"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "buck-converter",
+      "facts": [
+        {
+          "text": "A buck (step-down) converter uses a high-side switch (MOSFET), a synchronous or freewheeling low-side switch, an inductor, and an output capacitor to produce an output voltage lower than the input by PWM control of the duty cycle.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["buck","smPS"]
+        },
+        {
+          "text": "Buck converter output Vout ~= Vin * duty for an ideal converter; the controller regulates by measuring Vout through a feedback divider and adjusting the duty cycle. A wrong feedback ratio or open feedback pin drives the output off target.",
+          "confidence": "verified",
+          "tags": ["buck","feedback"]
+        },
+        {
+          "text": "Buck converters require an enable signal and a valid input supply; if EN is held low (by the EC, by UVLO, or by a protection fault) the converter makes no output even if Vin is present.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["buck","enable"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "boost-converter",
+      "facts": [
+        {
+          "text": "A boost (step-up) converter charges an inductor from the input and dumps its stored energy through a diode (or synchronous switch) to the output, producing Vout > Vin.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["boost"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "buck-boost-converter",
+      "facts": [
+        {
+          "text": "A buck-boost converter can produce a regulated output either above or below the input; it is used where the input range crosses the desired output, e.g. USB-C PD systems and battery-powered rails.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["buck-boost","usb-pd"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "pwm-controllers",
+      "facts": [
+        {
+          "text": "A PWM controller IC drives the power MOSFET(s) with variable duty cycle and fixed frequency; it includes error amplifier, oscillator, slope compensation, current-sense, and protection. The exact pinout, thresholds and register set are component-specific and must come from the datasheet.",
+          "confidence": "verified",
+          "provenance": "manufacturer-app-note",
+          "tags": ["pwm","controller"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "feedback-networks",
+      "facts": [
+        {
+          "text": "A feedback network is a resistor (sometimes capacitor-complexed) divider from the output rail to the feedback pin of the controller; the controller adjusts switching to keep the FB pin at its internal reference (often 0.6-0.8 V).",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["feedback","divider"]
+        },
+        {
+          "text": "An open or wrong feedback resistor typically drives the output high (loss of regulation) or causes the controller to stop switching; a shorted FB-to-ground resistor pulls the output down or prevents startup.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["feedback","failure"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "protections",
+      "facts": [
+        {
+          "text": "UVLO (under-voltage lockout) holds the controller off until Vin exceeds an internal threshold; it prevents malfunction at low input. Threshold values are component-specific.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["uvlo","protection"]
+        },
+        {
+          "text": "OVP (over-voltage protection) shuts the converter down if the output rises above a safe limit; it usually indicates loss of regulation and can latch the controller off until input or EN is cycled.",
+          "confidence": "verified",
+          "tags": ["ovp","protection"]
+        },
+        {
+          "text": "OCP (over-current protection) limits output current via the sense resistor; SCP (short-circuit protection) is a faster, lower-threshold version that triggers on a hard output short. Both can latch the converter off.",
+          "confidence": "verified",
+          "tags": ["ocp","scp","protection"]
+        },
+        {
+          "text": "Thermal shutdown disables the controller if its die exceeds a threshold; a board that runs briefly then stops may be entering thermal or OCP/SCP latch, not necessarily a permanent fault.",
+          "confidence": "verified",
+          "tags": ["thermal","protection"]
+        }
+      ]
+    },
+    {
+      "category": "power-conversion",
+      "topic": "current-sensing",
+      "facts": [
+        {
+          "text": "Current is sensed via a small series sense resistor (often 5-20 mOhm on main rails) whose voltage drop is read by the controller; a sense resistor that has been replaced with the wrong value changes the current limit and the regulation behavior.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["current-sense","rsense"]
+        }
+      ]
+    }
+  ]
+}

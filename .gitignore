@@ -1,0 +1,39 @@
+# Python environments and caches
+.venv/
+venv/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Local databases and backups
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.db-wal
+*.db-shm
+
+# KnowledgeCollector collected data
+KnowledgeCollector/data/
+
+# Offline bundles and generated files
+ElectronicsDiagnostic_OfflineBundle_*/
+ALL_SOURCE.txt
+results.json*
+*.log
+
+# Large model and runtime binaries
+ElectronicsDiagnostic/Models/*.gguf
+ElectronicsDiagnostic/Engine/*.exe
+ElectronicsDiagnostic/Engine/*.dll
+
+# Generated Expansion Pack reports
+ExpansionPack/download/
+
+# Credentials and private keys
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx

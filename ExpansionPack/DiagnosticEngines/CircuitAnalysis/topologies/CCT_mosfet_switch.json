@@ -1,0 +1,58 @@
+{
+  "circuit_id": "CCT_mosfet_switch",
+  "name": "MOSFET switching circuit",
+  "description": "MOSFET used as on/off switch. Gate drive level determines RDS_on; load is in drain (high-side) or source (low-side).",
+  "topology": "MOSFET + gate drive + load",
+  "main_components": [
+    "MOSFET",
+    "gate resistor",
+    "pull-down resistor",
+    "flyback diode (for inductive load)"
+  ],
+  "input": "Gate drive signal",
+  "output": "Switched load current",
+  "expected_signal_behavior": "When on: VDS ~ 0 (RDS_on * I); when off: VDS = supply. Gate drive must exceed VGS_th with margin.",
+  "common_failure_modes": [
+    {
+      "mode": "stuck_on",
+      "description": "gate drive high, FET shorted D-S"
+    },
+    {
+      "mode": "stuck_off",
+      "description": "gate drive low, FET open"
+    },
+    {
+      "mode": "overheating",
+      "description": "insufficient VGS, RDS_on too high"
+    },
+    {
+      "mode": "flyback_failure",
+      "description": "inductive load kicks back, FET avalanches"
+    }
+  ],
+  "diagnostic_measurements": [
+    "gate voltage",
+    "drain voltage",
+    "source voltage",
+    "VDS when on",
+    "gate-drive waveform"
+  ],
+  "possible_fault_locations": [
+    "MOSFET",
+    "gate drive circuit",
+    "flyback diode"
+  ],
+  "recommended_next_tests": [
+    "check gate drive level vs VGS_th",
+    "check VDS when on",
+    "check flyback diode for inductive loads"
+  ],
+  "source_references": [
+    {
+      "title": "Power MOSFET basics",
+      "url": "https://www.vishay.com/docs/71217/71217.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

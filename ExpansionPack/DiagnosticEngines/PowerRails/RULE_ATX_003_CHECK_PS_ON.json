@@ -1,0 +1,29 @@
+{
+  "rule_id": "RULE_ATX_003_CHECK_PS_ON",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": ["ATX_3V3", "ATX_5V", "ATX_12V", "EPS_12V", "CPU_VRM_INPUT"],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT ps_on_signal_measured",
+    "notes": "Desktop main rails (3V3/5V/12V) missing. These only come up after the motherboard pulls PS_ON# (pin 16, green wire) low. If PS_ON# is high, the PSU is correctly keeping the main rails off."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure PS_ON# (pin 16 of the 24-pin ATX, green wire) relative to ground. Then briefly short PS_ON# to ground with a jumper (or press the front-panel power button) and re-measure the missing rail.",
+      "measure": {
+        "what": "PS_ON# voltage and the missing rail's response to PS_ON# being pulled low",
+        "where": "Pin 16 of the 24-pin ATX (green wire); the missing rail test point",
+        "instrument": "DMM DC volts",
+        "expected": "PS_ON# is HIGH (>2 V, pulled up to 5VSB by the PSU) when the system is off. It goes LOW (<0.4 V) when the front-panel button is pressed. When PS_ON# is low, all main rails should come up within 100-500 ms.",
+        "safety": "Shorting PS_ON# to ground is safe — it is a logic input with a pull-up. NEVER short any other pin of the ATX connector to ground."
+      },
+      "interpretations": [
+        {"if_result": "PS_ON# goes low and the rail comes up", "then": "The PSU and the rail are good. The fault is in the front-panel button, the super-IO, or the EC that drives PS_ON#.", "set_facts": ["ps_on_signal_present=True"]},
+        {"if_result": "PS_ON# goes low but the rail still missing", "then": "PSU is not turning on the rail. Suspect a PSU fault or a short on the rail holding it down. Measure the rail resistance again; if low, hunt the short. If resistance is normal, replace the PSU.", "set_facts": ["ps_on_signal_present=True"], "next_rule": "RULE_BUCK_010_SHORTED_RAIL"},
+        {"if_result": "PS_ON# stays high when the button is pressed", "then": "Motherboard is not asserting PS_ON#. Could be: dead 5VSB (check ATX_5VSB first), dead super-IO/EC, stuck power button, or a stuck PWR_OK from a previous cycle. Diagnose the 5VSB and super-IO first.", "set_facts": ["ps_on_signal_present=False"]}
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

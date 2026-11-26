@@ -1,0 +1,132 @@
+{
+  "record_id": "IC_TI_TPS22918",
+  "part_number": "TPS22918",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "load_switch",
+  "package": "SOT-23-6 (DBV)",
+  "pin_count": 6,
+  "pinout": {
+    "1": "VIN",
+    "2": "VIN",
+    "3": "VIN",
+    "4": "GND",
+    "5": "ON/VIN",
+    "6": "VOUT"
+  },
+  "pin_functions": [
+    {
+      "pin": 1,
+      "name": "VIN",
+      "function": "Input",
+      "type": "power"
+    },
+    {
+      "pin": 2,
+      "name": "VIN",
+      "function": "Input",
+      "type": "power"
+    },
+    {
+      "pin": 3,
+      "name": "VIN",
+      "function": "Input",
+      "type": "power"
+    },
+    {
+      "pin": 4,
+      "name": "GND",
+      "function": "Ground",
+      "type": "ground"
+    },
+    {
+      "pin": 5,
+      "name": "ON",
+      "function": "Enable (active high)",
+      "type": "control"
+    },
+    {
+      "pin": 6,
+      "name": "VOUT",
+      "function": "Output",
+      "type": "output"
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 1.0,
+      "max": 5.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.0,
+      "max": 5.5,
+      "typ": null,
+      "adjustable": false
+    },
+    "maximum_ratings": {
+      "VIN_v": 5.7,
+      "IOUT_a": 2.0
+    },
+    "operating_conditions": {
+      "on_resistance_mohm": 18,
+      "rise_time_us_range": "adjustable via CT pin"
+    },
+    "quiescent_current_ma": 0.001,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Power-rail sequencing for USB / I2C peripherals",
+    "Standby load isolation"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Single-channel load switch",
+      "topology": "load_switch",
+      "description": "VIN on three pins, ON controls internal FET; CT pin optional on bigger package.",
+      "external_components": [
+        "input cap",
+        "output cap"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Input supply (multi-pin for current).",
+      "pin_numbers": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "function": "ON",
+      "description": "Active-high enable.",
+      "pin_numbers": [
+        5
+      ]
+    },
+    {
+      "function": "VOUT",
+      "description": "Output.",
+      "pin_numbers": [
+        6
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps22918.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Pinout, voltage range, current rating and Ron verified against TI datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Load switches look similar to LDOs but are pass-through FETs. Confirm VIN/VOUT routing and ON/CT pinout before swap.",
+  "tags": [
+    "load_switch",
+    "sot23"
+  ],
+  "schema_version": "1.0.0"
+}

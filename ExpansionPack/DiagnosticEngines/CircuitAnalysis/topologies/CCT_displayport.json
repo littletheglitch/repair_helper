@@ -1,0 +1,54 @@
+{
+  "circuit_id": "CCT_displayport",
+  "name": "DisplayPort interface",
+  "description": "Main link (1/2/4 lanes, differential) + AUX (I2C-like) + HPD. Packet-based video.",
+  "topology": "DP connector + ESD + main-link driver + AUX",
+  "main_components": [
+    "DP connector",
+    "ESD diodes",
+    "main-link driver (in GPU)",
+    "AUX channel",
+    "HPD logic"
+  ],
+  "input": "Digital video + audio",
+  "output": "DP output to display",
+  "expected_signal_behavior": "Main link lanes swing ~400-1200 mV depending on link rate; AUX at 1 Mbps; HPD pulses for link training.",
+  "common_failure_modes": [
+    {
+      "mode": "no_display",
+      "description": "main link dead, HPD missing"
+    },
+    {
+      "mode": "no_link_train",
+      "description": "signal integrity, AUX fault"
+    },
+    {
+      "mode": "sparkles",
+      "description": "link rate too high for cable"
+    }
+  ],
+  "diagnostic_measurements": [
+    "DP HPD level",
+    "main-link lane differential voltage",
+    "AUX channel levels"
+  ],
+  "possible_fault_locations": [
+    "DP connector",
+    "ESD diodes",
+    "main-link driver",
+    "AUX transceiver"
+  ],
+  "recommended_next_tests": [
+    "check HPD",
+    "scope main-link lanes",
+    "check AUX channel"
+  ],
+  "source_references": [
+    {
+      "title": "DisplayPort spec",
+      "url": "https://vesa.org/vesa-standards/",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

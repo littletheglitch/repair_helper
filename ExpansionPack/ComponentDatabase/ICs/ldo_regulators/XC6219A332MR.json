@@ -1,0 +1,124 @@
+{
+  "record_id": "IC_TOR_XC6219A332MR",
+  "part_number": "XC6219A332MR",
+  "manufacturer": "Torex Semiconductor",
+  "manufacturer_short": "Torex",
+  "category": "ldo_regulator",
+  "package": "SOT-23-5",
+  "pin_count": 5,
+  "pinout": {
+    "1": "VIN",
+    "2": "VOUT",
+    "3": "GND",
+    "4": "NC",
+    "5": "CE"
+  },
+  "pin_functions": [
+    {
+      "pin": 1,
+      "name": "VIN",
+      "function": "Input voltage",
+      "type": "power"
+    },
+    {
+      "pin": 2,
+      "name": "VOUT",
+      "function": "Output",
+      "type": "output"
+    },
+    {
+      "pin": 3,
+      "name": "GND",
+      "function": "Ground",
+      "type": "ground"
+    },
+    {
+      "pin": 4,
+      "name": "NC",
+      "function": "No connect / can be GND on some variants",
+      "type": "nc"
+    },
+    {
+      "pin": 5,
+      "name": "CE",
+      "function": "Chip enable (active high)",
+      "type": "control"
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 1.5,
+      "max": 6.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.3,
+      "max": 3.3,
+      "typ": 3.3,
+      "adjustable": false
+    },
+    "maximum_ratings": {
+      "VIN_v": 6.5,
+      "IOUT_ma": 300
+    },
+    "operating_conditions": {
+      "output_current_ma_typ": 300,
+      "drop_out_mv": 200
+    },
+    "quiescent_current_ma": 0.05,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Standby / RTC logic rails",
+    "Battery-backed SRAM"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Fixed 3.3 V low-Iq LDO",
+      "topology": "ldo",
+      "description": "CE high to enable; 1uF input/output caps minimum.",
+      "external_components": [
+        "input cap",
+        "output cap"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Input.",
+      "pin_numbers": [
+        1
+      ]
+    },
+    {
+      "function": "VOUT",
+      "description": "Output 3.3 V.",
+      "pin_numbers": [
+        2
+      ]
+    },
+    {
+      "function": "CE",
+      "description": "Chip enable.",
+      "pin_numbers": [
+        5
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.torexsemi.com/product/linear-ics/ldo-300ma-low-consumption/xc6219/",
+  "datasheet_source": "Torex Semiconductor official product page",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Pinout and family verified. Confirm EN polarity and NC pin treatment against the live datasheet for the specific suffix.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Pinout differs from TLV700/RT9193 (VOUT on pin 2, CE on pin 5) — NOT pin-compatible despite same SOT-23-5 package.",
+  "tags": [
+    "ldo",
+    "sot23",
+    "rtc"
+  ],
+  "schema_version": "1.0.0"
+}

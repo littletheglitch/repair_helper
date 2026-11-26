@@ -1,0 +1,58 @@
+{
+  "circuit_id": "CCT_opamp",
+  "name": "Op-amp circuit",
+  "description": "General-purpose amplifier with feedback. Configuration determines gain, filter, or comparison function.",
+  "topology": "Op-amp + feedback network",
+  "main_components": [
+    "op-amp IC",
+    "feedback resistors",
+    "input resistors",
+    "bypass caps"
+  ],
+  "input": "Analog signal",
+  "output": "Amplified/filtered analog signal",
+  "expected_signal_behavior": "Output per the configured gain/bandwidth; inputs at virtual short (inverting) or common-mode (non-inverting).",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "op-amp dead, supply missing"
+    },
+    {
+      "mode": "clipped",
+      "description": "gain too high, supply too low"
+    },
+    {
+      "mode": "oscillation",
+      "description": "feedback unstable, cap failed"
+    },
+    {
+      "mode": "offset_high",
+      "description": "input bias path open"
+    }
+  ],
+  "diagnostic_measurements": [
+    "op-amp V+ and V- supplies",
+    "output voltage",
+    "input voltages",
+    "feedback network resistance"
+  ],
+  "possible_fault_locations": [
+    "op-amp IC",
+    "feedback resistors",
+    "supply decoupling caps"
+  ],
+  "recommended_next_tests": [
+    "check op-amp supplies",
+    "check output vs expected gain",
+    "check feedback resistors",
+    "scope output for oscillation"
+  ],
+  "source_references": [
+    {
+      "title": "Op-amp fundamentals",
+      "url": "https://www.ti.com/lit/an/sloa011/sloa011.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

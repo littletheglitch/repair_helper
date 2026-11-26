@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "question_id": 123456,
+      "title": "Lenovo G50-80 no power, +5VALW shorted",
+      "link": "https://electronics.stackexchange.com/questions/123456/lenovo-g50-80-no-power",
+      "creation_date": 1714521600,
+      "score": 12,
+      "tags": ["motherboard", "laptop", "power-supply", "repair", "troubleshooting"],
+      "owner": {"display_name": "repair_tech"},
+      "body": "<p>My Lenovo G50-80 has no power. I measured +5VALW and it is 0V. The VIN is 19V. I measured resistance to ground on +5VALW and got 8 ohms. Could a capacitor be shorted? The +3VALW is fine at 3.3V.</p>"
+    },
+    {
+      "question_id": 123457,
+      "title": "What is the difference between a buck and boost converter?",
+      "link": "https://electronics.stackexchange.com/questions/123457/buck-vs-boost",
+      "creation_date": 1714608000,
+      "score": 45,
+      "tags": ["dc-dc-converter", "pwm"],
+      "owner": {"display_name": "student_eng"},
+      "body": "<p>A buck converter steps voltage down; a boost converter steps it up. The buck uses a high-side MOSFET and a low-side diode (or synchronous MOSFET). The boost uses a low-side switch and a diode. Both use an inductor and a capacitor for energy storage and filtering.</p>"
+    }
+  ],
+  "has_more": true,
+  "page_size": 30
+}

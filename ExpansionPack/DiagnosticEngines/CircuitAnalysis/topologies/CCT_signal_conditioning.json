@@ -1,0 +1,52 @@
+{
+  "circuit_id": "CCT_signal_conditioning",
+  "name": "Signal conditioning circuit",
+  "description": "Filters, scales, offsets, or isolates a sensor signal before it reaches an ADC or controller.",
+  "topology": "Op-amp + filter + scaling",
+  "main_components": [
+    "op-amp",
+    "filter caps/inductors",
+    "scaling resistors",
+    "offset network"
+  ],
+  "input": "Raw sensor signal",
+  "output": "Conditioned signal for ADC",
+  "expected_signal_behavior": "Output in the ADC input range; bandwidth limited to reject noise; offset applied per design.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "op-amp dead, supply missing"
+    },
+    {
+      "mode": "wrong_scaling",
+      "description": "resistor drift"
+    },
+    {
+      "mode": "noisy",
+      "description": "filter cap failed"
+    },
+    {
+      "mode": "offset_drift",
+      "description": "offset network drift"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input signal",
+    "output signal",
+    "op-amp supplies",
+    "filter cap ESR"
+  ],
+  "possible_fault_locations": [
+    "op-amp",
+    "scaling resistors",
+    "filter caps",
+    "offset network"
+  ],
+  "recommended_next_tests": [
+    "scope input vs output",
+    "verify gain/offset",
+    "check filter caps"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

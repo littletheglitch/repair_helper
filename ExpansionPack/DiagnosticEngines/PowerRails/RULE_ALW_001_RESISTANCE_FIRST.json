@@ -1,0 +1,44 @@
+{
+  "rule_id": "RULE_ALW_001_RESISTANCE_FIRST",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect adapter and battery. Wait 30 s. Measure resistance from rail to ground.",
+      "measure": {
+        "what": "Resistance from +3VALW / +5VALW to ground",
+        "where": "ALW rail test points (typically near the standby controller)",
+        "instrument": "DMM resistance mode (200 ohm range first)",
+        "expected": "+3VALW typically >50 ohm; +5VALW typically >30 ohm. Values <10 ohm indicate a hard short on the rail or on a downstream rail powered through a diode-OR.",
+        "safety": "Discharge all caps before measuring. ALW rails have many ceramic caps that hold charge briefly."
+      },
+      "interpretations": [
+        {
+          "if_result": "Resistance < 10 ohm",
+          "then": "Hard short. Do NOT re-apply power. A shorted downstream rail (e.g. a 3.3V peripheral) can pull +3VALW down through a load switch. Hunt the short before continuing.",
+          "set_facts": [
+            "rail_short=True"
+          ],
+          "next_rule": "RULE_BUCK_010_SHORTED_RAIL"
+        },
+        {
+          "if_result": "Resistance > 100 ohm",
+          "then": "No short. Proceed to check standby controller VIN.",
+          "set_facts": [
+            "rail_short=False"
+          ],
+          "next_rule": "RULE_ALW_002_CHECK_ADAPTER"
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

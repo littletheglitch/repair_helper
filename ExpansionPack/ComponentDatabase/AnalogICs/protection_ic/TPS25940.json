@@ -1,0 +1,41 @@
+{
+  "record_id": "AIC_TI_TPS25940",
+  "part_number": "TPS25940",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "protection_ic",
+  "package": "VQFN-22",
+  "pin_count": 22,
+  "pinout": {
+    "notes": "eFuse: integrates a power FET + OCP/OVP/UVLO/thermal. Pinout per datasheet."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 2.7,
+      "max": 23.0
+    },
+    "supply_current_ma": null,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 125
+    }
+  },
+  "typical_applications": [
+    "Hot-swap protection",
+    "Input rail eFuse",
+    "OCP/OVP for adapter rails"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps25940.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family and function verified. Detailed pinout and register map per the live datasheet.",
+  "replacement_notes": "eFuses are firmware/configured via external resistors; cross-vendor substitution is risky. Match VIN, I_limit, fault response, and enable polarity.",
+  "tags": [
+    "efuse",
+    "protection",
+    "ocp",
+    "ovp"
+  ],
+  "schema_version": "1.0.0"
+}

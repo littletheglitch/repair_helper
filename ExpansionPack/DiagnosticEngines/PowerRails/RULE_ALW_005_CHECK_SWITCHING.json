@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_ALW_005_CHECK_SWITCHING",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND en_present AND NOT switching_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Probe the switching node (inductor input) on the affected channel.",
+      "measure": {
+        "what": "Switching node waveform",
+        "where": "Inductor input pad for the affected channel",
+        "instrument": "Oscilloscope 100 MHz, 10x probe, ground spring",
+        "expected": "Square wave at the controller's switching frequency (typically 300-750 kHz for ALW bucks), swinging 0 to VIN.",
+        "safety": "ALW controllers are dual-channel; probe the right channel."
+      },
+      "interpretations": [
+        {
+          "if_result": "Switching present",
+          "then": "Controller is switching. Proceed to check FB/output voltage.",
+          "set_facts": [
+            "switching_present=True"
+          ],
+          "next_rule": "RULE_BUCK_006_CHECK_FEEDBACK"
+        },
+        {
+          "if_result": "No switching",
+          "then": "Controller is not switching despite all conditions good. Likely dead. Verify soft-start/ILIM pins are not shorted before replacing.",
+          "set_facts": [
+            "switching_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for switching frequency and channel assignment."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

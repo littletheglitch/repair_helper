@@ -1,0 +1,48 @@
+{
+  "circuit_id": "CCT_lvds",
+  "name": "LVDS interface",
+  "description": "Low-voltage differential signaling for panel display. 4-5 data pairs + 1 clock pair.",
+  "topology": "LVDS transmitter + connector + panel receiver",
+  "main_components": [
+    "LVDS transmitter (in GPU/PCH)",
+    "connector",
+    "panel receiver",
+    "termination resistors (100 ohm diff)"
+  ],
+  "input": "Parallel video",
+  "output": "LVDS serial to panel",
+  "expected_signal_behavior": "Each pair swings ~350 mV differential around a 1.2V common mode; clock at panel refresh rate.",
+  "common_failure_modes": [
+    {
+      "mode": "no_display",
+      "description": "transmitter dead, connector damaged"
+    },
+    {
+      "mode": "garbled",
+      "description": "pair swapped, termination missing"
+    },
+    {
+      "mode": "flicker",
+      "description": "signal integrity, bad cable"
+    }
+  ],
+  "diagnostic_measurements": [
+    "LVDS pair differential voltage",
+    "common-mode voltage",
+    "clock frequency"
+  ],
+  "possible_fault_locations": [
+    "LVDS transmitter",
+    "connector",
+    "termination resistors",
+    "panel receiver"
+  ],
+  "recommended_next_tests": [
+    "scope LVDS pairs",
+    "verify common mode",
+    "check termination resistors",
+    "inspect connector"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

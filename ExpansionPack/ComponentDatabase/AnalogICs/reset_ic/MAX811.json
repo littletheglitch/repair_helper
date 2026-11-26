@@ -1,0 +1,44 @@
+{
+  "record_id": "AIC_MAX_MAX811",
+  "part_number": "MAX811",
+  "manufacturer": "Maxim Integrated (Analog Devices)",
+  "manufacturer_short": "Maxim",
+  "category": "voltage_supervisor",
+  "package": "SOT-143",
+  "pin_count": 4,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "vdd",
+      "function": "vdd",
+      "pin": 1
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 2
+    },
+    {
+      "name": "reset_n",
+      "function": "reset_n",
+      "pin": 3
+    },
+    {
+      "name": "mr",
+      "function": "mr",
+      "pin": 4
+    }
+  ],
+  "electrical_characteristics": {},
+  "typical_applications": [],
+  "datasheet_url": "https://www.analog.com/media/en/technical-documentation/data-sheets/MAX811-MAX812.pdf",
+  "datasheet_source": "Maxim Integrated (Analog Devices) MAX811 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "5V supervisor (4.63V threshold), push-pull/open-drain variants. Classic reset IC.",
+  "tags": [
+    "supervisor",
+    "reset_ic"
+  ],
+  "schema_version": "1.0.0"
+}

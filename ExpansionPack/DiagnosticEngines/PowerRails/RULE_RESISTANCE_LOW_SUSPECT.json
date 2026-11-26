@@ -1,0 +1,70 @@
+{
+  "rule_id": "RULE_RESISTANCE_LOW_SUSPECT",
+  "topology": "buck_converter",
+  "priority": 10,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "rail_resistance_low AND no_confirmed_short",
+    "notes": "Rail resistance to ground is low (under 10 ohm), suggesting a possible short. This is a SUSPECT, not a confirmed short — low resistance can also be a normal low-impedance rail (e.g. a CPU VCORE rail reads low ohms to ground by design). The technician must confirm with a thermal scan or current-limited injection. Do NOT treat as a confirmed short without confirmation."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Rail resistance to ground is LOW (<10 ohm). This MIGHT be a short, or it might be normal for a low-impedance rail. Confirm with a current-limited supply (inject the rail's nominal voltage at ~0.5A limit) and thermal imaging. A genuinely shorted component will heat visibly; a healthy low-impedance rail will not.",
+      "measure": {
+        "what": "Confirm short via current-limited injection + thermal",
+        "where": "Rail test point, with current-limited bench supply",
+        "instrument": "Current-limited bench supply + thermal camera (or freeze spray)",
+        "expected": "A shorted component heats visibly under injection. No thermal signature = healthy low-impedance rail.",
+        "safety": "Use a current-limited supply, NOT the on-board regulator. Limit to ~0.5A to avoid trace damage."
+      },
+      "interpretations": [
+        {
+          "if_result": "A component heats up",
+          "then": "That component is shorted. Replace it. After replacement, re-measure resistance to confirm it returned to normal.",
+          "set_facts": [
+            "rail_short=True"
+          ]
+        },
+        {
+          "if_result": "No component heats up",
+          "then": "The low resistance is normal for this rail (low-impedance design). The fault is NOT a short. Re-examine other causes.",
+          "set_facts": [
+            "rail_short=False",
+            "resistance_normal=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

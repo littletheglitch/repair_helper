@@ -1,0 +1,50 @@
+{
+  "circuit_id": "CCT_spi",
+  "name": "SPI interface",
+  "description": "4-wire serial: SCLK + MOSI + MISO + CS. Full-duplex, master clocked.",
+  "topology": "SCLK + MOSI + MISO + CS",
+  "main_components": [
+    "SPI controller",
+    "SPI slave(s)",
+    "CS lines per slave"
+  ],
+  "input": "SCLK + MOSI + CS",
+  "output": "MISO",
+  "expected_signal_behavior": "SCLK idle level (CPOL) and sample edge (CPHA) per mode 0-3; CS active low typically; data clocked on edge.",
+  "common_failure_modes": [
+    {
+      "mode": "no_clock",
+      "description": "controller dead, SCLK stuck"
+    },
+    {
+      "mode": "no_miso",
+      "description": "slave dead, CS not asserted"
+    },
+    {
+      "mode": "garbled",
+      "description": "CPOL/CPHA mismatch, baud too high"
+    },
+    {
+      "mode": "no_cs",
+      "description": "CS stuck high, slave never selected"
+    }
+  ],
+  "diagnostic_measurements": [
+    "SCLK idle level",
+    "SCLK frequency",
+    "MOSI/MISO during transfer",
+    "CS level during transfer"
+  ],
+  "possible_fault_locations": [
+    "SPI controller",
+    "SPI slave",
+    "CS line"
+  ],
+  "recommended_next_tests": [
+    "scope all 4 lines during a transfer",
+    "verify CPOL/CPHA match",
+    "check CS assertion"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

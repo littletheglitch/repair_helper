@@ -1,0 +1,46 @@
+{
+  "record_id": "MOS_Vishay_SI2302",
+  "part_number": "SI2302",
+  "manufacturer": "Vishay Siliconix",
+  "manufacturer_short": "Vishay",
+  "channel_type": "N",
+  "package": "SOT-23",
+  "pin_count": 3,
+  "pinout": {
+    "1": "GATE",
+    "2": "DRAIN",
+    "3": "SOURCE"
+  },
+  "vds_v": 20,
+  "id_a": 2.1,
+  "id_conditions": "VGS=8.0V, 25C",
+  "rds_on_mohm": 85,
+  "rds_on_conditions": "VGS=4.5V (logic level)",
+  "vgs_th_v": 0.85,
+  "vgs_max_v": 8.0,
+  "gate_charge_nc": 12.0,
+  "gate_charge_conditions": "VDS=20V",
+  "power_dissipation_w": 1.25,
+  "thermal": {
+    "r_theta_ja_c_per_w": 110,
+    "r_theta_jc_c_per_w": null,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "technology": "Trench MOSFET (logic level)",
+  "typical_applications": [],
+  "datasheet_url": "https://www.vishay.com/docs/68588/si2302ds.pdf",
+  "datasheet_source": "Vishay Siliconix SI2302 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Logic-level N-MOS, Vth 0.85V, popular SOT-23 load switch.",
+  "replacement_notes": "",
+  "tags": [
+    "mosfet",
+    "n_channel",
+    "logic_level"
+  ],
+  "schema_version": "1.0.0"
+}

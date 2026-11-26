@@ -1,0 +1,38 @@
+{
+  "rail_family": "ADAPTER_INPUT",
+  "description": "Adapter input rail (typically 19-20 V from the barrel jack or USB-C PD). Passes through input MOSFETs controlled by the charger IC.",
+  "typical_voltage_v": {
+    "min": 5.0,
+    "typ": 19.0,
+    "max": 20.0,
+    "notes": "USB-C PD can negotiate up to 20 V; barrel jack is typically 19-20 V."
+  },
+  "typical_topology": "charger_input",
+  "always_on": true,
+  "common_controllers": [
+    "BQ24737",
+    "BQ24780S",
+    "BQ25700",
+    "ISL95521"
+  ],
+  "upstream_rails": [
+    "DC_JACK",
+    "USB_C_PD"
+  ],
+  "downstream_rails": [
+    "+VIN_BUCK",
+    "BATTERY"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "input_mosfet_vgs_present"
+  ],
+  "schema_version": "1.0.0"
+}

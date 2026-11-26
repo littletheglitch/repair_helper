@@ -1,0 +1,51 @@
+{
+  "rule_id": "RULE_CHG_003_CHECK_EN",
+  "topology": "charger_input",
+  "applies_to_rail_families": [
+    "ADAPTER_INPUT"
+  ],
+  "condition": {
+    "expression": "input_mosfet_off AND vcc_present AND NOT en_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the charger IC EN pin and the ACOK output. Most chargers gate the input MOSFET via ACOK (open-drain) and an external inverter; if ACOK is low the MOSFET stays off.",
+      "measure": {
+        "what": "Charger EN + ACOK pin voltages",
+        "where": "Charger EN and ACOK pins (consult datasheet)",
+        "instrument": "DMM DC volts + oscilloscope",
+        "expected": "ACOK high when adapter is recognised as valid. EN level per datasheet.",
+        "safety": "ACOK feeds the EC; if the EC is holding the charger off, that is by design (battery-only mode, low current limit)."
+      },
+      "interpretations": [
+        {
+          "if_result": "ACOK high and EN at enabled level",
+          "then": "Charger should be driving the input MOSFET. If the MOSFET gate is still low, suspect the MOSFET driver transistor or the MOSFET itself.",
+          "set_facts": [
+            "en_present=True",
+            "input_mosfet_fault=True"
+          ]
+        },
+        {
+          "if_result": "ACOK low",
+          "then": "Charger has not declared adapter valid. Check ACIN voltage threshold on the charger datasheet; if ACIN is below threshold the charger will keep the MOSFET off. May indicate an adapter-ID pin issue (middle pin on Dell/HP jacks).",
+          "set_facts": [
+            "en_present=False",
+            "acok_low=True"
+          ]
+        },
+        {
+          "if_result": "EN low",
+          "then": "EC is holding the charger off (firmware policy: wrong adapter, battery-only mode, OTP). Read the EC's charger enable register via SMBus if accessible.",
+          "set_facts": [
+            "en_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need charger datasheet for EN/ACOK pins and the adapter-ID scheme used by this board."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

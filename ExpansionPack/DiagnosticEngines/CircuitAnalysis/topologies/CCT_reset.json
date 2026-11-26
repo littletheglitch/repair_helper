@@ -1,0 +1,48 @@
+{
+  "circuit_id": "CCT_reset",
+  "name": "Reset circuit",
+  "description": "Generates a reset signal on power-up and on brown-out. Often a dedicated reset IC + RC.",
+  "topology": "Reset IC + RC (or just RC)",
+  "main_components": [
+    "reset IC (or supervisor)",
+    "RC network",
+    "pull-up resistor",
+    "manual reset button"
+  ],
+  "input": "VCC",
+  "output": "Reset signal (active-low typically)",
+  "expected_signal_behavior": "Reset asserts when VCC < threshold; de-asserts after a delay once VCC is good.",
+  "common_failure_modes": [
+    {
+      "mode": "stuck_in_reset",
+      "description": "VCC low, reset IC stuck, reset button stuck"
+    },
+    {
+      "mode": "no_reset",
+      "description": "reset IC dead, cap open"
+    },
+    {
+      "mode": "intermittent_reset",
+      "description": "VCC noise triggering brown-out"
+    }
+  ],
+  "diagnostic_measurements": [
+    "VCC voltage",
+    "reset signal level",
+    "reset IC threshold",
+    "reset pulse duration on power-up"
+  ],
+  "possible_fault_locations": [
+    "reset IC",
+    "RC cap",
+    "reset button",
+    "pull-up resistor"
+  ],
+  "recommended_next_tests": [
+    "check VCC vs reset threshold",
+    "scope reset on power-up",
+    "check reset button for stuck"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,44 @@
+{
+  "rule_id": "RULE_ATX_002_CHECK_PSU_5VSB",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "ATX_5VSB"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT ps_on_signal_measured",
+    "notes": "5VSB resistance is fine; the next step is to confirm whether 5VSB is actually present at the ATX connector with mains applied, before diagnosing the motherboard."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "With the PSU plugged into mains (board side of the 24-pin connector UNPLUGGED for safety on first check), measure 5VSB at pin 9 of the PSU-side 24-pin connector.",
+      "measure": {
+        "what": "5VSB voltage at the PSU-side 24-pin connector",
+        "where": "Pin 9 (purple wire) of the 24-pin ATX, PSU side only",
+        "instrument": "DMM DC volts",
+        "expected": "5.0 V +/-5% whenever the PSU is plugged into mains.",
+        "safety": "Measure at the PSU-side connector with the board unplugged. Never short adjacent pins with the probe; the 24-pin connector carries multiple voltages."
+      },
+      "interpretations": [
+        {
+          "if_result": "5VSB present at PSU side",
+          "then": "PSU 5VSB is good. Re-plug the 24-pin to the board and re-measure 5VSB on the board side. If missing on the board side, the connector or the board's 5VSB input fuse is open.",
+          "set_facts": [
+            "psu_5vsb_good=True"
+          ],
+          "next_rule": "RULE_ATX_003_CHECK_PS_ON"
+        },
+        {
+          "if_result": "5VSB missing at PSU side",
+          "then": "PSU is faulty or its mains switch is off. Replace or service the PSU. Do NOT continue diagnosing the motherboard.",
+          "set_facts": [
+            "psu_5vsb_good=False"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": 5.0,
+  "schema_version": "1.0.0"
+}

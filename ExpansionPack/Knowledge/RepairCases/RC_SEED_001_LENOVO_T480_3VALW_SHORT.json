@@ -1,0 +1,68 @@
+{
+  "case_id": "RC_SEED_001_LENOVO_T480_3VALW_SHORT",
+  "device_manufacturer": "Lenovo",
+  "device_model": "ThinkPad T480",
+  "board_model": "NM-xxxxx (placeholder; verify against the actual board)",
+  "platform": "laptop",
+  "symptoms": [
+    "no power",
+    "no LED when adapter plugged in",
+    "fan does not spin"
+  ],
+  "initial_observations": [
+    "Adapter LED on the tip lights when plugged into the jack (adapter is good).",
+    "No LED on the laptop when adapter plugged in.",
+    "Board does not reach S5."
+  ],
+  "measurements": [
+    {
+      "name": "+3VALW.resistance",
+      "value": 4.7,
+      "unit": "ohm",
+      "condition": "unpowered",
+      "instrument": "DMM"
+    },
+    {
+      "name": "+5VALW.resistance",
+      "value": 320,
+      "unit": "ohm",
+      "condition": "unpowered",
+      "instrument": "DMM"
+    },
+    {
+      "name": "ADAPTER_INPUT.voltage",
+      "value": 20.0,
+      "unit": "V",
+      "condition": "powered",
+      "instrument": "DMM"
+    }
+  ],
+  "diagnostic_path": [
+    "Resistance check: +3VALW reads 4.7 ohm to ground (hard short).",
+    "Current-limited bench supply at 3.3 V, 0.5 A: C123 (output bulk cap on +3VALW) heats up.",
+    "Removed C123, re-measured +3VALW resistance: 1.2 kohm (short cleared).",
+    "Replaced C123 with same value/voltage/temp-rated cap.",
+    "Re-measured +3VALW with adapter: 3.30 V."
+  ],
+  "confirmed_faulty_component": "C123 (output bulk capacitor on +3VALW)",
+  "root_cause": "C123 shorted internally, dragging +3VALW to ground. The standby controller could not start; the board never reached S5.",
+  "repair_action": "Replaced C123 with same value/voltage/temp-rated capacitor.",
+  "final_verification": "Board boots to OS; +3VALW stable at 3.30 V under load; battery charges.",
+  "technician_notes": "Classic standby-rail short. The +5VALW resistance was normal, localising the short to the +3VALW domain. Thermal scan under current-limited injection identified C123 within seconds.",
+  "source": "technician",
+  "confidence": "confirmed",
+  "date": "2024-06-15",
+  "rails_involved": [
+    "+3VALW",
+    "+5VALW",
+    "ADAPTER_INPUT"
+  ],
+  "components_involved": [
+    "C123",
+    "standby controller"
+  ],
+  "topology": "always_on_standby",
+  "failure_pattern": "shorted_rail",
+  "promotion_status": "approved",
+  "promotion_notes": "Verified by second technician; re-test passed. Promoted to reusable knowledge."
+}

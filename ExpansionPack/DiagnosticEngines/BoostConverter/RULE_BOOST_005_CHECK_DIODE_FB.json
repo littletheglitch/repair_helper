@@ -1,0 +1,53 @@
+{
+  "rule_id": "RULE_BOOST_005_CHECK_DIODE_FB",
+  "topology": "boost_converter",
+  "applies_to_rail_families": [
+    "BOOST_GENERIC"
+  ],
+  "condition": {
+    "expression": "switching_present AND NOT fb_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the boost output diode cathode voltage (Vout) and the FB pin. Also check the output diode anode vs cathode to confirm it is conducting.",
+      "measure": {
+        "what": "Boost output voltage + FB pin + diode forward voltage",
+        "where": "Output diode cathode (Vout) and anode; FB pin per datasheet",
+        "instrument": "DMM DC volts + oscilloscope",
+        "expected": "Vout = designed boost voltage. FB at VREF per datasheet.",
+        "safety": "Boost outputs can be high voltage; verify probe rating."
+      },
+      "interpretations": [
+        {
+          "if_result": "Vout correct, FB at VREF",
+          "then": "Boost is regulating. Issue is downstream of the boost.",
+          "set_facts": [
+            "fb_present=True",
+            "rail_voltage_present=True"
+          ]
+        },
+        {
+          "if_result": "Switching present but Vout = Vin (no boost)",
+          "then": "Output diode is open OR the switch FET is not actually switching (gate-drive fault). Check diode forward conduction and switch-pin waveform.",
+          "set_facts": [
+            "fb_present=False",
+            "output_diode_open=True"
+          ]
+        },
+        {
+          "if_result": "Vout low and FB pulled high",
+          "then": "Boost is trying but cannot reach regulation. Could be overloaded output, weak inductor, or weak switch. Check output load.",
+          "set_facts": [
+            "fb_present=True",
+            "rail_voltage_present=True",
+            "voltage_low=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need boost datasheet for FB pin and VREF."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

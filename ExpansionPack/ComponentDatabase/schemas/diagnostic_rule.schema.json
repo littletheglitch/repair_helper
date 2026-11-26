@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "diagnostic_rule.schema.json",
+  "title": "Power Rail Diagnostic Rule",
+  "description": "A deterministic rule that maps a set of measured or observed signals on a power rail to the next diagnostic step. Each rule is scoped to a topology and references rail families it applies to. Rules must never invent pin numbers or expected voltages: those come from the rail definition or the identified controller.",
+  "type": "object",
+  "required": [
+    "rule_id",
+    "topology",
+    "applies_to_rail_families",
+    "condition",
+    "next_steps",
+    "schema_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "pattern": "^RULE_[A-Z0-9_]+$"
+    },
+    "topology": {
+      "type": "string",
+      "enum": [
+        "buck_converter",
+        "boost_converter",
+        "ldo",
+        "multi_phase_vrm",
+        "gpu_vrm",
+        "memory_power",
+        "charger_input",
+        "always_on_standby",
+        "load_switch"
+      ]
+    },
+    "applies_to_rail_families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "condition": {
+      "type": "object",
+      "description": "Boolean expression over measurement keys. Uses a restricted expression language: AND/OR/NOT over fact names like 'vin_present', 'vcc_present'. Fact names ending in '_present' are booleans; '_value' are numbers; '_measured' are booleans indicating the measurement exists.",
+      "required": [
+        "expression"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "step",
+          "action"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "measure": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "what": {
+                "type": "string"
+              },
+              "where": {
+                "type": "string"
+              },
+              "instrument": {
+                "type": "string"
+              },
+              "expected": {
+                "type": "string"
+              },
+              "safety": {
+                "type": "string"
+              }
+            }
+          },
+          "interpretations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "if_result",
+                "then"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "if_result": {
+                  "type": "string"
+                },
+                "then": {
+                  "type": "string"
+                },
+                "set_facts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Facts to assert when this interpretation matches."
+                },
+                "next_rule": {
+                  "type": "string"
+                },
+                "requires_info": {
+                  "type": "boolean",
+                  "description": "True if this interpretation branch needs more info to proceed."
+                },
+                "requires_info_note": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "requires_info": {
+            "type": "boolean",
+            "description": "True if this step cannot proceed without additional information (controller identity, datasheet, board-specific data)."
+          },
+          "requires_info_note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rail_voltage_hint_v": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "controller_hint": {
+      "type": "string"
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "datasheet",
+              "app_note",
+              "reference_design",
+              "community",
+              "other"
+            ]
+          }
+        }
+      }
+    },
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.0.0"
+      ]
+    },
+    "follow_on": {
+      "type": "boolean",
+      "description": "True if this rule is only reachable via next_rule from another rule, not a standalone candidate."
+    },
+    "priority": {
+      "type": "integer",
+      "description": "Evaluation order (lower fires first). 10=numeric/safety faults, 20=measured-absent conclusions, 30=healthy, 50=linear chain (default), 70=follow-on.",
+      "default": 50
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "rail_family": "+1.8V",
+  "description": "1.8 V system rail (PCH / chipset / memory substrate). Topology varies: usually a synchronous buck from +3VALW or +5VALW.",
+  "typical_voltage_v": {
+    "min": 1.75,
+    "typ": 1.8,
+    "max": 1.85,
+    "notes": "Tolerance +/-3%. DDR4 platforms may run 1.2 V instead."
+  },
+  "typical_topology": "buck_converter",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51224",
+    "RT8205",
+    "ISL95831"
+  ],
+  "upstream_rails": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0"
+}

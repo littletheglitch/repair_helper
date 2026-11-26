@@ -1,0 +1,29 @@
+{
+  "rail_family": "ATX_5V",
+  "description": "Desktop ATX +5V main rail. Enabled by the PSU on PS_ON#.",
+  "typical_voltage_v": {
+    "min": 4.75,
+    "typ": 5.0,
+    "max": 5.25,
+    "notes": "ATX12V: +/-5%."
+  },
+  "typical_topology": "always_on_standby",
+  "always_on": false,
+  "common_controllers": [],
+  "upstream_rails": [
+    "ATX_PSU_5V"
+  ],
+  "downstream_rails": [
+    "USB_5V",
+    "HDD_5V"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "ps_on_signal_state",
+    "pwr_ok_signal_state"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

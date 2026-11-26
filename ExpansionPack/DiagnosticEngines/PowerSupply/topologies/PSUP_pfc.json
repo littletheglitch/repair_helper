@@ -1,0 +1,168 @@
+{
+  "topology_id": "PSUP_pfc",
+  "name": "PFC boost pre-regulator (mains, ~380V DC output)",
+  "mains_powered": true,
+  "isolated": false,
+  "typical_power_level_w": 500,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "AC inlet, fuse, NTC, EMI filter, MOV",
+      "components": [
+        "fuse",
+        "MOV",
+        "NTC",
+        "X-cap",
+        "Y-cap",
+        "CM-choke"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No AC input reaching the primary. Check the AC inlet, fuse, and NTC. A blown primary fuse indicates a downstream short — do NOT replace without finding it.",
+      "depends_on": [],
+      "side": "primary"
+    },
+    {
+      "id": "rectification",
+      "description": "Bridge rectifier (4 diodes or bridge block)",
+      "components": [
+        "bridge_rectifier"
+      ],
+      "diagnostic_signals": {
+        "bulk_dc": "in_range"
+      },
+      "fail_note": "Bridge rectifier fault. Check the bridge for short/open. A shorted bridge blows the primary fuse.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "input_filter",
+      "description": "Primary bulk capacitor (~160V or ~340V DC)",
+      "components": [
+        "bulk_cap"
+      ],
+      "diagnostic_signals": {
+        "bulk_dc": "in_range"
+      },
+      "fail_note": "Bulk cap voltage wrong. A shorted bulk cap blows the fuse; an open/degraded cap causes low DC and ripple.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "pfc",
+      "description": "PFC boost pre-regulator: switch + diode + bulk to ~380V",
+      "components": [
+        "pfc_fet",
+        "pfc_diode",
+        "pfc_inductor",
+        "pfc_bulk"
+      ],
+      "diagnostic_signals": {
+        "pfc_voltage": "in_range",
+        "switching": "in_range"
+      },
+      "fail_note": "PFC boost stage fault. The PFC FET must switch; the PFC bulk must hold ~380V DC. A dead PFC FET leaves the bulk at ~160V (peak of rectified mains); a shorted PFC diode drains it.",
+      "depends_on": [
+        "rectification"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "primary"
+    },
+    {
+      "id": "output_filter",
+      "description": "PFC bulk cap (the 'output')",
+      "components": [
+        "pfc_bulk"
+      ],
+      "diagnostic_signals": {
+        "pfc_voltage": "in_range",
+        "output_ripple": "in_range"
+      },
+      "fail_note": "PFC bulk cap fault. Low capacitance causes high ripple.",
+      "depends_on": [
+        "rectification_secondary",
+        "inductor",
+        "transformer"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Non-isolated feedback: output divider to controller FB pin",
+      "components": [
+        "fb_divider",
+        "fb_cap"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range"
+      },
+      "fail_note": "Feedback pin not at expected voltage. Check the FB divider resistors and FB decoupling cap.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "input_protection",
+        "pfc"
+      ],
+      "notes": "PFC: a dead FET leaves bulk at 160V (not zero)."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

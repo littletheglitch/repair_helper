@@ -1,0 +1,62 @@
+{
+  "circuit_id": "CCT_hdmi",
+  "name": "HDMI interface",
+  "description": "4 TMDS pairs + DDC (I2C) + HPD + 5V. High-speed differential video + I2C EDID.",
+  "topology": "HDMI connector + ESD + TMDS driver + DDC",
+  "main_components": [
+    "HDMI connector",
+    "ESD diodes on TMDS",
+    "TMDS driver (in GPU/PCH)",
+    "DDC I2C",
+    "HPD logic",
+    "5V source"
+  ],
+  "input": "Digital video + audio",
+  "output": "HDMI output to display",
+  "expected_signal_behavior": "TMDS pairs swing ~400 mV differential; DDC at 100 kHz; HPD high when display connected; 5V 50 mA min.",
+  "common_failure_modes": [
+    {
+      "mode": "no_display",
+      "description": "TMDS dead, HPD missing"
+    },
+    {
+      "mode": "no_edid",
+      "description": "DDC open, EDID ROM dead"
+    },
+    {
+      "mode": "sparkles",
+      "description": "signal integrity, bad cable"
+    },
+    {
+      "mode": "no_5v",
+      "description": "5V source dead, display won't enumerate"
+    }
+  ],
+  "diagnostic_measurements": [
+    "HDMI 5V",
+    "HPD level",
+    "TMDS differential voltage",
+    "DDC SCL/SDA levels"
+  ],
+  "possible_fault_locations": [
+    "HDMI connector",
+    "ESD diodes",
+    "TMDS driver",
+    "5V source",
+    "HPD logic"
+  ],
+  "recommended_next_tests": [
+    "check 5V",
+    "check HPD when display connected",
+    "scope TMDS pairs",
+    "check DDC I2C"
+  ],
+  "source_references": [
+    {
+      "title": "HDMI spec",
+      "url": "https://www.hdmi.org/spec/index",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

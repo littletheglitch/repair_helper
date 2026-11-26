@@ -1,0 +1,50 @@
+{
+  "measured_at": "2026-11-24 (Linux sandbox, Python 3.12, offline)",
+  "hardware_note": "Benchmark runs entirely offline with no network. The learning subsystem is deterministic and lightweight; these numbers are from this sandbox. On the Windows target (i7 6th gen, 8GB RAM) the CPU-only numbers will be similar because the subsystem does no LLM inference — all grading is rule-based and all reference solutions are computed by the existing deterministic engines.",
+  "metrics": [
+    {"metric": "skill_assessment_correctness", "rate": 1.0, "trials": 5, "correct": 5,
+     "interpretation": "The evidence-based engine reaches the exact expected level (novice/apprentice/practitioner) for 5 known evidence sequences, including the rule that viewing does not raise mastery."},
+    {"metric": "anti_memorization_resistance", "pass": true,
+     "distinct_after_5_same_exercise_solves": 1, "level": "apprentice",
+     "interpretation": "Re-solving the SAME exercise 5 times leaves the distinct-exercise count at 1; mastery does not inflate to practitioner (which needs 2+ distinct exercises)."},
+    {"metric": "reasoning_grading_accuracy", "rate": 1.0, "trials": 4, "correct": 4,
+     "interpretation": "Correct answer with reasoning -> correct; bare number -> not correct; wrong law with right-looking number -> not correct; unsupported assumption -> not correct. The central 'do not reward correct answer for incorrect reasoning' rule holds."},
+    {"metric": "exercise_reference_correctness", "rate": 1.0, "trials": 12, "correct": 12,
+     "interpretation": "Every generated engine exercise (ohm, series/parallel, voltage divider, RC) has a reference solution that matches an independent engine computation to within rounding."},
+    {"metric": "hint_no_disclosure", "rate": 1.0, "trials": 5, "correct": 5,
+     "interpretation": "The hint-level explanation never contains the reference solution value across 5 exercises."},
+    {"metric": "progress_persistence", "pass": true,
+     "interpretation": "Evidence (an independent solve + a view) survives reopening a learning session with the same profile name; the DB is the source of truth."},
+    {"metric": "spaced_review_determinism", "pass": true, "distinct_results_over_20_runs": 1,
+     "interpretation": "The SM-2 scheduler is a pure function: 20 runs with identical inputs produced exactly 1 distinct output."},
+    {"metric": "repair_to_learning_safety", "pass": true,
+     "confirmed_flag": false, "root_cause_disclosed": null, "solution_hidden": true,
+     "interpretation": "An unconfirmed repair case stays unconfirmed; the root cause is not disclosed; the generated follow-up exercise hides its solution."},
+    {"metric": "exercise_provenance", "rate": 1.0, "trials": 9, "correct": 9,
+     "interpretation": "Every generated exercise carries a source_kind (engine/kb/confirmed_case/synthetic) and a source_ref."},
+    {"metric": "offline_compatibility", "pass": true,
+     "learning_cmd": true, "existing_learn_cmd": true, "orchestrate_cmd": true, "analyze_cmd": true,
+     "interpretation": "The subsystem imports and runs with no network; the existing repair flow ('learn record', 'orchestrate', 'analyze') is unchanged."}
+  ],
+  "test_suite": {
+    "total_tests": 434,
+    "new_phase4_tests": 81,
+    "regressions": 0,
+    "note": "286 (Phase 1/2) + 67 (Phase 3) + 81 (Phase 4) = 434 tests, all passing offline."
+  },
+  "what_this_proves": [
+    "Mastery is evidence-based: viewing an explanation 10 times does NOT raise mastery; only independent solves and new-context demonstrations do.",
+    "A correct final answer reached by incorrect reasoning is NOT counted as correct (the spec's central rule).",
+    "Exercises always carry a known reference solution computed by a deterministic engine; the LLM is never the source of a numerical reference value.",
+    "The hint level never discloses the solution; the default level is 'guided' (not full).",
+    "Spaced review is deterministic and performance-based (SM-2): failures reset the interval, successes grow it by the ease factor.",
+    "Repair-to-learning conversion never marks an uncertain outcome as confirmed and never auto-discloses the original solution.",
+    "The subsystem is fully offline and additive — the existing repair/diagnostic flow is unchanged."
+  ],
+  "limitations": [
+    "The reasoning evaluator is rule-based and heuristic: it checks for the presence of the relevant law/keyword and a reasoning connective. A subtly-wrong reasoning phrased with the right keywords could slip through. This is a deliberate trade-off for offline determinism.",
+    "Mastery thresholds (apprentice=2 indep, practitioner=3 indep + 2 distinct, expert=5 indep + 4 distinct + 2 new-context) are calibrated for a learning context, not a formal certification. They are conservative on purpose.",
+    "The exercise generator covers 16 skill categories but draws from 4 source generators (engine, KB, confirmed case, synthetic RC). Skills without a dedicated generator fall back to an open-ended prompt graded on reasoning.",
+    "The Socratic engine has built-in paths for 5 skills (ohm_kirchhoff, voltage_divider, mosfet, measurement_interp, fault_isolation); other skills use the exercise + hint/explain flow instead of a Socratic path."
+  ]
+}

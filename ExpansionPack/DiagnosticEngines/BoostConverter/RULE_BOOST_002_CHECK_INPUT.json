@@ -1,0 +1,44 @@
+{
+  "rule_id": "RULE_BOOST_002_CHECK_INPUT",
+  "topology": "boost_converter",
+  "applies_to_rail_families": [
+    "BOOST_GENERIC"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT vin_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the boost converter input voltage (typically +3VALW or +5VALW or battery).",
+      "measure": {
+        "what": "Boost converter input voltage",
+        "where": "Boost converter input pin / input inductor pad",
+        "instrument": "DMM DC volts",
+        "expected": "Per upstream rail (3.3 V / 5 V / battery).",
+        "safety": "Standard low-voltage probe."
+      },
+      "interpretations": [
+        {
+          "if_result": "Input present",
+          "then": "Input supply good. Proceed to check EN.",
+          "set_facts": [
+            "vin_present=True"
+          ],
+          "next_rule": "RULE_BOOST_003_CHECK_EN"
+        },
+        {
+          "if_result": "Input missing",
+          "then": "Upstream rail dead. Diagnose upstream.",
+          "set_facts": [
+            "vin_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need the boost converter datasheet for input pin and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

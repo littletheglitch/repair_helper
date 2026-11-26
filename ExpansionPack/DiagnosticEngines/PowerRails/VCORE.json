@@ -1,0 +1,39 @@
+{
+  "rail_family": "VCORE",
+  "description": "CPU core voltage rail. Multi-phase synchronous buck, IMVP-compliant, voltage set by CPU VID. Voltage is platform/CPU-specific and MUST be measured against the CPU datasheet, not assumed.",
+  "typical_voltage_v": {
+    "min": 0.6,
+    "typ": 1.0,
+    "max": 1.5,
+    "notes": "Range covers many platforms; the exact VID is set by the CPU. Do NOT assume."
+  },
+  "typical_topology": "multi_phase_vrm",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51621",
+    "TPS51622",
+    "ISL95831",
+    "ISL95813",
+    "MAX15496"
+  ],
+  "upstream_rails": [
+    "+VCC_CORE_IN",
+    "+1.8V",
+    "+5VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present",
+    "ripple_measured_mv",
+    "phase_count_observed"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,47 @@
+{
+  "circuit_id": "CCT_edp",
+  "name": "eDP interface",
+  "description": "Embedded DisplayPort. Same packet protocol as DP but internal (no connector). Used for laptop panels.",
+  "topology": "eDP transmitter + panel receiver",
+  "main_components": [
+    "eDP transmitter (in GPU/PCH)",
+    "panel receiver",
+    "termination in panel"
+  ],
+  "input": "Digital video",
+  "output": "eDP to internal panel",
+  "expected_signal_behavior": "Main link per DP spec; AUX for link training and backlight control; HPD from panel.",
+  "common_failure_modes": [
+    {
+      "mode": "no_display",
+      "description": "transmitter dead, panel dead, backlight fault"
+    },
+    {
+      "mode": "no_backlight",
+      "description": "backlight enable missing, backlight boost dead"
+    },
+    {
+      "mode": "no_link_train",
+      "description": "signal integrity, panel termination wrong"
+    }
+  ],
+  "diagnostic_measurements": [
+    "eDP main-link lanes",
+    "AUX channel",
+    "HPD from panel",
+    "backlight enable signal"
+  ],
+  "possible_fault_locations": [
+    "eDP transmitter",
+    "panel",
+    "backlight boost circuit"
+  ],
+  "recommended_next_tests": [
+    "check HPD from panel",
+    "scope main-link lanes",
+    "check backlight enable",
+    "check backlight boost"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

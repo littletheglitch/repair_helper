@@ -1,0 +1,42 @@
+{
+  "case_id": "SAMPLE_05_PWM_VIN_NO_VCC",
+  "description": "+1.8V missing; VIN good, VCC measured as 0 V. The workflow cannot proceed without an explicit 'VCC missing' branch.",
+  "rail_family": "+1.8V",
+  "topology": null,
+  "controller_part": "TPS51224",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "rail_resistance",
+      "value": 500.0,
+      "measured": true,
+      "unit": "ohm"
+    },
+    {
+      "name": "rail_short",
+      "value": false,
+      "measured": true
+    },
+    {
+      "name": "vin",
+      "value": 5.0,
+      "measured": true,
+      "unit": "V"
+    },
+    {
+      "name": "vcc",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_FAULT_VCC_ABSENT",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": null,
+  "notes": "Engine surfaces that the workflow is blocked; the engineer follows the previous step's interpretation (trace VCC source LDO)."
+}

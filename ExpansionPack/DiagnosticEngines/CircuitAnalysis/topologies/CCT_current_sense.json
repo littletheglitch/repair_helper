@@ -1,0 +1,48 @@
+{
+  "circuit_id": "CCT_current_sense",
+  "name": "Current-sense circuit",
+  "description": "Measures current via a sense resistor + amplifier. Output is a voltage proportional to current.",
+  "topology": "Sense resistor + current-sense amp + filter",
+  "main_components": [
+    "sense resistor (shunt)",
+    "current-sense amplifier",
+    "filter cap",
+    "gain-setting resistors"
+  ],
+  "input": "Current through shunt",
+  "output": "Voltage proportional to current",
+  "expected_signal_behavior": "Vout = I_load * R_sense * gain. Bandwidth limited by filter.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "amp dead, shunt open"
+    },
+    {
+      "mode": "wrong_reading",
+      "description": "shunt drift, gain resistors drifted"
+    },
+    {
+      "mode": "noisy",
+      "description": "filter cap failed"
+    }
+  ],
+  "diagnostic_measurements": [
+    "shunt voltage drop (mV range)",
+    "amplifier output",
+    "amplifier supply",
+    "gain resistors"
+  ],
+  "possible_fault_locations": [
+    "sense resistor",
+    "current-sense amp",
+    "filter cap",
+    "gain resistors"
+  ],
+  "recommended_next_tests": [
+    "measure shunt voltage (differential)",
+    "check amp output vs expected",
+    "check gain resistors"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

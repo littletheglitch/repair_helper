@@ -1,0 +1,41 @@
+{
+  "record_id": "AIC_TI_UCC27282",
+  "part_number": "UCC27282",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "gate_driver",
+  "package": "WDFN-8",
+  "pin_count": 8,
+  "pinout": {
+    "notes": "Half-bridge gate driver, 100V. Pinout per datasheet."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 3.0,
+      "max": 5.5
+    },
+    "supply_current_ma": 1.5,
+    "gate_drive_a": 3.0,
+    "propagation_delay_ns": 25,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 140
+    }
+  },
+  "typical_applications": [
+    "Synchronous buck driver",
+    "Half-bridge motor driver"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/ucc27282.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family, topology (half-bridge), VBST rating verified. Pinout per live datasheet.",
+  "replacement_notes": "Gate driver replacement MUST match: bootstrap voltage, peak drive current (>= the FET Qg * Fsw requirement), propagation delay, and dead-time. A weak driver will not fully switch the FET at the target frequency.",
+  "tags": [
+    "gate_driver",
+    "half_bridge",
+    "100v"
+  ],
+  "schema_version": "1.0.0"
+}

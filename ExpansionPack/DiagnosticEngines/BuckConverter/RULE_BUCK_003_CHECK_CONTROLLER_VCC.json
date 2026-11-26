@@ -1,0 +1,55 @@
+{
+  "rule_id": "RULE_BUCK_003_CHECK_CONTROLLER_VCC",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND NOT vcc_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller's VCC pin (internal logic supply, typically 5 V or 3.3 V).",
+      "measure": {
+        "what": "Controller VCC voltage",
+        "where": "Controller VCC pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts",
+        "expected": "5.0 V or 3.3 V typical; exact value per controller datasheet.",
+        "safety": "Avoid shorting adjacent pins with the probe."
+      },
+      "interpretations": [
+        {
+          "if_result": "VCC present and at expected voltage",
+          "then": "Controller logic supply is good. Proceed to check EN.",
+          "set_facts": [
+            "vcc_present=True"
+          ],
+          "next_rule": "RULE_BUCK_004_CHECK_ENABLE"
+        },
+        {
+          "if_result": "VCC missing",
+          "then": "Controller logic supply is dead. Trace the VCC source (usually a small LDO from +5VALW or +3VALW) and diagnose that LDO first.",
+          "set_facts": [
+            "vcc_present=False"
+          ]
+        },
+        {
+          "if_result": "VCC present but wrong voltage",
+          "then": "VCC source is loaded down or out of regulation. Diagnose the VCC LDO.",
+          "set_facts": [
+            "vcc_present=True",
+            "vcc_voltage_wrong=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet to identify VCC pin and expected voltage."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

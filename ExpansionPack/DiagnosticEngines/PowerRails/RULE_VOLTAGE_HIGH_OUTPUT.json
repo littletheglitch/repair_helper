@@ -1,0 +1,76 @@
+{
+  "rule_id": "RULE_VOLTAGE_HIGH_OUTPUT",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "rail_voltage_high",
+    "notes": "Rail voltage is ABOVE the typical tolerance max. This is dangerous — overvoltage can damage downstream ICs. Power off immediately. A high rail is by definition not a short. Common causes: feedback divider open (high-side resistor), low-side FET open (synchronous buck runs unregulated), OVP circuit failed."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "DANGER: rail voltage is HIGH. Power off immediately to prevent downstream damage. Do NOT re-apply power until the cause is identified. With power off, measure the feedback divider resistors and check the low-side FET for open-circuit.",
+      "measure": {
+        "what": "Feedback divider resistor values + low-side FET drain-source resistance",
+        "where": "FB pin divider resistors; low-side FET (synchronous bucks only)",
+        "instrument": "DMM resistance mode (UNPOWERED only)",
+        "expected": "FB divider values per the schematic/service manual. Low-side FET drain-source should read low ohms (RDS_on) gate-off, high impedance gate-on; a FET that reads open in both directions is failed-open.",
+        "safety": "UNPOWERED. Discharge all caps before measuring resistance. Overvoltage may have already damaged downstream ICs — inspect for bulged/vented caps and charred ICs before re-applying power."
+      },
+      "interpretations": [
+        {
+          "if_result": "FB high-side resistor open (infinite resistance)",
+          "then": "Feedback divider is open. The regulator sees FB pin too low and drives the output high to compensate. Replace the open resistor with the correct value. WARNING: downstream ICs may already be damaged from the overvoltage — verify them before re-applying power.",
+          "set_facts": [
+            "fb_divider_open=True"
+          ]
+        },
+        {
+          "if_result": "Low-side FET reads open (synchronous buck)",
+          "then": "Low-side FET failed open. The buck cannot freewheel, so the output rises unregulated. Replace the low-side FET. Verify the gate driver survived.",
+          "set_facts": [
+            "low_side_fet_open=True"
+          ]
+        },
+        {
+          "if_result": "FB divider and FETs both good",
+          "then": "Cause unclear. Suspect the controller IC itself (internal reference or error amp drift). Replace the controller. Do NOT re-apply power without a current-limited supply to limit damage if the fault recurs.",
+          "set_facts": [
+            "controller_fault=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0",
+  "priority": 10
+}

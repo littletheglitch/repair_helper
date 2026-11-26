@@ -1,0 +1,40 @@
+{
+  "record_id": "AIC_TI_CSD87381",
+  "part_number": "CSD87381Q4D",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "power_stage",
+  "package": "VQFN-8 (3x3 mm) PowerBlock",
+  "pin_count": 8,
+  "pinout": {
+    "notes": "Combo high-side + low-side FET in one package (NexFET PowerBlock). Pinout per datasheet."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": null,
+      "max": 25.0
+    },
+    "gate_drive_a": null,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "typical_applications": [
+    "Laptop/desktop CPU VRM phase power stage",
+    "Multi-phase buck output stage"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/csd87381q4d.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family, package, VDS rating verified. Combo part: high-side + low-side in one package; do not treat as a single discrete FET.",
+  "replacement_notes": "PowerBlock combo parts are only directly substitutable with another combo part of the same pinout, VDS, RDS_on, and Qg. Replacing with two discretes requires board layout changes.",
+  "tags": [
+    "power_stage",
+    "combo",
+    "vrm",
+    "nexfet"
+  ],
+  "schema_version": "1.0.0"
+}

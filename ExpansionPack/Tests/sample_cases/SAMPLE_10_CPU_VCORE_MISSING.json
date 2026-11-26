@@ -1,0 +1,18 @@
+{
+  "case_id": "SAMPLE_10_CPU_VCORE_MISSING",
+  "description": "VCORE missing on first observation. Controller TPS51621.",
+  "rail_family": "VCORE",
+  "topology": null,
+  "controller_part": "TPS51621",
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_VRM_001_RESISTANCE_FIRST",
+  "expected_requires_info": true,
+  "expected_next_step_action_contains": "known-good"
+}

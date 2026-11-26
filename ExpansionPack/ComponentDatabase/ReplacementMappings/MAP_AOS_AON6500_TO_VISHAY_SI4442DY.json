@@ -1,0 +1,66 @@
+{
+  "mapping_id": "MAP_AOS_AON6500_TO_VISHAY_SI4442DY",
+  "original_part": "AON6500",
+  "candidate_part": "Si4442DY",
+  "component_type": "MOSFET",
+  "classification": "CONDITIONAL",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "conditional",
+      "note": "AON6500 is DFN-8 3x3; Si4442DY is SO-8. Both 8-pin but different outline and land pattern. DFN is much smaller; Si4442DY will not fit a DFN footprint."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "match",
+      "note": "Both follow classic SO-8/DFN-8 N-channel pinout: pins 1-3 source, pin 4 gate, pins 5-8 drain."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "match",
+      "note": "Both VDS=30V."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "match",
+      "note": "Both ID=12A at T_C=25C."
+    },
+    {
+      "criterion": "rds_on",
+      "verdict": "conditional",
+      "note": "CRITICAL: AON6500 RDS_on=12 mOhm at VGS=4.5V (logic-level); Si4442DY RDS_on=7.5 mOhm but specified at VGS=10V only. Si4442DY is NOT guaranteed logic-level — driving its gate from 5V will not fully enhance it and RDS_on will rise sharply."
+    },
+    {
+      "criterion": "gate_drive",
+      "verdict": "mismatch",
+      "note": "AON6500 is logic-level (specified at VGS=4.5V). Si4442DY is standard-level (specified at VGS=10V). If the controller gate drive is 5V, Si4442DY is unsuitable."
+    },
+    {
+      "criterion": "gate_charge",
+      "verdict": "conditional",
+      "note": "AON6500 Qg=6 nC; Si4442DY Qg=14 nC — Si4442DY will switch slower and dissipate more gate-drive power."
+    },
+    {
+      "criterion": "thermal",
+      "verdict": "conditional",
+      "note": "Both Rtheta_ja=50 C/W class. Si4442DY Rtheta_jc=15 vs AON6500 8 C/W."
+    }
+  ],
+  "conditions": [
+    "Footprint must be SO-8 on the board (not DFN-8).",
+    "Gate drive from the controller must be >=10V (NOT 5V). If driven from 5V, do NOT substitute.",
+    "Verify that the higher Qg of Si4442DY (14 nC vs 6 nC) does not exceed the controller's gate-drive capability at the switching frequency."
+  ],
+  "datasheet_urls": {
+    "original": "https://www.aosmd.com/res/data_sheets/AON6500.pdf",
+    "candidate": "https://www.vishay.com/docs/71205/71205.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Alpha & Omega Semiconductor official datasheet",
+    "candidate": "Vishay Siliconix official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Electrically close in VDS/ID but critical difference in gate-drive level. CONDITIONAL only when board footprint and gate drive both permit.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,100 @@
+{
+  "phase": "4.1",
+  "measured_at": "2026-11-24 (Linux sandbox, Python 3.12, offline)",
+  "purpose": "Validation & engineering accuracy of the Phase 4 learning system — NOT new features. Real, measured numbers from this sandbox.",
+  "defects_found_and_fixed": {
+    "count": 12,
+    "categories": ["reasoning_evaluator", "exercise_generator", "knowledge_transfer", "architectural_boundaries"],
+    "list": [
+      {"id": "D1", "area": "reasoning_evaluator", "defect": "Unsupported-assumption check only caught 'assume' wording; 'the rail is 5V' / 'let R=5' slipped through.", "fix": "Broadened to catch 'the X is <num>', 'let X = <num>', and 'X of <num>' assertions; added source-word allow-list; skip when the value is given in the prompt or equals the user's conclusion.", "status": "fixed"},
+      {"id": "D2", "area": "reasoning_evaluator", "defect": "Measurement-misinterpretation check required both '0 v' AND 'no voltage' literally; '0V means the rail is dead' slipped through.", "fix": "Broadened to catch 'dead', 'no power', 'absent', 'nothing', '0v means' without a stated ground reference.", "status": "fixed"},
+      {"id": "D3", "area": "reasoning_evaluator", "defect": "Logic check only flagged answers under 6 words; a 7+ word answer with no reasoning connective passed.", "fix": "Gate on the presence of a reasoning connective (so/therefore/because/...) OR step-words (substitut/first/then/...), regardless of length.", "status": "fixed"},
+      {"id": "D4", "area": "reasoning_evaluator", "defect": "Unit normalization broken for 'kΩ' (lowercases to 'mω' = milli) and unrecognized units (H, W) were silently accepted.", "fix": "Canonical (base_dimension, prefix) table; flag a unit whose base dimension differs from the reference, or that is unrecognized.", "status": "fixed"},
+      {"id": "D5", "area": "reasoning_evaluator", "defect": "Answer extractor picked the FIRST '= number' (often a given value mid-reasoning) and fell back to the last bare number (could be an index).", "fix": "Priority order: explicit 'answer/result/therefore is X' -> last '= X unit' -> trailing 'number unit' -> last bare number guarded against label-like numbers (exercise/step/page).", "status": "fixed"},
+      {"id": "D6", "area": "exercise_generator", "defect": "No physical validation: a 1V @ 3A -> 0.33 Ω 'load' (near-short) or a 60V @ 0.001A 'load' (leakage) could be generated.", "fix": "physical_validation module; each generator draws params up to 8 times until V/I/P/R are in board-level bounds; invalid draws return None (exercise rejected).", "status": "fixed"},
+      {"id": "D7", "area": "exercise_generator", "defect": "Divider generator could produce a degenerate case (Vout < 0.3V, or R1+R2 out of range).", "fix": "validate_divider checks Vout in [0.3, Vin], total in [1k, 10M], quiescent current in [1µA, 10mA].", "status": "fixed"},
+      {"id": "D8", "area": "exercise_generator", "defect": "RC valid_range was in seconds only, but the prompt asks for seconds AND ms — a correct ms answer was marked wrong.", "fix": "Unit-aware valid_range with min_s/max_s AND min_ms/max_ms + accept_units; the evaluator picks the band matching the user's unit.", "status": "fixed"},
+      {"id": "D9", "area": "exercise_generator", "defect": "upsert_exercise overwrote the reference_solution in place; a regenerated exercise would invalidate in-flight responses.", "fix": "D9 guard: if an exercise key already has responses, upsert refreshes only non-grading metadata; the reference/prompt/valid_range are frozen.", "status": "fixed"},
+      {"id": "D10", "area": "knowledge_transfer", "defect": "Exercises were number-swaps of one template (always 'V and I -> R'); no transfer to a different circuit condition.", "fix": "generate_transfer() with 4 new shapes: ohm inverse (R,V -> I), power (P=VI), loaded divider (R2||R_L), branch current. Verified distinct (different formula, unit, question).", "status": "fixed"},
+      {"id": "D11", "area": "architectural_boundaries", "defect": "The boundary (BIOS/schematic/BoardView NOT auto-imported to general KB) was implicit, not tested.", "fix": "Tests assert importing a document adds 0 KB facts; repair-to-learning adds 0 KB facts; only technician-confirmed cases (learning.py record_case) promote to KB, and only as 'repair-case' category.", "status": "tested"},
+      {"id": "D12", "area": "architectural_boundaries", "defect": "No test that proprietary repair docs stay scoped to their session.", "fix": "Test asserts a document imported for session A does not surface in session B.", "status": "tested"}
+    ]
+  },
+  "independent_reasoning_test_set": {
+    "total_cases": 53,
+    "independent_from_dev_set": true,
+    "categories": {"A_correct_reasoned": 6, "B_correct_wrong_reasoning": 4, "C_incomplete": 4, "D_hidden_assumptions": 3, "E_keyword_right_logic_wrong": 4, "F_wrong_number_good_reasoning": 3, "G_measurement_misinterpretation": 3, "H_wrong_units": 4, "I_no_reasoning": 4, "J_correct_varied": 5, "K_correct_edge": 5, "L_wrong_reasoning_traps": 3, "M_alternative_law": 1, "N_extra_edge": 4},
+    "per_category_accuracy": {
+      "A": "6/6 (100%)", "B": "4/4 (100%)", "C": "4/4 (100%)",
+      "D": "3/3 (100%)", "E": "4/4 (100%)", "F": "3/3 (100%)",
+      "G": "3/3 (100%)", "H": "4/4 (100%)", "I": "4/4 (100%)",
+      "J": "5/5 (100%)", "K": "5/5 (100%)", "L": "3/3 (100%)",
+      "M": "1/1 (100%)", "N": "4/4 (100%)"
+    },
+    "total_accuracy": "53/53 (100%)",
+    "note": "The central rule holds: a correct number with wrong/incomplete reasoning is NOT counted as correct, across all 53 independent cases."
+  },
+  "educational_benchmark": {
+    "hint_no_disclosure": {"trials": 30, "leaks": 0, "result": "PASS"},
+    "guided_no_disclosure": {"trials": 30, "leaks": 0, "result": "PASS"},
+    "full_discloses_with_provenance": {"result": "PASS"},
+    "default_level_not_full": {"default": "guided", "result": "PASS"},
+    "mastery_memorization_resistance": {"repeated_same_exercise": 5, "distinct_after": 1, "level": "apprentice (not practitioner/expert)", "result": "PASS"},
+    "memorized_answer_fails_transfer": {"result": "PASS", "note": "A user who memorized exercise A's number fails the transfer exercise B (different question shape)."},
+    "correct_transfer_answer_passes": {"result": "PASS"},
+    "spaced_review_deterministic_and_shortens": {"result": "PASS"}
+  },
+  "technician_scenarios": {
+    "total": 24,
+    "categories": {"measurement": 8, "datasheet": 6, "component": 6, "troubleshooting": 4},
+    "every_scenario_has_reference_and_source": true,
+    "synthetic_separate_from_confirmed": true,
+    "synthetic_count": 7,
+    "confirmed_repair_count": 5,
+    "no_overlap": true,
+    "reference_answers_have_reasoning": true
+  },
+  "integration": {
+    "repair_to_learning_preserves_measurements": true,
+    "repair_to_learning_preserves_symptoms": true,
+    "orchestrate_command_unchanged": true,
+    "analyze_command_unchanged": true,
+    "learn_record_command_unchanged": true,
+    "learning_and_learn_record_distinct": true
+  },
+  "phase4_benchmark_rerun": {
+    "skill_assessment_correctness": "1.00 (5/5)",
+    "anti_memorization_resistance": "PASS",
+    "reasoning_grading_accuracy": "1.00 (4/4)",
+    "exercise_reference_correctness": "1.00 (12/12)",
+    "hint_no_disclosure": "1.00 (5/5)",
+    "progress_persistence": "PASS",
+    "spaced_review_determinism": "PASS",
+    "repair_to_learning_safety": "PASS",
+    "exercise_provenance": "1.00 (9/9)",
+    "offline_compatibility": "PASS"
+  },
+  "test_suite": {
+    "total_tests": 582,
+    "phase4_baseline": 434,
+    "phase41_new_tests": 148,
+    "regressions": 0,
+    "all_offline": true
+  },
+  "what_this_proves": [
+    "12 real defects were found in Phase 4 by independent inspection and fixed in 4 stages.",
+    "The independent reasoning test set (53 cases, written separately from the dev set) grades 100% correctly per category — including the central 'correct number + wrong reasoning -> not correct' rule.",
+    "Hint and Guided never disclose the solution across 30 exercises each; Full discloses with provenance; the default level is guided (not full).",
+    "Mastery resists memorization: 5 solves of the SAME exercise leave the distinct count at 1; a memorized answer fails the transfer exercise (different question shape).",
+    "All 24 technician scenarios have a reference answer with reasoning and a valid source; synthetic and confirmed-repair scenarios are kept separate.",
+    "Exercise generation is physically validated: 0 invalid exercises across 100 seeds; RC answers accepted in both seconds and ms.",
+    "Architectural boundaries hold: documents are never auto-imported to the general KB; proprietary repair docs stay session-scoped; only technician-confirmed cases promote to KB (as 'repair-case' category).",
+    "Phase 3 behavior (orchestrate, analyze, learn record) is unchanged; the Phase 4 benchmark still passes 10/10."
+  ],
+  "limitations_honest": [
+    "The reasoning evaluator is rule-based and heuristic. The 53-case independent set passes 100%, but a sufficiently subtle wrong reasoning phrased with all the right keywords could still slip through. The independent set is a strong signal, not a proof of perfection.",
+    "The 24 technician scenarios are validated structurally (reference + source + reasoning); they are not yet wired into the exercise generator's flow as gradable exercises. Wiring them in is a Phase 4.2 task.",
+    "The transfer shapes cover 4 skills (ohm_kirchhoff, electrical_math, voltage_divider, series_parallel); the other 12 skills do not yet have transfer shapes.",
+    "The physical-validation bounds (V 0.8-60V, I 1mA-10A, P 100µW-50W) are generous board-level heuristics, not component-datasheet limits. A 50 W exercise is rejected, but a 49 W exercise is accepted — the boundary is a sanity check, not a precise derating calculation."
+  ]
+}

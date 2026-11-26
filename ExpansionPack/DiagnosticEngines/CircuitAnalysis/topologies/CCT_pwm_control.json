@@ -1,0 +1,48 @@
+{
+  "circuit_id": "CCT_pwm_control",
+  "name": "PWM control circuit",
+  "description": "Generates a pulse-width-modulated signal. Either a dedicated PWM IC or an MCU timer.",
+  "topology": "PWM IC + feedback + driver",
+  "main_components": [
+    "PWM controller IC",
+    "feedback network",
+    "gate driver",
+    "sense resistor"
+  ],
+  "input": "Feedback signal",
+  "output": "PWM output to driver",
+  "expected_signal_behavior": "Duty cycle varies with feedback; frequency fixed; dead-time for synchronous designs.",
+  "common_failure_modes": [
+    {
+      "mode": "no_pwm",
+      "description": "controller dead, EN missing"
+    },
+    {
+      "mode": "wrong_duty",
+      "description": "feedback fault"
+    },
+    {
+      "mode": "no_dead_time",
+      "description": "gate driver timing wrong"
+    }
+  ],
+  "diagnostic_measurements": [
+    "PWM output waveform",
+    "duty cycle",
+    "feedback pin voltage",
+    "dead-time (sync designs)"
+  ],
+  "possible_fault_locations": [
+    "PWM controller",
+    "feedback network",
+    "gate driver"
+  ],
+  "recommended_next_tests": [
+    "scope PWM output",
+    "check duty vs feedback",
+    "check EN",
+    "verify dead-time"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

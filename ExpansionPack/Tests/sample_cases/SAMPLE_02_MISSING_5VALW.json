@@ -1,0 +1,18 @@
+{
+  "case_id": "SAMPLE_02_MISSING_5VALW",
+  "description": "+5VALW missing. No measurements yet.",
+  "rail_family": "+5VALW",
+  "topology": null,
+  "controller_part": null,
+  "measurements": [
+    {
+      "name": "rail_voltage",
+      "value": 0.0,
+      "measured": true,
+      "unit": "V"
+    }
+  ],
+  "expected_fired_rule": "RULE_ALW_001_RESISTANCE_FIRST",
+  "expected_requires_info": false,
+  "expected_next_step_action_contains": "Disconnect"
+}

@@ -1,0 +1,31 @@
+{
+  "rail_family": "RAM_VTT_DESKTOP",
+  "description": "Desktop DDR termination rail (VDDQ/2). Tracks RAM_VRM_DESKTOP.",
+  "typical_voltage_v": {
+    "min": 0.55,
+    "typ": 0.6,
+    "max": 0.75,
+    "notes": "VDDQ/2."
+  },
+  "typical_topology": "ldo",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51200",
+    "RT9179"
+  ],
+  "upstream_rails": [
+    "RAM_VRM_DESKTOP",
+    "ATX_3V3"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present",
+    "power_good_present"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

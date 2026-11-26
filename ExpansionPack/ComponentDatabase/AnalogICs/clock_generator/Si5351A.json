@@ -1,0 +1,39 @@
+{
+  "record_id": "AIC_SI_SI5351A",
+  "part_number": "Si5351A",
+  "manufacturer": "Skyworks Solutions (formerly Silicon Labs)",
+  "manufacturer_short": "Silicon Labs",
+  "category": "clock_generator",
+  "package": "MSOP-10",
+  "pin_count": 10,
+  "pinout": {
+    "notes": "I2C-programmable PLL clock generator, 3x outputs. Pinout per datasheet."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 1.71,
+      "max": 3.6
+    },
+    "supply_current_ma": 30,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 85
+    }
+  },
+  "typical_applications": [
+    "Programmable clock source for misc board clocks",
+    "Reference clock replacement"
+  ],
+  "datasheet_url": "https://www.silabs.com/documents/public/data-sheets/Si5351-B.pdf",
+  "datasheet_source": "Silicon Labs official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family, package, supply verified. The chip is I2C-programmed and the configuration is board-specific; the engine cannot verify an arbitrary programmed config.",
+  "replacement_notes": "Si5351A/B/C differ in output count and feature set. A blank replacement needs reprogramming via I2C with the board's config (typically stored in an EEPROM).",
+  "tags": [
+    "pll",
+    "clock_gen",
+    "i2c"
+  ],
+  "schema_version": "1.0.0"
+}

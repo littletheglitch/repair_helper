@@ -1,0 +1,33 @@
+{
+  "rail_family": "PCH_VCC_DESKTOP",
+  "description": "Desktop PCH/chipset core voltage. Synchronous buck from ATX_3V3.",
+  "typical_voltage_v": {
+    "min": 0.7,
+    "typ": 1.05,
+    "max": 1.2,
+    "notes": "Platform-dependent."
+  },
+  "typical_topology": "buck_converter",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51224",
+    "ISL95831"
+  ],
+  "upstream_rails": [
+    "ATX_3V3"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

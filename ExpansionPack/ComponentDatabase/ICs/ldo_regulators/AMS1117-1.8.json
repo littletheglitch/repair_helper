@@ -1,0 +1,62 @@
+{
+  "record_id": "IC_AMS_AMS111718",
+  "part_number": "AMS1117-1.8",
+  "manufacturer": "Advanced Monolithic Systems / various",
+  "manufacturer_short": "AMS",
+  "category": "ldo_regulator",
+  "package": "SOT-223",
+  "pin_count": 3,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "vin",
+      "function": "vin",
+      "pin": 1
+    },
+    {
+      "name": "vout",
+      "function": "vout",
+      "pin": 2
+    },
+    {
+      "name": "gnd",
+      "function": "gnd",
+      "pin": 3
+    },
+    {
+      "name": "en",
+      "function": "en",
+      "pin": 4
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": null,
+      "max": 15.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.8,
+      "max": 1.8,
+      "typ": 1.8,
+      "adjustable": false
+    },
+    "operating_conditions": {
+      "output_current_a": 1.0,
+      "quiescent_current_ua": 5000.0,
+      "output_accuracy_pct": 1.0,
+      "dropout_mv": null
+    }
+  },
+  "typical_applications": [],
+  "datasheet_url": "https://www.advanced-monolithic.com/pdf/ds1117.pdf",
+  "datasheet_source": "Advanced Monolithic Systems / various AMS1117-1.8 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "1.8V LDO, 1A, SOT-223. Ubiquitous low-dropout regulator.",
+  "replacement_notes": "",
+  "tags": [
+    "ldo"
+  ],
+  "schema_version": "1.0.0"
+}

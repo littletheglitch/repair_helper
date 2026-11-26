@@ -1,0 +1,46 @@
+{
+  "circuit_id": "CCT_high_side_switch",
+  "name": "High-side switch",
+  "description": "Load switched to V+ (high side). Requires P-channel FET or N-channel with bootstrapped gate drive.",
+  "topology": "P-MOSFET or N-MOSFET + gate driver + load",
+  "main_components": [
+    "high-side FET",
+    "gate driver (or level shifter)",
+    "gate resistor"
+  ],
+  "input": "Control signal (referenced to ground)",
+  "output": "Switched V+ to load",
+  "expected_signal_behavior": "When on: load sees V+; FET source at V+, drain at load. Gate drive must be V+ - VGS for P-FET or V+ + VGS for N-FET (bootstrapped).",
+  "common_failure_modes": [
+    {
+      "mode": "stuck_on",
+      "description": "FET shorted, gate drive stuck"
+    },
+    {
+      "mode": "stuck_off",
+      "description": "gate drive wrong, FET open"
+    },
+    {
+      "mode": "overheating",
+      "description": "insufficient VGS"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "output (load) voltage",
+    "gate voltage (relative to source)",
+    "VDS when on"
+  ],
+  "possible_fault_locations": [
+    "high-side FET",
+    "gate driver",
+    "gate resistor"
+  ],
+  "recommended_next_tests": [
+    "check gate voltage relative to SOURCE (not ground)",
+    "check VDS when on",
+    "verify gate drive level"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

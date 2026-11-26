@@ -1,0 +1,77 @@
+{
+  "rule_id": "RULE_VOLTAGE_LOW_OUTPUT",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "rail_voltage_low AND rail_voltage_present",
+    "notes": "Rail voltage is present but below the typical tolerance min. The rail_voltage_present fact (non-zero reading) distinguishes this from a dead rail (zero voltage, handled by the resistance-first chain). A low-but-nonzero reading indicates the regulator IS running but cannot hold regulation — overload, feedback drift, or high-side FET degradation."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Rail voltage is LOW (below tolerance). The regulator is running but cannot hold regulation. Measure the input voltage (VIN) to the regulator and the load current.",
+      "measure": {
+        "what": "Regulator input voltage (VIN) and output load current",
+        "where": "Regulator VIN pin and the rail's current-sense resistor (if fitted)",
+        "instrument": "DMM DC volts + DMM DC amps (in series with the load) or current probe",
+        "expected": "VIN within the regulator's specified input range; load current within the rail's rated capacity. If load current is at or above the rail's limit, the rail is overloaded.",
+        "safety": "Powered measurement. Use appropriate probe tips; do not short adjacent pins."
+      },
+      "interpretations": [
+        {
+          "if_result": "VIN normal AND load current high",
+          "then": "OVERLOAD. The load is drawing too much current, pulling the rail down. Identify the overloaded load (a shorted IC, a shorted cap on a downstream rail, or a genuine overload). Do NOT blame the regulator until the load is verified.",
+          "set_facts": [
+            "overload=True"
+          ],
+          "next_rule": "RULE_OVERLOAD_IDENTIFY"
+        },
+        {
+          "if_result": "VIN normal AND load current normal",
+          "then": "Regulator is not regulating despite correct input and normal load. Suspect feedback divider drift, reference voltage drift, or high-side FET degradation. Check the FB pin voltage and the feedback resistor values.",
+          "set_facts": [
+            "regulator_fault=True"
+          ]
+        },
+        {
+          "if_result": "VIN low",
+          "then": "The upstream supply to this regulator is sagging. Diagnose the upstream rail first; this rail's low output is a symptom, not the cause.",
+          "set_facts": [
+            "upstream_fault=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0",
+  "priority": 10
+}

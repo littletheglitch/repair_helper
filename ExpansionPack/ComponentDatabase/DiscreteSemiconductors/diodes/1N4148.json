@@ -1,0 +1,36 @@
+{
+  "record_id": "DIO_NXP_1N4148",
+  "part_number": "1N4148",
+  "manufacturer": "NXP / various (Vishay, ON, etc.)",
+  "manufacturer_short": "NXP",
+  "category": "diode",
+  "sub_category": "switching",
+  "package": "DO-35 / SOD-123",
+  "pin_count": 2,
+  "pinout": {
+    "A": "anode",
+    "K": "cathode"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 100,
+    "if_avg_a": 0.15,
+    "vf_v": 1.0,
+    "trr_ns": 4.0,
+    "pd_w": 0.5,
+    "thermal_r_ja_c_per_w": 300.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "datasheet_url": "https://www.nxp.com/docs/en/data-sheet/1N4148_1N4448.pdf",
+  "datasheet_source": "NXP / various (Vishay, ON, etc.) 1N4148 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Small-signal fast-switching diode, 100V/150mA, 4ns. Universal signal diode.",
+  "tags": [
+    "diode",
+    "switching"
+  ],
+  "schema_version": "1.0.0"
+}

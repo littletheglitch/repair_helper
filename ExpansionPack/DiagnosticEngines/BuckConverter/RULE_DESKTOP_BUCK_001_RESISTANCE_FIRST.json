@@ -1,0 +1,28 @@
+{
+  "rule_id": "RULE_DESKTOP_BUCK_001_RESISTANCE_FIRST",
+  "topology": "buck_converter",
+  "applies_to_rail_families": ["RAM_VRM_DESKTOP", "PCH_VCC_DESKTOP"],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured",
+    "notes": "Desktop RAM VRM or PCH VCC missing. Same first-step workflow as laptop bucks: resistance first."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Unplug the PSU from mains. Wait 60 s. Measure resistance from the rail to ground.",
+      "measure": {
+        "what": "Resistance from rail to ground",
+        "where": "Rail test point or VRM inductor output pad",
+        "instrument": "DMM resistance mode (200 ohm then 2 kohm)",
+        "expected": "RAM VRM typically >50 ohm; PCH VCC typically >50 ohm. <10 ohm indicates a hard short.",
+        "safety": "Unplug from mains and wait for bulk caps to discharge."
+      },
+      "interpretations": [
+        {"if_result": "Resistance < 10 ohm", "then": "Hard short on the rail. Do NOT apply power. Hunt the shorted component (output cap, low-side FET, load IC) before any further diagnosis.", "set_facts": ["rail_short=True"], "next_rule": "RULE_BUCK_010_SHORTED_RAIL"},
+        {"if_result": "Resistance > 50 ohm", "then": "No short. Proceed to check the rail's input supply (ATX_3V3 for both RAM_VRM and PCH_VCC on most desktop boards).", "set_facts": ["rail_short=False"], "next_rule": "RULE_BUCK_002_CHECK_INPUT_SUPPLY"}
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

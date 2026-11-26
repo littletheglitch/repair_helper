@@ -1,0 +1,61 @@
+{
+  "mapping_id": "MAP_TI_TLV70033_TO_RICHTEK_RT9193_33",
+  "original_part": "TLV70033",
+  "candidate_part": "RT9193-33",
+  "component_type": "IC",
+  "classification": "CONDITIONAL",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "match",
+      "note": "Both SOT-23-5."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "match",
+      "note": "Both: pin 1 VIN, pin 2 GND, pin 3 EN, pin 4 BP/BYP (bypass), pin 5 OUT."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "conditional",
+      "note": "TLV70033 VIN 2.0-5.5V; RT9193-33 VIN 2.3-5.5V. RT9193-33 has a slightly higher minimum VIN."
+    },
+    {
+      "criterion": "current_rating",
+      "verdict": "conditional",
+      "note": "TLV70033 IOUT=200 mA; RT9193-33 IOUT=300 mA. RT9193-33 can supply more current than TLV70033 — safe direction for swap (300 mA part replacing 200 mA part), but verify the BP bypass cap value matches."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "match",
+      "note": "Both fixed 3.3V LDOs with active-high EN."
+    },
+    {
+      "criterion": "enable_threshold",
+      "verdict": "conditional",
+      "note": "EN thresholds differ in detail; verify that the driving signal's logic level meets RT9193-33 VIH."
+    },
+    {
+      "criterion": "thermal",
+      "verdict": "conditional",
+      "note": "Both in SOT-23-5 with similar Rtheta_ja (~250 C/W). At 200 mA the dissipation is the same; both thermally equivalent."
+    }
+  ],
+  "conditions": [
+    "Confirm the BP bypass capacitor value satisfies both datasheets (TLV700 typically 1 nF-0.1 uF, RT9193 specifies 0.01 uF-0.1 uF).",
+    "Confirm the EN driving signal VIH meets RT9193-33 requirement.",
+    "Confirm the input source never falls below RT9193-33's 2.3 V minimum."
+  ],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/tlv700.pdf",
+    "candidate": "https://www.richtek.com/assets/product_file/RT9193/DS9193-13.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "Richtek Technology official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Pin-compatible SOT-23-5 3.3V LDOs with overlapping specs. CONDITIONAL because the EN threshold and minimum VIN differ and must be checked on the specific board.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

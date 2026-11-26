@@ -1,0 +1,42 @@
+{
+  "mapping_id": "MAP_TI_TPS25750_TO_ONSEMI_FUSB302B",
+  "original_part": "TPS25750",
+  "candidate_part": "FUSB302B",
+  "component_type": "IC",
+  "classification": "NOT_RECOMMENDED",
+  "evidence": [
+    {
+      "criterion": "package",
+      "verdict": "mismatch",
+      "note": "TPS25750 is WQFN-42; FUSB302B is WLCSP-9 / MLP-14. Different package and pin count."
+    },
+    {
+      "criterion": "pinout",
+      "verdict": "mismatch",
+      "note": "Different pinout — TPS25750 includes integrated power path switches (PP1/PP2) that FUSB302B does not have."
+    },
+    {
+      "criterion": "voltage_rating",
+      "verdict": "conditional",
+      "note": "TPS25750 handles VBUS up to 22V and gates the path; FUSB302B only senses VBUS up to 30V."
+    },
+    {
+      "criterion": "control_logic",
+      "verdict": "mismatch",
+      "note": "TPS25750 is a full PD controller with policy engine; FUSB302B is a PD PHY only and requires an external EC running the policy engine. The two are not interchangeable roles."
+    }
+  ],
+  "conditions": [],
+  "datasheet_urls": {
+    "original": "https://www.ti.com/lit/ds/symlink/tps25750.pdf",
+    "candidate": "https://www.onsemi.com/pdf/datasheet/fusb302b-d.pdf"
+  },
+  "datasheet_sources": {
+    "original": "Texas Instruments official datasheet",
+    "candidate": "onsemi official datasheet"
+  },
+  "verification_status": "verified",
+  "verification_notes": "Different functional role: TPS25750 is a full PD controller; FUSB302B is a PHY only. They are NOT interchangeable even on identical boards.",
+  "source_date": "2024-06-01",
+  "schema_version": "1.0.0"
+}

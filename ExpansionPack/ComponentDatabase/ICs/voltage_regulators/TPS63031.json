@@ -1,0 +1,88 @@
+{
+  "record_id": "IC_TI_TPS63031",
+  "part_number": "TPS63031",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "voltage_regulator",
+  "package": "DSBGA-12 (1.5x1.5 mm)",
+  "pin_count": 12,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 1.8,
+      "max": 5.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.3,
+      "max": 3.3,
+      "typ": 3.3,
+      "adjustable": false
+    },
+    "maximum_ratings": {
+      "VIN_v": 6.0,
+      "IOUT_a": 0.5
+    },
+    "operating_conditions": {
+      "topology": "synchronous buck-boost",
+      "switching_frequency_khz_range": "2500"
+    },
+    "quiescent_current_ma": 0.05,
+    "switching_frequency_khz": [
+      2500
+    ]
+  },
+  "typical_applications": [
+    "3.3 V always-on rail from a single Li-Ion cell",
+    "Battery-backed logic"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Fixed 3.3 V buck-boost",
+      "topology": "buck_boost",
+      "description": "Maintains 3.3 V across the full Li-Ion voltage range.",
+      "external_components": [
+        "1.5 uH inductor",
+        "input/output caps"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VOUT",
+      "description": "Fixed 3.3 V output.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN",
+      "description": "Enable.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PS/SYNC",
+      "description": "Power-save / sync.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps63030.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (TPS63030/1 family, PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family, topology, voltage and current rating verified. BGA pinout must be confirmed against the live datasheet — DSBGA pin assignments are dense and easy to misread.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "DSBGA package is not hand-replaceable; needs hot-air rework station and the correct paste stencil.",
+  "tags": [
+    "buck_boost",
+    "dsga",
+    "always_on"
+  ],
+  "schema_version": "1.0.0"
+}

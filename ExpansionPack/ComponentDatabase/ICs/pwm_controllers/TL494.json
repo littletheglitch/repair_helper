@@ -1,0 +1,116 @@
+{
+  "record_id": "IC_TI_TL494",
+  "part_number": "TL494",
+  "manufacturer": "Texas Instruments (multiple second-sources: ON, ST, etc.)",
+  "manufacturer_short": "TI",
+  "category": "pwm_controller",
+  "package": "DIP-16 / SOIC-16",
+  "pin_count": 16,
+  "pinout": {
+    "1": "1IN+",
+    "2": "1IN-",
+    "3": "FEEDBACK/COMP",
+    "4": "DTC (dead-time control)",
+    "5": "CT",
+    "6": "RT",
+    "7": "GROUND",
+    "8": "C1 (output 1 collector)",
+    "9": "E1 (output 1 emitter)",
+    "10": "E2 (output 2 emitter)",
+    "11": "C2 (output 2 collector)",
+    "12": "VCC",
+    "13": "OUTPUT CTRL (parallel/push-pull select)",
+    "14": "VREF (5.0V)",
+    "15": "2IN-",
+    "16": "2IN+"
+  },
+  "pin_functions": [
+    {
+      "name": "error_amp_1",
+      "function": "error_amp_1",
+      "pin": 1
+    },
+    {
+      "name": "error_amp_2",
+      "function": "error_amp_2",
+      "pin": 2
+    },
+    {
+      "name": "dead_time",
+      "function": "dead_time",
+      "pin": 3
+    },
+    {
+      "name": "oscillator",
+      "function": "oscillator",
+      "pin": 4
+    },
+    {
+      "name": "output_1",
+      "function": "output_1",
+      "pin": 5
+    },
+    {
+      "name": "output_2",
+      "function": "output_2",
+      "pin": 6
+    },
+    {
+      "name": "vcc",
+      "function": "vcc",
+      "pin": 7
+    },
+    {
+      "name": "vref",
+      "function": "vref",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "switching_frequency_khz": [
+      1
+    ],
+    "operating_conditions": {
+      "supply_voltage_range_v": {
+        "min": 7.0,
+        "max": 40.0,
+        "typ": null
+      },
+      "vref_v": 5.0,
+      "max_duty_cycle_pct": 45,
+      "control_mode": "voltage_mode",
+      "dead_time_control": true
+    }
+  },
+  "typical_applications": [
+    "PC ATX power supplies (classic design)",
+    "Push-pull and half-bridge DC-DC",
+    "Single-ended flyback (outputs paralleled)"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "ATX half-bridge with TL494",
+      "topology": "half_bridge",
+      "description": "Two outputs drive a half-bridge. Pin 13 high = push-pull mode. Dead-time via pin 4. Error amp 2 often unused or for OVP.",
+      "external_components": [
+        "RT/CT",
+        "dead-time divider",
+        "error-amp compensation",
+        "output transistors/drivers"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tl494.pdf",
+  "datasheet_source": "Texas Instruments TL494 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Classic ATX PWM. 16-pin. Vref 5.0V. Open-collector outputs (unlike SG3525's totem-pole). Dead-time control on pin 4. NOT pin-compatible with SG3525.",
+  "replacement_notes": "TL494 and SG3525 are NOT interchangeable despite both being 16-pin push-pull PWMs — different pinouts, different output stages (open-collector vs totem-pole).",
+  "tags": [
+    "pwm",
+    "voltage_mode",
+    "atx",
+    "16-pin"
+  ],
+  "schema_version": "1.0.0"
+}

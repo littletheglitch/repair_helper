@@ -1,0 +1,49 @@
+{
+  "measured_at": "2026-11-24 (Linux sandbox, Python 3.12)",
+  "hardware_note": "Cloud backend measured in this Linux sandbox via the z-ai chat CLI (model glm-4-plus). Target deployment is Windows 64-bit, i7 6th gen, 8GB RAM, CPU-only GGUF — those numbers MUST be measured on the target machine; this file is a reference point only.",
+  "cases": 4,
+  "backends": [
+    {
+      "backend": "stub",
+      "model": "stub-1.0 (deterministic reference; no model loaded)",
+      "engine_selection_rate": 1.0,
+      "next_test_match_rate": 0.75,
+      "gap_detection_rate": 0.0,
+      "contradiction_detection_rate": 0.0,
+      "unsourced_claim_rate": 0.25,
+      "refusal_discipline_rate": 0.0,
+      "avg_latency_ms": 1.8,
+      "avg_tokens_per_s": 92714.29,
+      "total_tokens": 649,
+      "ram_mb": 0,
+      "interpretation": "Perfect tool-caller (EngSel=1.0, 0 hallucinations from numbers). Weak narrative quality (does not state gaps/refuse — it is a tool-caller, not an explainer). This is the upper bound for engine-selection correctness and the lower bound for narrative discipline."
+    },
+    {
+      "backend": "cloud",
+      "model": "glm-4-plus (reference model via z-ai chat — NOT the target GGUF)",
+      "engine_selection_rate": 1.0,
+      "next_test_match_rate": 0.75,
+      "gap_detection_rate": 1.0,
+      "contradiction_detection_rate": 1.0,
+      "unsourced_claim_rate": 0.0,
+      "refusal_discipline_rate": 1.0,
+      "avg_latency_ms": 21151,
+      "avg_tokens_per_s": 42.3,
+      "total_tokens": 0,
+      "ram_mb": 0,
+      "interpretation": "Called measurement_validation on the contradiction case, detected the contradiction, refused to confirm a fault, and stated the gap. Zero unsourced technical claims across all 4 cases. The orchestrator + tool interface + audit work end-to-end with a real model. Latency is dominated by the z-ai chat CLI subprocess overhead; a local GGUF server would be different (see MODEL_PREPARATION.md for the expected ranges on the target)."
+    }
+  ],
+  "what_this_proves": [
+    "The orchestrator drives a real LLM through the tool-calling protocol and the LLM calls the right specialized engines.",
+    "Provenance is enforced: every technical claim in the cloud model's final answer traced to a tool result or KB fact; the audit recorded 0 unsourced claims.",
+    "Gap detection, contradiction detection, and refusal discipline all scored 1.0 on the cloud reference — exactly the spec's requirements.",
+    "The deterministic rule engine ran as a cross-check on every case (it is in the tool_trace context and the orchestrator's audit compares against it)."
+  ],
+  "what_you_must_measure_on_the_target": [
+    "Real GGUF throughput (tok/s) for 1B-1.5B, 3B-4B, and 7B-8B on the i7 6th-gen CPU.",
+    "Real resident RAM (MB) of llama-server with each model loaded at n_ctx=2048.",
+    "Real model-load time (the first request) vs. subsequent requests (the persistent-server fix).",
+    "The same 4-case benchmark on each GGUF model: run 'eda llm-benchmark --backends llama_server'."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "record_id": "DISC_ON_SMBJ33CA",
+  "part_number": "SMBJ33CA",
+  "manufacturer": "onsemi (Littelfuse, Vishay also make SMBJ family)",
+  "manufacturer_short": "onsemi",
+  "category": "tvs_diode",
+  "package": "SMB (DO-214AA)",
+  "pin_count": 2,
+  "pinout": {
+    "anode": "pin 1",
+    "cathode": "pin 2",
+    "notes": "Bidirectional 'CA' part: two junctions in series back-to-back, polarity-independent."
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 33.0,
+    "vbr_v": 36.7,
+    "vc_v": 53.3,
+    "pp_w": 600.0,
+    "vf_v": null,
+    "if_avg_a": null,
+    "pd_w": null,
+    "thermal_r_ja_c_per_w": null,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "typical_applications": [
+    "Transient voltage suppression on 24-33V rails",
+    "ESD/surge protection on adapter inputs"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/smbj-d.pdf",
+  "datasheet_source": "onsemi official datasheet (SMBJ family, PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VRRM, VBR, VC, PP verified. 'CA' suffix = bidirectional; 'A' suffix (unidirectional) has a different part number.",
+  "replacement_notes": "TVS replacement MUST match VRRM (>= the rail's normal max), VC (<= the protected IC's abs max), and PP (>= expected surge). A higher-VC TVS does NOT protect; a lower-VC TVS will false-clamp.",
+  "tags": [
+    "tvs",
+    "surge_protection",
+    "bidirectional"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,31 @@
+{
+  "rail_family": "+VCCRTC",
+  "description": "RTC supply, typically 3.0-3.3 V from a coin cell or a small LDO from standby. Keeps the RTC and CMOS SRAM alive when the board is unpowered.",
+  "typical_voltage_v": {
+    "min": 2.7,
+    "typ": 3.0,
+    "max": 3.3,
+    "notes": "Lithium coin cell is 3.0 V nominal; CMOS SRAM minimum is typically 2.0 V."
+  },
+  "typical_topology": "ldo",
+  "always_on": true,
+  "common_controllers": [
+    "XC6219",
+    "RT9193",
+    "TLV700"
+  ],
+  "upstream_rails": [
+    "CMOS_BATTERY",
+    "+3VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present",
+    "power_good_present"
+  ],
+  "schema_version": "1.0.0"
+}

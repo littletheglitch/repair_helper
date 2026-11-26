@@ -1,0 +1,101 @@
+{
+  "record_id": "IC_TI_BQ24737",
+  "part_number": "BQ24737",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "charger_ic",
+  "package": "QFN-32 (5x5 mm)",
+  "pin_count": 32,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 4.5,
+      "max": 24.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.0,
+      "max": 19.2,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "ACIN_v": 26.0,
+      "BATDRV_v": 26.0,
+      "ICHG_a": "set by sense resistor"
+    },
+    "operating_conditions": {
+      "switching_frequency_khz_range": "600 (typical)",
+      "control_mode": "synchronous buck charger"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      600
+    ]
+  },
+  "typical_applications": [
+    "Laptop/notebook Li-Ion charger",
+    "USB PD / adapter input current limiting"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Synchronous buck charger with input current limit",
+      "topology": "synchronous_buck_charger",
+      "description": "Two back-to-back input MOSFETs and a synchronous buck from adapter to battery.",
+      "external_components": [
+        "input current sense resistor",
+        "inductor",
+        "2x high/low MOSFET",
+        "adapter-select MOSFETs"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "ACIN",
+      "description": "Adapter input voltage sense.",
+      "pin_numbers": []
+    },
+    {
+      "function": "IINP",
+      "description": "Input current sense amplifier input.",
+      "pin_numbers": []
+    },
+    {
+      "function": "BATP/BATDRV",
+      "description": "Battery pack sense / battery adapter switching drive.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN",
+      "description": "Enable (active low typically).",
+      "pin_numbers": []
+    },
+    {
+      "function": "SRN/SRP",
+      "description": "Charge current sense amplifier inputs.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PGOOD",
+      "description": "Power-good open-drain.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/bq24737.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part family, topology and voltage range verified. Pin map and SMBus register semantics not enumerated — consult the live datasheet before diagnosis.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Charger ICs are firmware-tuned via SMBus; direct swap to a different part number will usually break current limit / chemistry tables even if pinout matches.",
+  "tags": [
+    "charger",
+    "smbus",
+    "buck_charger"
+  ],
+  "schema_version": "1.0.0"
+}

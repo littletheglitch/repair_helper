@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "electronics-diagnostic-assistant"
+version = "1.0.0"
+description = "Offline electronics and laptop motherboard troubleshooting assistant with a local LLM and evidence-based reasoning."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "EDA Project" }]
+
+dependencies = [
+    "pypdf>=4.0",
+    "PyMuPDF>=1.23",
+]
+
+[project.optional-dependencies]
+ocr = ["pytesseract", "Pillow"]
+pdf = ["reportlab>=4.0"]
+build = ["pyinstaller>=6.0"]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+eda = "eda.cli:main"
+ElectronicsDiagnostic = "eda.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

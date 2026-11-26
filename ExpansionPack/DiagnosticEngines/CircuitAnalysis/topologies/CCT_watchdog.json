@@ -1,0 +1,45 @@
+{
+  "circuit_id": "CCT_watchdog",
+  "name": "Watchdog timer",
+  "description": "Timer that resets the system if not periodically kicked by firmware. Prevents hard hangs.",
+  "topology": "Watchdog IC or internal to MCU",
+  "main_components": [
+    "watchdog IC (or MCU internal)",
+    "kick input from firmware",
+    "reset output to system"
+  ],
+  "input": "Periodic kick signal",
+  "output": "Reset if kick missing",
+  "expected_signal_behavior": "Reset asserts if kick not received within timeout window.",
+  "common_failure_modes": [
+    {
+      "mode": "false_reset",
+      "description": "kick signal wrong polarity/rate"
+    },
+    {
+      "mode": "no_reset",
+      "description": "watchdog dead"
+    },
+    {
+      "mode": "stuck_reset",
+      "description": "watchdog latched"
+    }
+  ],
+  "diagnostic_measurements": [
+    "kick signal (scope)",
+    "watchdog timeout window",
+    "reset output"
+  ],
+  "possible_fault_locations": [
+    "watchdog IC",
+    "kick signal driver",
+    "reset output path"
+  ],
+  "recommended_next_tests": [
+    "scope kick signal vs expected rate",
+    "verify watchdog timeout",
+    "check reset output"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

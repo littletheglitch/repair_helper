@@ -1,0 +1,46 @@
+{
+  "rule_id": "RULE_LDO_003_CHECK_EN",
+  "topology": "ldo",
+  "applies_to_rail_families": [
+    "+VCCRTC",
+    "DDR_VTT",
+    "RAM_VTT_DESKTOP"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND NOT en_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure LDO EN/CE pin voltage. Note: some LDOs are always-on (no EN pin); for those, skip to RULE_LDO_004_CHECK_LDO.",
+      "measure": {
+        "what": "LDO EN/CE pin voltage",
+        "where": "LDO EN/CE pin (consult datasheet for pin number)",
+        "instrument": "DMM DC volts",
+        "expected": "Active-high EN: at VIH when enabled. Active-low CE: <0.4 V when enabled.",
+        "safety": "Some LDOs are always-on (no EN). If so, this step is N/A."
+      },
+      "interpretations": [
+        {
+          "if_result": "EN at enabled level",
+          "then": "LDO is enabled. If output is still missing, suspect the LDO itself.",
+          "set_facts": [
+            "en_present=True"
+          ],
+          "next_rule": "RULE_LDO_004_CHECK_LDO"
+        },
+        {
+          "if_result": "EN at disabled level",
+          "then": "EC is not enabling the LDO. For always-on LDOs this is normal during sequencing; trace the EN signal.",
+          "set_facts": [
+            "en_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need LDO datasheet for EN pin number and polarity. Some LDOs are always-on and have no EN."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,188 @@
+{
+  "source": {
+    "title": "EDA Built-in Knowledge: Electrical Fundamentals",
+    "url": "",
+    "date": "2026-11-23"
+  },
+  "provenance": "verified-reference",
+  "sections": [
+    {
+      "category": "basic-electrical-principles",
+      "topic": "voltage-current-resistance-power",
+      "facts": [
+        {
+          "text": "Voltage (V, in volts) is the electrical potential difference between two points; it must always be measured between a point and a defined reference, never 'at' a single point in isolation.",
+          "confidence": "verified",
+          "tags": ["voltage","measurement"]
+        },
+        {
+          "text": "Current (I, in amperes) is the flow of charge through a conductor; it is measured in series with the load, not in parallel across it.",
+          "confidence": "verified",
+          "tags": ["current","measurement"]
+        },
+        {
+          "text": "Resistance (R, in ohms) is opposition to DC current; it is measured with the circuit unpowered, and large capacitors should be safely discharged before measuring to avoid both false readings and meter damage.",
+          "confidence": "verified",
+          "tags": ["resistance","measurement","safety"]
+        },
+        {
+          "text": "Power (P, in watts) equals voltage times current: P = V * I. Combined with Ohm's law this also gives P = I^2 * R and P = V^2 / R for purely resistive loads.",
+          "confidence": "verified",
+          "tags": ["power","ohms-law"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "ohms-law",
+      "facts": [
+        {
+          "text": "Ohm's law for a linear resistor: V = I * R, I = V / R, R = V / I. It applies only to resistive elements at a given temperature; semiconductor junctions and active regulators do not obey it directly.",
+          "confidence": "verified",
+          "provenance": "general-electrical-law",
+          "tags": ["ohms-law"]
+        },
+        {
+          "text": "A resistance-to-ground reading on a power rail that is significantly lower than the known normal for that board suggests a short or low-impedance path on that rail; a reading near zero ohms on a main power rail is a strong indicator of a hard short, but a soft short can still allow partial operation.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["resistance","short-circuit","diagnostic"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "kirchhoffs-laws",
+      "facts": [
+        {
+          "text": "Kirchhoff's current law (KCL): the algebraic sum of currents entering a node equals the sum leaving; charge is conserved at every node.",
+          "confidence": "verified",
+          "provenance": "general-electrical-law",
+          "tags": ["kirchhoff","kcl"]
+        },
+        {
+          "text": "Kirchhoff's voltage law (KVL): the algebraic sum of voltages around any closed loop is zero; this is the basis for analyzing series power paths and voltage drops across protection devices.",
+          "confidence": "verified",
+          "provenance": "general-electrical-law",
+          "tags": ["kirchhoff","kvl"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "series-parallel-circuits",
+      "facts": [
+        {
+          "text": "Resistors in series add directly: R_total = R1 + R2 + ... ; the same current flows through each, and voltage divides in proportion to resistance.",
+          "confidence": "verified",
+          "provenance": "general-electrical-law",
+          "tags": ["series"]
+        },
+        {
+          "text": "Resistors in parallel combine as 1/R_total = 1/R1 + 1/R2 + ... ; the same voltage appears across each, and the total is always less than the smallest individual resistance.",
+          "confidence": "verified",
+          "provenance": "general-electrical-law",
+          "tags": ["parallel"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "capacitors-inductors",
+      "facts": [
+        {
+          "text": "An ideal capacitor blocks DC and passes AC; in a DC power rail it stores charge, filters ripple, and provides transient current. A shorted capacitor on a power rail is a common cause of a low-resistance-to-ground fault.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["capacitor"]
+        },
+        {
+          "text": "An inductor resists changes in current and is used in switching regulators as the energy-storage element; its DC resistance is normally very low (milliohms to a few ohms) and should not be mistaken for a short.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["inductor","buck"]
+        },
+        {
+          "text": "Bulk capacitors on power rails can hold charge after power is removed; always discharge them (with an appropriate bleed resistor, not a screwdriver) before measuring resistance or probing, to avoid both false readings and meter or finger injury.",
+          "confidence": "verified",
+          "tags": ["capacitor","safety"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "diodes-zener",
+      "facts": [
+        {
+          "text": "A diode conducts current from anode to cathode when forward-biased (anode ~0.6-0.7 V above cathode for silicon) and blocks when reverse-biased, until its reverse breakdown voltage.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["diode"]
+        },
+        {
+          "text": "A Zener diode is operated in reverse breakdown to provide a stable reference voltage; its nominal Zener voltage is component-specific and must be read from the datasheet, not assumed.",
+          "confidence": "verified",
+          "tags": ["zener","reference"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "mosfet-operation",
+      "facts": [
+        {
+          "text": "An N-channel enhancement MOSFET turns on when its gate-source voltage exceeds its threshold (Vgs(th)); current then flows from drain to source. P-channel turns on when Vgs is negative of the required magnitude.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["mosfet","n-channel","p-channel"]
+        },
+        {
+          "text": "On laptop motherboards the main input (adapter) MOSFET is usually a P-channel or back-to-back N-channel arrangement used as an ideal diode / load switch; a failed input MOSFET can pass no voltage, leak current, or pass voltage in both directions.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["mosfet","input","adapter"]
+        },
+        {
+          "text": "A MOSFET can fail short (gate-oxide punch-through or drain-source avalanche) so the rail is always connected, or fail open (bond wire or channel damage) so no current passes; both modes appear in repair experience.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["mosfet","failure-modes"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "bjt-operation",
+      "facts": [
+        {
+          "text": "A bipolar junction transistor (BJT) is a current-controlled device: a small base current controls a larger collector current. NPN conducts when base is ~0.7 V above emitter; PNP when base is ~0.7 V below emitter.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["bjt","npn","pnp"]
+        },
+        {
+          "text": "In switching service a BJT is driven hard into saturation; in linear service (small-signal amplifiers, bias networks) it operates in the forward-active region. The intended mode must be known before judging a measurement.",
+          "confidence": "verified",
+          "tags": ["bjt","switching"]
+        }
+      ]
+    },
+    {
+      "category": "basic-electrical-principles",
+      "topic": "operational-amplifiers-comparators",
+      "facts": [
+        {
+          "text": "An operational amplifier with negative feedback holds its inverting input at the same potential as the non-inverting input (virtual short); the output moves to whatever value makes this true.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["opamp","feedback"]
+        },
+        {
+          "text": "A comparator has no feedback (or only positive feedback) and its output saturates to one rail or the other based on which input is higher; it is used to assert power-good, over-current, or under-voltage flags.",
+          "confidence": "verified",
+          "tags": ["comparator","power-good"]
+        }
+      ]
+    }
+  ]
+}

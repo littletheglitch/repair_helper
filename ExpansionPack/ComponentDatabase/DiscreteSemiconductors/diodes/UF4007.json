@@ -1,0 +1,36 @@
+{
+  "record_id": "DIO_ON_UF4007",
+  "part_number": "UF4007",
+  "manufacturer": "ON Semiconductor / various",
+  "manufacturer_short": "ON",
+  "category": "diode",
+  "sub_category": "ultrafast",
+  "package": "DO-41 / SMA",
+  "pin_count": 2,
+  "pinout": {
+    "A": "anode",
+    "K": "cathode"
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 1000,
+    "if_avg_a": 1.0,
+    "vf_v": 1.7,
+    "trr_ns": 75.0,
+    "pd_w": 1.25,
+    "thermal_r_ja_c_per_w": 100.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "datasheet_url": "https://www.onsemi.com/pub/Collateral/UF4007-D.PDF",
+  "datasheet_source": "ON Semiconductor / various UF4007 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Ultra-fast rectifier, 1000V/1A, 75ns. PFC boost / RCD snubber / flyback primary.",
+  "tags": [
+    "diode",
+    "ultrafast"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,53 @@
+{
+  "rule_id": "RULE_BUCK_007_CHECK_PGOOD",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "switching_present AND fb_present AND rail_voltage_present AND NOT pgood_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller's PGOOD pin. PGOOD is open-drain with an external pull-up; the pin voltage is high when the controller declares the rail good.",
+      "measure": {
+        "what": "PGOOD pin voltage",
+        "where": "Controller PGOOD pin (consult datasheet) and the PGOOD pull-up resistor",
+        "instrument": "DMM DC volts + oscilloscope to check for chatter",
+        "expected": "High (= pull-up rail, typically 3.3 V) when rail is good. Low when faulted.",
+        "safety": "PGOOD is open-drain; if the pin is low the controller is actively pulling it. Do NOT assume the pin is dead just because it is low."
+      },
+      "interpretations": [
+        {
+          "if_result": "PGOOD high",
+          "then": "Rail is good. If the system still does not progress, the issue is downstream of this rail (sequencing, next rail, or load).",
+          "set_facts": [
+            "pgood_present=True"
+          ]
+        },
+        {
+          "if_result": "PGOOD low while rail voltage is correct",
+          "then": "Controller is not declaring PGOOD despite good output. Possible causes: PGOOD pull-up rail missing, PGOOD comparator threshold mismatch, or controller internal fault. Check the PGOOD pull-up source first.",
+          "set_facts": [
+            "pgood_present=False"
+          ]
+        },
+        {
+          "if_result": "PGOOD chattering",
+          "then": "Rail is on the edge of regulation. Check ripple, load transients, and the FB divider. Output capacitors degraded?",
+          "set_facts": [
+            "pgood_present=False",
+            "pgood_chattering=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for PGOOD pin and PGOOD assertion conditions."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

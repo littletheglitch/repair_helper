@@ -1,0 +1,97 @@
+{
+  "record_id": "IC_MACRONIX_MX25L12873F",
+  "part_number": "MX25L12873F",
+  "manufacturer": "Macronix",
+  "manufacturer_short": "MXIC",
+  "category": "bios_spi_flash",
+  "package": "SOP-16 (300mil)",
+  "pin_count": 16,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.7,
+      "max": 3.6,
+      "typ": 3.3
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "VCC_v": 4.0,
+      "VIO_v": 4.0
+    },
+    "operating_conditions": {
+      "density": "128 Mbit (16 MB)",
+      "interface": "SPI (1/2/4/4-4-4 mode)",
+      "max_clock_mhz": 133
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "UEFI BIOS storage",
+    "Embedded controller firmware storage"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Standard SPI with WP/HOLD",
+      "topology": "spi_flash",
+      "description": "CS#, DO, WP#, GND, DI, CLK, HOLD#/RESET#, VCC.",
+      "external_components": [
+        "decoupling cap on VCC",
+        "series resistor on CLK"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "CS#",
+      "description": "Chip select, active low.",
+      "pin_numbers": []
+    },
+    {
+      "function": "DO (MISO)",
+      "description": "Serial data out.",
+      "pin_numbers": []
+    },
+    {
+      "function": "DI (MOSI)",
+      "description": "Serial data in.",
+      "pin_numbers": []
+    },
+    {
+      "function": "CLK",
+      "description": "SPI clock.",
+      "pin_numbers": []
+    },
+    {
+      "function": "WP#/HOLD#/RESET#",
+      "description": "Hardware control pins.",
+      "pin_numbers": []
+    },
+    {
+      "function": "VCC",
+      "description": "3.3 V supply.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.macronix.com/Lists/Datasheet/Attachments/7404/MX25L12873F,%201.8V-3.3V,%20128Mb,%20v1.2.pdf",
+  "datasheet_source": "Macronix official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Density, interface, package verified. Pin-by-pin map must be confirmed from the live datasheet (different Macronix densities shift WP/HOLD positions).",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "BIOS flash cross-replacement MUST match density (or higher with same 4KB/64KB erase map), voltage family (3V vs 1.8V), and command set (Winbond/Micron/Macronix use slightly different 4-byte addressing for >=128Mbit).",
+  "tags": [
+    "spi_flash",
+    "bios",
+    "uefi"
+  ],
+  "schema_version": "1.0.0"
+}

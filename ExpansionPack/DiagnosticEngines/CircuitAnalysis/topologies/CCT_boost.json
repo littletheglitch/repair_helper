@@ -1,0 +1,66 @@
+{
+  "circuit_id": "CCT_boost",
+  "name": "Boost converter",
+  "description": "Step-up switching regulator. Inductor stores energy when switch closes; releases to output through diode when switch opens.",
+  "topology": "Async boost: MOSFET + inductor + Schottky diode + output cap + controller",
+  "main_components": [
+    "MOSFET (switch)",
+    "inductor",
+    "Schottky diode",
+    "output cap",
+    "boost controller",
+    "feedback divider"
+  ],
+  "input": "DC (e.g. 3.3-5 V)",
+  "output": "Higher DC (e.g. 12-40 V)",
+  "expected_signal_behavior": "Output within tolerance; switch node swings VIN to (VOUT+Vdiode); ripple dependent on cap ESR.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "switch open, diode open, controller dead"
+    },
+    {
+      "mode": "low_output",
+      "description": "diode open, switch weak, overload"
+    },
+    {
+      "mode": "high_output",
+      "description": "switch shorted, FB open"
+    },
+    {
+      "mode": "no_switching",
+      "description": "controller dead"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "output voltage",
+    "switch node waveform",
+    "diode forward voltage",
+    "FB pin",
+    "output ripple"
+  ],
+  "possible_fault_locations": [
+    "switch MOSFET",
+    "Schottky diode",
+    "inductor",
+    "output cap",
+    "boost controller"
+  ],
+  "recommended_next_tests": [
+    "measure resistance first",
+    "check input",
+    "check EN",
+    "check switching",
+    "check diode forward",
+    "check FB"
+  ],
+  "source_references": [
+    {
+      "title": "Boost converter basics",
+      "url": "https://www.ti.com/lit/an/slva061a/slva061a.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

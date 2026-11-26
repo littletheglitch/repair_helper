@@ -1,0 +1,36 @@
+{
+  "rail_family": "DDR_VDD",
+  "description": "DDR memory main supply. 1.5 V (DDR3), 1.2 V (DDR4), 1.1 V (DDR5). Topology: synchronous buck.",
+  "typical_voltage_v": {
+    "min": 1.1,
+    "typ": 1.2,
+    "max": 1.5,
+    "notes": "DDR generation specific."
+  },
+  "typical_topology": "memory_power",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51224",
+    "RT8205",
+    "ISL95831"
+  ],
+  "upstream_rails": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "downstream_rails": [
+    "DDR_VTT"
+  ],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present"
+  ],
+  "schema_version": "1.0.0"
+}

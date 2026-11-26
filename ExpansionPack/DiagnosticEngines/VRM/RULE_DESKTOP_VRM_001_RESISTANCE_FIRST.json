@@ -1,0 +1,33 @@
+{
+  "rule_id": "RULE_DESKTOP_VRM_001_RESISTANCE_FIRST",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": ["VCORE_DESKTOP"],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured",
+    "notes": "Desktop CPU VCORE missing. Same first-step workflow as laptop VCORE: resistance first, then walk the sequence. CPU VRM rails have a very low normal resistance; compare against a known-good board."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Unplug the PSU from mains. Wait 60 s. Measure resistance from VCORE to ground at the CPU socket VCC pins or the VRM inductor output pads.",
+      "measure": {
+        "what": "Resistance from VCORE to ground",
+        "where": "CPU socket VCC pins or VRM inductor output pads",
+        "instrument": "DMM resistance mode (200 ohm range)",
+        "expected": "Highly board-dependent — typically 5-30 ohm on a healthy desktop board. Compare to a known-good board. Values below 2 ohm with no load suggest a shorted output FET or output cap.",
+        "safety": "VRM rails hold charge in many ceramics — wait for full discharge before measuring. Unplug from mains, not just PS_ON# off."
+      },
+      "interpretations": [
+        {"if_result": "Resistance much lower than known-good board", "then": "Short on VCORE. Suspect low-side MOSFET(s) or output cap. Do NOT apply power; hunt the short first.", "set_facts": ["rail_short=True"], "next_rule": "RULE_BUCK_010_SHORTED_RAIL"},
+        {"if_result": "Resistance matches known-good board", "then": "No short. Proceed to check VRM input supply (CPU_VRM_INPUT, which is the EPS 12V).", "set_facts": ["rail_short=False"], "next_rule": "RULE_VRM_002_CHECK_INPUT"}
+      ],
+      "requires_info": true,
+      "requires_info_note": "A known-good board reading is strongly recommended — CPU VRM resistance is too board-specific to interpret alone."
+    }
+  ],
+  "rail_voltage_hint_v": 1.0,
+  "references": [
+    {"title": "Intel VR12/VR12.5 motherboard design guide", "url": "https://www.intel.com/content/www/us/en/design/ipla/software-platform-design/voltage-regulator-down-vr12-12-5-design.html", "type": "reference_design"}
+  ],
+  "schema_version": "1.0.0"
+}

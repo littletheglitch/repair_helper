@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "rail_definition.schema.json",
+  "title": "Power Rail Definition",
+  "description": "Defines a rail family: nominal voltage expectations, common topology, and the controller-independent measurement keys the diagnostic engine uses. Rail voltages are TYPICAL expectations, not absolute truth — the engine never assumes a measured board matches.",
+  "type": "object",
+  "required": [
+    "rail_family",
+    "description",
+    "typical_voltage_v",
+    "typical_topology",
+    "always_on",
+    "schema_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "rail_family": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "typical_voltage_v": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min": { "type": ["number", "null"] },
+        "typ": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "typical_topology": {
+      "type": "string",
+      "enum": [
+        "buck_converter",
+        "boost_converter",
+        "ldo",
+        "multi_phase_vrm",
+        "gpu_vrm",
+        "memory_power",
+        "charger_input",
+        "always_on_standby",
+        "switched_linear",
+        "load_switch"
+      ]
+    },
+    "always_on": { "type": "boolean" },
+    "common_controllers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Part numbers commonly seen on this rail. The engine MUST NOT assume any specific controller from the rail name alone."
+    },
+    "platform": {
+      "type": "string",
+      "enum": ["laptop", "desktop", "universal"],
+      "description": "Which platform this rail belongs to. 'universal' for rails present on both (e.g. RTC). Defaults to 'laptop' for legacy rails that pre-date the platform split."
+    },
+    "psu_signal_notes": { "type": "string" },
+    "cable_note": { "type": "string" },
+    "upstream_rails": { "type": "array", "items": { "type": "string" } },
+    "downstream_rails": { "type": "array", "items": { "type": "string" } },
+    "measurement_keys": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Canonical measurement keys used by the engine for this rail family."
+    },
+    "schema_version": { "type": "string", "enum": ["1.0.0"] }
+  }
+}

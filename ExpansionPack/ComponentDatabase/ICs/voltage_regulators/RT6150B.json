@@ -1,0 +1,140 @@
+{
+  "record_id": "IC_RICHTEK_RT6150",
+  "part_number": "RT6150B",
+  "manufacturer": "Richtek Technology",
+  "manufacturer_short": "Richtek",
+  "category": "voltage_regulator",
+  "package": "SOT-23-6",
+  "pin_count": 6,
+  "pinout": {
+    "1": "VIN",
+    "2": "GND",
+    "3": "EN",
+    "4": "FB/VSET",
+    "5": "VOUT",
+    "6": "PG"
+  },
+  "pin_functions": [
+    {
+      "pin": 1,
+      "name": "VIN",
+      "function": "Input",
+      "type": "power"
+    },
+    {
+      "pin": 2,
+      "name": "GND",
+      "function": "Ground",
+      "type": "ground"
+    },
+    {
+      "pin": 3,
+      "name": "EN",
+      "function": "Enable",
+      "type": "control"
+    },
+    {
+      "pin": 4,
+      "name": "FB/VSET",
+      "function": "Feedback / output voltage set",
+      "type": "input"
+    },
+    {
+      "pin": 5,
+      "name": "VOUT",
+      "function": "Output",
+      "type": "output"
+    },
+    {
+      "pin": 5,
+      "name": "PG",
+      "function": "Power good (on RT6150B variant)",
+      "type": "output"
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 2.5,
+      "max": 5.5,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.8,
+      "max": 5.0,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VIN_v": 6.0,
+      "IOUT_a": 1.5
+    },
+    "operating_conditions": {
+      "topology": "synchronous buck-boost",
+      "switching_frequency_khz_range": "1500"
+    },
+    "quiescent_current_ma": 0.04,
+    "switching_frequency_khz": [
+      1500
+    ]
+  },
+  "typical_applications": [
+    "USB / SD card rail from Li-Ion or 5V",
+    "Single-cell battery to 3.3 V rail"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Buck-boost for USB OTG / 3.3V from battery",
+      "topology": "buck_boost",
+      "description": "Maintains regulated 3.3 V or 5 V as input is above or below output.",
+      "external_components": [
+        "2.2 uH inductor",
+        "input/output caps"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Input.",
+      "pin_numbers": [
+        1
+      ]
+    },
+    {
+      "function": "EN",
+      "description": "Enable.",
+      "pin_numbers": [
+        3
+      ]
+    },
+    {
+      "function": "VOUT",
+      "description": "Output.",
+      "pin_numbers": [
+        5
+      ]
+    },
+    {
+      "function": "FB/VSET",
+      "description": "Output voltage set.",
+      "pin_numbers": [
+        4
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.richtek.com/assets/product_file/RT6150/DS6150-05.pdf",
+  "datasheet_source": "Richtek Technology official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Pinout, package, voltage and current rating verified. PG pin position differs between RT6150A/B variants — confirm against the live datasheet.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Buck-boost parts look like LDOs in SOT-23-6 but need an inductor. Do not swap with an LDO.",
+  "tags": [
+    "buck_boost",
+    "sot23",
+    "always_on"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,64 @@
+{
+  "record_id": "MOSFET_AO_AOD4185",
+  "part_number": "AOD4185",
+  "manufacturer": "Alpha & Omega Semiconductor",
+  "manufacturer_short": "AOS",
+  "channel_type": "P-channel",
+  "package": "DPAK-3 (TO-252)",
+  "pin_count": 3,
+  "pinout": {
+    "drain": "pin 2 (tab is also drain on DPAK)",
+    "source": "pin 1",
+    "gate": "pin 3",
+    "notes": "DPAK: pin 1 source, pin 2 gate, pin 3 drain — CONFIRM against datasheet figure for this exact part."
+  },
+  "vds_v": -40.0,
+  "id_a": -12.0,
+  "id_conditions": "T_C=25 C, V_GS=-10 V. Magnitudes shown.",
+  "rds_on_mohm": 35.0,
+  "rds_on_conditions": {
+    "vgs_v": -10,
+    "id_a": 12
+  },
+  "vgs_th_v": -2.0,
+  "vgs_max_v": 20.0,
+  "gate_charge_nc": 12.0,
+  "gate_charge_conditions": {
+    "vds_v": -20,
+    "vgs_v": -10,
+    "id_a": 12
+  },
+  "power_dissipation_w": 2.5,
+  "thermal": {
+    "r_theta_ja_c_per_w": 75.0,
+    "r_theta_jc_c_per_w": 8.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "switching_characteristics": {
+    "turn_on_delay_ns": null,
+    "turn_off_delay_ns": null,
+    "rise_time_ns": null,
+    "fall_time_ns": null
+  },
+  "technology": "Trench",
+  "typical_applications": [
+    "High-side load switch on 19 V adapter rail",
+    "Battery / adapter selection",
+    "Charger input MOSFET"
+  ],
+  "datasheet_url": "https://www.aosmd.com/res/data_sheets/AOD4185.pdf",
+  "datasheet_source": "Alpha & Omega Semiconductor official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Electrical ratings verified against AOS datasheet. DPAK pin numbering (1 source / 2 gate / 3 drain) needs reconfirmation against the live datasheet figure for the specific reel; some AOS DPAK parts put drain on pin 2 and gate on pin 3, the inverse of common convention.",
+  "replacement_notes": "P-channel FETs are commonly used as high-side switches on the adapter/battery rail. Replacement MUST match VDS margin to adapter peak (typically >=30V) and provide logic-level drive if the gate is pulled by a 5V signal.",
+  "tags": [
+    "high_side",
+    "adapter_switch",
+    "dpak"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,29 @@
+{
+  "rail_family": "LCD_VDD",
+  "description": "LCD panel power rail (3.3 V typical for eDP/LVDS panels; higher boost for LED backlight). Topology varies: load switch from +3VALW or boost for backlight.",
+  "typical_voltage_v": {
+    "min": 3.2,
+    "typ": 3.3,
+    "max": 5.0,
+    "notes": "Backlight boost rails can exceed 30 V; treat as a separate rail family."
+  },
+  "typical_topology": "load_switch",
+  "always_on": false,
+  "common_controllers": [
+    "TPS22918",
+    "AON6500"
+  ],
+  "upstream_rails": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present"
+  ],
+  "schema_version": "1.0.0"
+}

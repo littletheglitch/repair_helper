@@ -1,0 +1,54 @@
+{
+  "rule_id": "RULE_BUCK_006_CHECK_FEEDBACK",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "switching_present AND NOT fb_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller's FB pin voltage. For D-CAP controllers FB equals VREF (typically 0.6-0.8 V); for current-mode controllers FB is the error-amplifier output.",
+      "measure": {
+        "what": "FB pin voltage",
+        "where": "Controller FB pin (consult datasheet for pin number) and the rail-side feedback divider tap",
+        "instrument": "DMM DC volts + oscilloscope to see if FB is steady",
+        "expected": "Per controller datasheet — typically VREF (0.6-0.8 V) when regulating.",
+        "safety": "FB is a high-impedance node; probe loading can shift the reading."
+      },
+      "interpretations": [
+        {
+          "if_result": "FB at VREF and rail voltage present",
+          "then": "Feedback is regulating. Proceed to check PGOOD.",
+          "set_facts": [
+            "fb_present=True"
+          ],
+          "next_rule": "RULE_BUCK_007_CHECK_PGOOD"
+        },
+        {
+          "if_result": "FB at VREF but rail still missing",
+          "then": "Switching is happening but no energy reaches the output. Suspect open inductor, blown output fuse, or shorted output FET pulling the rail down. Inspect output stage.",
+          "set_facts": [
+            "fb_present=True",
+            "output_stage_fault=True"
+          ]
+        },
+        {
+          "if_result": "FB pinned low or high",
+          "then": "Feedback divider is open, shorted, or the rail-side sense line is broken. Trace the divider resistors and the remote-sense traces.",
+          "set_facts": [
+            "fb_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for FB pin and VREF value."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

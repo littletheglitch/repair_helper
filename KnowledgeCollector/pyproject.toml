@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knowledge-collector"
+version = "1.0.0"
+description = "Offline Knowledge Collector for the Electronics Diagnostic Assistant"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pymupdf"]
+ocr = ["pytesseract"]
+test = ["pytest"]
+
+[project.scripts]
+kc = "kc.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,86 @@
+{
+  "pack_name": "Electronics_Diagnostic_Expansion_Pack",
+  "pack_version": "1.5.0",
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-11-25T06:03:18+00:00",
+  "description": "Standalone expansion pack: component intelligence database + deterministic diagnostic engines (power-rail, motherboard power-on sequence, power supply, circuit analysis) + measurement intelligence + failure pattern DB + knowledge platform + LLM orchestrator. Pure standard library, no runtime network access, LLM optional.",
+  "independent": true,
+  "stdlib_only": true,
+  "runtime_network_access_required": false,
+  "top_level_layout": {
+    "ComponentDatabase": "IC + MOSFET + discrete semiconductor + analog IC records, replacement mappings, schemas",
+    "DiagnosticEngines": "Core framework + power-rail + motherboard + power supply + circuit analysis engines + rule files + rail definitions",
+    "Knowledge": "Technical references, app notes, repair cases, source catalog",
+    "Tests": "Original + expanded test suites + sample cases",
+    "Tools": "Validators + summary exporter",
+    "Integration": "Host adapter + integration guide + API spec + import manifest"
+  },
+  "counts": {
+    "ic_records": 35,
+    "mosfet_records": 5,
+    "discrete_semiconductor_records": 20,
+    "analog_ic_records": 16,
+    "replacement_mappings": 9,
+    "rail_families": 25,
+    "diagnostic_rules": 53,
+    "power_supply_topologies": 15,
+    "circuit_topologies": 36,
+    "repair_cases": 1,
+    "ic_by_category": {
+      "battery_management_ic": 1,
+      "bios_spi_flash": 2,
+      "buck_controller": 6,
+      "charger_ic": 4,
+      "ec_controller": 2,
+      "ldo_regulator": 5,
+      "load_switch": 1,
+      "pmic": 1,
+      "pwm_controller": 9,
+      "usb_pd_controller": 2,
+      "voltage_regulator": 2
+    },
+    "mosfet_by_channel": {
+      "N-channel": 3,
+      "P-channel": 2
+    },
+    "rules_by_topology": {
+      "boost_converter": 5,
+      "buck_converter": 21,
+      "charger_input": 3,
+      "ldo": 5,
+      "always_on_standby": 10,
+      "load_switch": 1,
+      "multi_phase_vrm": 8
+    }
+  },
+  "engines": {
+    "power_rail": "DiagnosticEngines.core.engine.DiagnosticEngine (legacy, preserved)",
+    "motherboard": "DiagnosticEngines.Motherboard.MotherboardEngine (single-rail + power-on sequence)",
+    "power_supply": "DiagnosticEngines.PowerSupply.PowerSupplyEngine",
+    "circuit_analysis": "DiagnosticEngines.CircuitAnalysis.CircuitAnalysisEngine",
+    "component_identification": "DiagnosticEngines.core.identification_engine.ComponentIdentificationEngine",
+    "replacement": "DiagnosticEngines.core.replacement_engine.ReplacementEngine",
+    "measurement_intelligence": "DiagnosticEngines.core.measurement_intelligence.MeasurementIntelligenceEngine",
+    "failure_pattern_db": "DiagnosticEngines.core.failure_pattern_db.FailurePatternDB",
+    "knowledge_platform": "DiagnosticEngines.core.knowledge_platform",
+    "llm_orchestrator": "DiagnosticEngines.core.llm_orchestrator.LLMOrchestrator",
+    "host_adapter": "Integration.host_adapter.ExpansionPackAdapter"
+  },
+  "entry_points": {
+    "engine_import": "DiagnosticEngines.core.load_engine",
+    "host_adapter_import": "Integration.host_adapter.load_adapter",
+    "component_db_import": "DiagnosticEngines.core.component_db.ComponentDatabase.load",
+    "validate_database": "Tools/validate_database.py",
+    "validate_rules": "Tools/validate_rules.py",
+    "export_summary": "Tools/export_summary.py",
+    "test_suite_original": "Tests/run_all_tests.py",
+    "test_suite_expanded": "Tests/run_expanded_tests.py"
+  },
+  "schemas": [
+    "ComponentDatabase/schemas/ic_component.schema.json",
+    "ComponentDatabase/schemas/mosfet_component.schema.json",
+    "ComponentDatabase/schemas/replacement_mapping.schema.json",
+    "ComponentDatabase/schemas/rail_definition.schema.json",
+    "ComponentDatabase/schemas/diagnostic_rule.schema.json"
+  ]
+}

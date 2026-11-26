@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "answer_id": 789001,
+      "creation_date": 1714610000,
+      "score": 23,
+      "is_accepted": true,
+      "owner": {"display_name": "expert_repair"},
+      "body": "<p>8 ohms on +5VALW is a definite short. Replaced C45 (a 22uF 6.3V ceramic cap near the +5VALW inductor) and the board powered on. Measured 480 ohm to ground after the fix. The fault was a shorted ceramic capacitor.</p>"
+    },
+    {
+      "answer_id": 789002,
+      "creation_date": 1714620000,
+      "score": 5,
+      "is_accepted": false,
+      "owner": {"display_name": "guess_user"},
+      "body": "<p>It might be the EC/KBC holding the rail off. Could be a firmware issue. Try reflashing the BIOS.</p>"
+    }
+  ]
+}

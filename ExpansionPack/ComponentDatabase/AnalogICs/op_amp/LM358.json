@@ -1,0 +1,86 @@
+{
+  "record_id": "AIC_TI_LM358",
+  "part_number": "LM358",
+  "manufacturer": "Texas Instruments (multiple sources)",
+  "manufacturer_short": "TI",
+  "category": "op_amp",
+  "package": "SOIC-8 / DIP-8",
+  "pin_count": 8,
+  "pinout": {
+    "1": "OUT_A",
+    "2": "IN_A-",
+    "3": "IN_A+",
+    "4": "VEE/GND",
+    "5": "IN_B+",
+    "6": "IN_B-",
+    "7": "OUT_B",
+    "8": "VCC"
+  },
+  "pin_functions": [
+    {
+      "name": "vcc",
+      "function": "vcc",
+      "pin": 1
+    },
+    {
+      "name": "vee",
+      "function": "vee",
+      "pin": 2
+    },
+    {
+      "name": "in1+",
+      "function": "in1+",
+      "pin": 3
+    },
+    {
+      "name": "in1-",
+      "function": "in1-",
+      "pin": 4
+    },
+    {
+      "name": "out1",
+      "function": "out1",
+      "pin": 5
+    },
+    {
+      "name": "in2+",
+      "function": "in2+",
+      "pin": 6
+    },
+    {
+      "name": "in2-",
+      "function": "in2-",
+      "pin": 7
+    },
+    {
+      "name": "out2",
+      "function": "out2",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": null,
+      "max": 32.0,
+      "typ": null
+    },
+    "bandwidth_mhz": 1.0,
+    "slew_rate_v_per_us": 0.5,
+    "offset_voltage_mv": 2.0,
+    "supply_current_ma": 0.7,
+    "operating_temp_range_c": {
+      "min": 0,
+      "max": 70
+    }
+  },
+  "typical_applications": [],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/lm358.pdf",
+  "datasheet_source": "Texas Instruments (multiple sources) LM358 datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "Dual op-amp, single-supply, 32V, 1MHz GBW. Industry standard low-cost.",
+  "tags": [
+    "op_amp"
+  ],
+  "schema_version": "1.0.0"
+}

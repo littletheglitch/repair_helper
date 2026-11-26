@@ -1,0 +1,37 @@
+{
+  "rail_family": "VCORE_DESKTOP",
+  "description": "Desktop CPU core voltage. Multi-phase synchronous buck VRM, voltage set by CPU VID. Same topology as laptop VCORE but typically more phases and higher current.",
+  "typical_voltage_v": {
+    "min": 0.6,
+    "typ": 1.0,
+    "max": 1.5,
+    "notes": "CPU VID dependent; do NOT assume."
+  },
+  "typical_topology": "multi_phase_vrm",
+  "always_on": false,
+  "common_controllers": [
+    "ISL95831",
+    "NCP4200",
+    "MAX15496",
+    "TPS53679"
+  ],
+  "upstream_rails": [
+    "CPU_VRM_INPUT"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present",
+    "ripple_measured_mv",
+    "phase_count_observed"
+  ],
+  "schema_version": "1.0.0",
+  "platform": "desktop"
+}

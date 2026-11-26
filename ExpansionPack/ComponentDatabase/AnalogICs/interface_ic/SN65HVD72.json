@@ -1,0 +1,46 @@
+{
+  "record_id": "AIC_TI_SN65HVD72",
+  "part_number": "SN65HVD72",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "interface_ic",
+  "package": "SOIC-8",
+  "pin_count": 8,
+  "pinout": {
+    "1": "R",
+    "2": "/RE",
+    "3": "DE",
+    "4": "D",
+    "5": "GND",
+    "6": "A",
+    "7": "B",
+    "8": "VCC"
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 3.0,
+      "max": 5.5
+    },
+    "supply_current_ma": 2.0,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 125
+    }
+  },
+  "typical_applications": [
+    "RS-485 transceiver",
+    "Industrial differential bus"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/sn65hvd7x.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF, SN65HVD7x family)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "RS-485 transceiver, half-duplex. Pinout and supply range verified against the SN65HVD7x family datasheet.",
+  "replacement_notes": "RS-485 transceivers (MAX485, SN65HVD72, ST3485) share pinout but differ in ESD rating, max datarate, and fail-safe biasing. Match the datarate and ESD requirement.",
+  "tags": [
+    "rs485",
+    "transceiver",
+    "half_duplex"
+  ],
+  "schema_version": "1.0.0"
+}

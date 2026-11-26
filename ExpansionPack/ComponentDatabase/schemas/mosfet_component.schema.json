@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "mosfet_component.schema.json",
+  "title": "MOSFET Component Record",
+  "description": "Verified record of a discrete MOSFET used in laptop motherboard power rails. All electrical ratings must be sourced from a manufacturer datasheet. Missing values must be null with verification_status='unknown'.",
+  "type": "object",
+  "required": [
+    "record_id",
+    "part_number",
+    "manufacturer",
+    "channel_type",
+    "package",
+    "pin_count",
+    "pinout",
+    "vds_v",
+    "id_a",
+    "rds_on_mohm",
+    "vgs_th_v",
+    "vgs_max_v",
+    "gate_charge_nc",
+    "thermal",
+    "verification_status",
+    "datasheet_url",
+    "datasheet_source",
+    "source_date",
+    "schema_version"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^MOSFET_[A-Z0-9_]+$"
+    },
+    "part_number": { "type": "string", "minLength": 1 },
+    "manufacturer": { "type": "string", "minLength": 1 },
+    "manufacturer_short": { "type": "string" },
+    "channel_type": { "type": "string", "enum": ["N-channel", "P-channel"] },
+    "package": { "type": "string", "minLength": 1 },
+    "pin_count": { "type": "integer", "minimum": 1 },
+    "pinout": {
+      "type": "object",
+      "required": ["drain", "source", "gate"],
+      "additionalProperties": true,
+      "properties": {
+        "drain": { "type": "string" },
+        "source": { "type": "string" },
+        "gate": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "vds_v": { "type": ["number", "null"], "description": "Drain-source voltage rating." },
+    "id_a": { "type": ["number", "null"], "description": "Continuous drain current at specified Tc." },
+    "id_conditions": { "type": "string", "description": "Temperature and pulse conditions for Id." },
+    "rds_on_mohm": { "type": ["number", "null"], "description": "Static on-resistance in milliohms." },
+    "rds_on_conditions": {
+      "type": "object",
+      "properties": {
+        "vgs_v": { "type": ["number", "null"] },
+        "id_a": { "type": ["number", "null"] }
+      }
+    },
+    "vgs_th_v": { "type": ["number", "null"], "description": "Gate-source threshold voltage." },
+    "vgs_max_v": { "type": ["number", "null"], "description": "Maximum gate-source voltage." },
+    "gate_charge_nc": { "type": ["number", "null"], "description": "Total gate charge Qg in nanocoulombs." },
+    "gate_charge_conditions": {
+      "type": "object",
+      "properties": {
+        "vds_v": { "type": ["number", "null"] },
+        "vgs_v": { "type": ["number", "null"] },
+        "id_a": { "type": ["number", "null"] }
+      }
+    },
+    "power_dissipation_w": { "type": ["number", "null"] },
+    "thermal": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "r_theta_ja_c_per_w": { "type": ["number", "null"] },
+        "r_theta_jc_c_per_w": { "type": ["number", "null"] },
+        "operating_temp_range_c": {
+          "type": "object",
+          "properties": {
+            "min": { "type": ["number", "null"] },
+            "max": { "type": ["number", "null"] }
+          }
+        }
+      }
+    },
+    "switching_characteristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "turn_on_delay_ns": { "type": ["number", "null"] },
+        "turn_off_delay_ns": { "type": ["number", "null"] },
+        "rise_time_ns": { "type": ["number", "null"] },
+        "fall_time_ns": { "type": ["number", "null"] }
+      }
+    },
+    "technology": { "type": "string", "description": "e.g. Trench, Planar, Logic-level." },
+    "typical_applications": { "type": "array", "items": { "type": "string" } },
+    "datasheet_url": { "type": "string", "format": "uri" },
+    "datasheet_source": { "type": "string", "minLength": 1 },
+    "source_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "verification_status": { "type": "string", "enum": ["verified", "partial", "unknown"] },
+    "verification_notes": { "type": "string" },
+    "replacement_notes": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "schema_version": { "type": "string", "enum": ["1.0.0"] }
+  }
+}

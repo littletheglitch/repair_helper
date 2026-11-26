@@ -1,0 +1,75 @@
+{
+  "source": {
+    "title": "EDA Built-in Knowledge: Embedded Buses and BIOS/Firmware",
+    "url": "",
+    "date": "2026-11-23"
+  },
+  "provenance": "verified-reference",
+  "sections": [
+    {
+      "category": "embedded-buses",
+      "topic": "spi",
+      "facts": [
+        {
+          "text": "SPI is a synchronous 4-wire serial bus (CS, CLK, MOSI, MISO) used on laptops to read the BIOS/UEFI flash. It runs at several MHz; clock must be present during reads and a stuck CS or open MISO prevents boot even if the flash is electrically intact.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["spi","bios-flash"]
+        },
+        {
+          "text": "BIOS/UEFI is stored in a serial flash that the PCH reads after reset; corrupt firmware can present as 'no POST', 'stuck on logo', or recovery loops. Firmware analysis requires a real flash parser; raw SHA-256 of the file alone does not establish corruption.",
+          "confidence": "verified",
+          "tags": ["bios","firmware","spi"]
+        }
+      ]
+    },
+    {
+      "category": "embedded-buses",
+      "topic": "i2c-smbus",
+      "facts": [
+        {
+          "text": "I2C/SMBus is a 2-wire (SDA, SCL) open-drain bus with pull-ups; on a laptop it carries battery fuel gauge, thermal sensors, EEPROMs, and some controller programming. Lines should idle high; a stuck-low line usually means a shorted sensor or pulled-down device.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["i2c","smbus","battery"]
+        }
+      ]
+    },
+    {
+      "category": "embedded-buses",
+      "topic": "uart",
+      "facts": [
+        {
+          "text": "UART is an asynchronous serial debug console (TX, RX, GND) at a fixed baud rate (commonly 115200); it is the primary port for reading EC/PCH/BIOS debug output during board bring-up. Voltage level is board-specific (3.3 V CMOS or 1.8 V on newer boards).",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["uart","debug"]
+        }
+      ]
+    },
+    {
+      "category": "embedded-buses",
+      "topic": "pcie-fundamentals",
+      "facts": [
+        {
+          "text": "PCIe is a high-speed differential serial link (Tx+/Tx-, Rx+/Rx-) with per-lane reference clock, PERST#, and power from 3.3V/12V aux rails. AC-coupled capacitors are on the transmit side; link training failures can be caused by missing PERST, missing refclk, or a damaged lane pair.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["pcie","perst","refclk"]
+        }
+      ]
+    },
+    {
+      "category": "embedded-buses",
+      "topic": "usb-fundamentals",
+      "facts": [
+        {
+          "text": "USB 2.0 uses a single differential pair (D+/D-) with VBUS at 5 V and GND; USB 3.x adds TX/RX super-speed pairs. Port failures cluster at the port itself, the USB power switch, the ESD diodes, and the PCH/EC USB controller. A shorted D+/D- ESD diode is a common port fault.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["usb","esd"]
+        }
+      ]
+    }
+  ]
+}

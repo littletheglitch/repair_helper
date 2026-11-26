@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_VRM_003_CHECK_VCC",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND NOT vcc_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure VRM controller VCC (typically 5 V) and VDDA/VDDIO supplies.",
+      "measure": {
+        "what": "Controller VCC + VDDA",
+        "where": "Controller VCC and VDDA pins (consult datasheet)",
+        "instrument": "DMM DC volts",
+        "expected": "5.0 V VCC typical; VDDA per datasheet.",
+        "safety": "VRM controllers have multiple supplies; check all of them."
+      },
+      "interpretations": [
+        {
+          "if_result": "VCC and VDDA present",
+          "then": "Controller supplies good. Proceed to check VR_ON enable.",
+          "set_facts": [
+            "vcc_present=True"
+          ],
+          "next_rule": "RULE_VRM_004_CHECK_VR_ON"
+        },
+        {
+          "if_result": "VCC missing",
+          "then": "5 V supply to VRM controller is dead. Trace back to +5VALW and diagnose that rail.",
+          "set_facts": [
+            "vcc_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for VCC/VDDA pin numbers and voltages."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

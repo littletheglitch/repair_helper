@@ -1,0 +1,65 @@
+{
+  "record_id": "IC_ITE_IT8528",
+  "part_number": "IT8528",
+  "manufacturer": "ITE Tech",
+  "manufacturer_short": "ITE",
+  "category": "ec_controller",
+  "package": "LQFP-128",
+  "pin_count": 128,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 1.62,
+      "max": 3.6,
+      "typ": 3.3
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "VCC_v": 3.6
+    },
+    "operating_conditions": {
+      "core": "8051 EC core",
+      "interface": "LPC/eSPI"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Notebook Embedded Controller on ASUS / MSI / Clevo boards"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "EC with LPC to PCH",
+      "topology": "ec",
+      "description": "Drives power sequencing and charger SMBus.",
+      "external_components": [
+        "32 kHz crystal",
+        "decoupling",
+        "thermal sensors"
+      ]
+    }
+  ],
+  "important_pins": [],
+  "datasheet_url": "https://www.ite.com.tw/en/product/EC",
+  "datasheet_source": "ITE Tech public product page (full datasheet under NDA)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part number and family verified from ITE public product page. EC firmware and pin map are board-specific and NDA-gated; cannot be verified from public sources.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "ECs are firmware-defined. Direct swaps require identical board firmware and GPIO map.",
+  "tags": [
+    "ec",
+    "lpc",
+    "espi",
+    "ite"
+  ],
+  "schema_version": "1.0.0"
+}

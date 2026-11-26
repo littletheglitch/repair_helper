@@ -1,0 +1,164 @@
+{
+  "source": {
+    "title": "EDA Built-in Knowledge: Laptop Motherboard Power Architecture",
+    "url": "",
+    "date": "2026-11-23"
+  },
+  "provenance": "verified-reference",
+  "sections": [
+    {
+      "category": "laptop-power-architecture",
+      "topic": "dc-input-protection",
+      "facts": [
+        {
+          "text": "The laptop DC input path normally passes: DC jack -> reverse-protection (input MOSFET or ideal-diode) -> input fuse or current-limit -> bulk input capacitors -> charger/controller IC. A fault anywhere in this chain can produce 'no power' with the adapter voltage present at the jack but not at the charger IC input.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["input","adapter","path"]
+        },
+        {
+          "text": "The adapter-detection and identification signals (e.g. center-pin, PSID, ACPI, ACIN/ACOK to EC) tell the EC what adapter is connected and whether the adapter is valid; if the EC does not see a valid adapter it may refuse to enable charging or system power.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["adapter","detection","acok","ec"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "always-on-rails",
+      "facts": [
+        {
+          "text": "An always-on (standby) rail is generated directly from the adapter input and stays live whenever the adapter (or a charged battery) is present, regardless of power button state. Common examples on Intel platforms are +3VALW and +5VALW (also called +3V_ALW / +5V_ALW or +3.3V_ALW / +5V_ALW); the exact rail names differ by manufacturer.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["always-on","3valw","5valw","standby"]
+        },
+        {
+          "text": "If the always-on rails are missing, the EC has no power, the power button does nothing, and the board cannot sequence up. Missing always-on rails is a common 'dead board' presentation.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["always-on","dead-board"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "power-states-s5-s3-s0",
+      "facts": [
+        {
+          "text": "S5 is the soft-off state: only always-on rails are live and the EC waits for the power button. S3 is suspend (sleep): RAM is kept powered (suspend rails, e.g. +1.5V or +1.2V DDR rail) while most other rails are off. S0 is the fully-powered working state with all rails up.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["s5","s3","s0","acpi"]
+        },
+        {
+          "text": "Power sequencing is the ordered enabling of rails: e.g. always-on -> RTC -> suspend -> run rails -> CPU core (VRM) -> reset deassert. Each rail's power-good usually gates the next; a rail that fails to come up blocks everything downstream.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["sequencing","power-good"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "embedded-controller",
+      "facts": [
+        {
+          "text": "The embedded controller (EC, e.g. ITE, Nuvoton, ENE families) handles the power button, lid switch, keyboard, thermal sensors, fan control, battery charging and most power-sequencing enable signals. It usually runs from an always-on 3.3 V rail and communicates with the host via LPC or eSPI.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["ec","ite","nuvoton","sequencing"]
+        },
+        {
+          "text": "If the EC is not powered (no always-on rail) or its firmware is corrupt, it cannot assert the enables and power-good inputs the rest of the board needs; a dead EC commonly presents as 'no power, no lights'.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["ec","dead-board"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "battery-charging",
+      "facts": [
+        {
+          "text": "A battery charger IC regulates adapter current into the battery pack under control of the EC, reading the pack's SMBus fuel gauge. Charging is gated by adapter validity, pack temperature, cell voltage and charge state; bypassing any of these is unsafe and can cause a pack fire.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["charger","battery","smbus","safety"]
+        },
+        {
+          "text": "Shorting the battery terminals, bypassing pack protection, or disabling over-current / over-voltage protection to 'force' charging is unsafe and must never be recommended.",
+          "confidence": "verified",
+          "tags": ["battery","safety"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "vrm-cpu-power",
+      "facts": [
+        {
+          "text": "CPU core power is delivered by a multi-phase voltage regulator module (VRM) controller (e.g. the TPS51716 / ISL families) that produces a tightly regulated low voltage (commonly 0.6-1.2 V) at high current. The controller is enabled by the EC only after the prior sequencing steps complete.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["vrm","cpu","core-power"]
+        },
+        {
+          "text": "VRM feedback, current-sense, slope compensation and power-good thresholds are component-specific; verifying VRM behavior requires the VRM controller datasheet for the specific part number on the board.",
+          "confidence": "verified",
+          "tags": ["vrm","datasheet-required"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "memory-power",
+      "facts": [
+        {
+          "text": "DDR memory needs a core rail (e.g. +1.5V for DDR3, +1.2V for DDR4, +1.1V for DDR5) and a termination rail (VTT, typically half the core voltage). DDR VTT and core rails are usually derived from one controller and must come up in a defined order.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["ddr","vtt","memory-power"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "clock-reset",
+      "facts": [
+        {
+          "text": "After all run rails are up and power-good, the board deasserts reset (RST#, PLTRST#) and starts the CPU, which then reads the BIOS/UEFI from the SPI flash. A board stuck with reset asserted cannot boot regardless of rails being present.",
+          "confidence": "verified",
+          "provenance": "verified-reference",
+          "tags": ["reset","clock","boot"]
+        }
+      ]
+    },
+    {
+      "category": "laptop-power-architecture",
+      "topic": "common-fault-patterns",
+      "facts": [
+        {
+          "text": "'No power, no lights, adapter 19 V at jack': high-priority first checks are adapter voltage at the board input, input MOSFET source/drain, charger IC supply pin, ACIN/ACOK to EC, and the always-on rails (+3VALW, +5VALW). The exact next check depends on which earlier check fails.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["no-power","diagnostic-path"]
+        },
+        {
+          "text": "Low resistance to ground on a single rail strongly suggests a shorted component on that rail; isolate by lifting inductors or removing decoupling capacitors rather than injecting uncontrolled current.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["short","isolation"]
+        },
+        {
+          "text": "A rail present but at the wrong voltage can mean wrong feedback ratio, wrong reference, overloaded rail, or a regulator in current limit; the cause is regulator- and topology-specific and the datasheet is needed for exact numbers.",
+          "confidence": "verified",
+          "provenance": "repair-forum-summary",
+          "tags": ["wrong-voltage","regulator"]
+        }
+      ]
+    }
+  ]
+}

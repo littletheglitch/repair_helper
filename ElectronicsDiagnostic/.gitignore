@@ -1,0 +1,43 @@
+# Build artifacts
+build/
+dist/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+*.spec.bak
+
+# Runtime data (created on first run; do not ship a populated DB)
+Config/eda.sqlite3
+Config/eda.sqlite3-shm
+Config/eda.sqlite3-wal
+Config/settings.json
+Documents/*
+!Documents/README.txt
+Sessions/*
+!Sessions/README.txt
+Temp/*
+!Temp/README.txt
+Logs/*
+!Logs/README.txt
+Reports/*
+!Reports/README.txt
+
+# Model weights and runtime binaries (deliberately not bundled; prepared
+# separately via scripts/prepare_model.py)
+Models/*.gguf
+Engine/*.exe
+Engine/main
+Engine/llama-cli
+!Models/README.txt
+!Engine/README.txt
+
+# Sample data is shipped
+!sample_documents/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp

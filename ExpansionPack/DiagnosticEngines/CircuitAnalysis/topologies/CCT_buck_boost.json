@@ -1,0 +1,59 @@
+{
+  "circuit_id": "CCT_buck_boost",
+  "name": "Buck-boost converter",
+  "description": "Single-inductor topology that can step up or down. Output polarity is inverted (classic) or non-inverted (4-switch).",
+  "topology": "4-switch buck-boost: 4x MOSFET + inductor + controller",
+  "main_components": [
+    "4x MOSFET",
+    "inductor",
+    "output cap",
+    "controller"
+  ],
+  "input": "DC (variable)",
+  "output": "Regulated DC (above or below input)",
+  "expected_signal_behavior": "Output regulated across the full input range; mode transitions between buck and boost at VIN~VOUT.",
+  "common_failure_modes": [
+    {
+      "mode": "mode_transition glitch",
+      "description": ""
+    },
+    {
+      "mode": "no_output",
+      "description": "switch fault"
+    },
+    {
+      "mode": "instability at VIN~VOUT",
+      "description": ""
+    },
+    {
+      "mode": "FB fault",
+      "description": ""
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "output voltage",
+    "switch node waveforms (both sides)",
+    "mode pin state",
+    "FB"
+  ],
+  "possible_fault_locations": [
+    "4x MOSFET",
+    "inductor",
+    "controller"
+  ],
+  "recommended_next_tests": [
+    "measure resistance",
+    "check input/output",
+    "check mode transitions",
+    "check FB"
+  ],
+  "source_references": [
+    {
+      "title": "4-switch buck-boost design",
+      "url": "https://www.ti.com/lit/an/slva721/slva721.pdf",
+      "type": "app_note"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,41 @@
+{
+  "record_id": "AIC_ONS_NCP303LSN27T1",
+  "part_number": "NCP303LSN27T1",
+  "manufacturer": "onsemi",
+  "manufacturer_short": "onsemi",
+  "category": "reset_ic",
+  "package": "TSOP-5",
+  "pin_count": 5,
+  "pinout": {
+    "notes": "5-pin supervisor with active-low open-drain reset and a manual reset input. Pinout per datasheet."
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 1.0,
+      "max": 6.0
+    },
+    "supply_current_ma": 0.0005,
+    "threshold_v": 2.7,
+    "reset_delay_ms": null,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 85
+    }
+  },
+  "typical_applications": [
+    "Low-voltage micro reset supervisor",
+    "Battery-backed logic reset"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/ncp303-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Family and threshold verified. Specific pinout for the LS variant must be confirmed against the live datasheet.",
+  "replacement_notes": "Open-drain active-low reset. Different NCP303 part numbers have different thresholds (suffix) and output configurations — verify all before substitution.",
+  "tags": [
+    "reset",
+    "open_drain",
+    "low_iq"
+  ],
+  "schema_version": "1.0.0"
+}

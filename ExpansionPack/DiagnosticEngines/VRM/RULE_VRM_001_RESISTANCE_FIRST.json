@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_VRM_001_RESISTANCE_FIRST",
+  "topology": "multi_phase_vrm",
+  "applies_to_rail_families": [
+    "VCORE",
+    "GPU_CORE"
+  ],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect adapter and battery. CPU VRM rails have a very low normal resistance to ground (single-digit ohms is common due to the many output capacitors). Compare against a known-good board.",
+      "measure": {
+        "what": "Resistance from VCORE/GPU_CORE to ground",
+        "where": "CPU socket VCORE pins or the VRM inductor output pads",
+        "instrument": "DMM resistance mode (200 ohm range)",
+        "expected": "Highly board-dependent — typically 5-30 ohm. Compare to known-good. Values below 2 ohm with no load on the rail suggest a shorted output FET or output cap.",
+        "safety": "VRM rails hold charge in many ceramics — wait for full discharge before measuring."
+      },
+      "interpretations": [
+        {
+          "if_result": "Resistance much lower than known-good board",
+          "then": "Short on VCORE. Suspect low-side MOSFET(s) or output cap. Do NOT apply power; hunt the short first.",
+          "set_facts": [
+            "rail_short=True"
+          ],
+          "next_rule": "RULE_BUCK_010_SHORTED_RAIL"
+        },
+        {
+          "if_result": "Resistance matches known-good board",
+          "then": "No short. Proceed to check VRM input supply.",
+          "set_facts": [
+            "rail_short=False"
+          ],
+          "next_rule": "RULE_VRM_002_CHECK_INPUT"
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "A known-good board reading is strongly recommended — CPU VRM resistance is too board-specific to interpret alone."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

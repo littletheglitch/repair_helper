@@ -1,0 +1,47 @@
+{
+  "circuit_id": "CCT_charge_pump",
+  "name": "Charge pump (flying-cap)",
+  "description": "Switched-capacitor voltage converter. No inductor; uses capacitors and switches to double, invert, or halve voltage.",
+  "topology": "Flying-cap + 4x switches (or diodes)",
+  "main_components": [
+    "flying capacitor",
+    "output cap",
+    "switches (or diodes)",
+    "oscillator"
+  ],
+  "input": "DC",
+  "output": "DC (2x, 0.5x, or -1x input)",
+  "expected_signal_behavior": "Output tracks input ratio; efficiency high at low current; collapses under load.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "cap open, switch dead"
+    },
+    {
+      "mode": "low_output",
+      "description": "cap dried, overloaded"
+    },
+    {
+      "mode": "high_ripple",
+      "description": "cap ESR high"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input voltage",
+    "output voltage",
+    "flying cap voltage (AC)",
+    "output ripple"
+  ],
+  "possible_fault_locations": [
+    "flying capacitor",
+    "output capacitor",
+    "switches"
+  ],
+  "recommended_next_tests": [
+    "measure input/output",
+    "check flying cap ESR",
+    "check output cap ESR"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

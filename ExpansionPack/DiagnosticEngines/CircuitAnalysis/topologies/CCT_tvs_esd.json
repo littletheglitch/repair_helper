@@ -1,0 +1,44 @@
+{
+  "circuit_id": "CCT_tvs_esd",
+  "name": "TVS / ESD protection",
+  "description": "Clamps transients to protect downstream circuitry. TVS for energy transients; ESD diodes for fast low-energy events.",
+  "topology": "TVS diode or ESD diode array",
+  "main_components": [
+    "TVS diode",
+    "ESD diode array",
+    "series resistor (sometimes)"
+  ],
+  "input": "Protected line",
+  "output": "Clamped line",
+  "expected_signal_behavior": "Clamps at the breakdown voltage; low leakage below the working voltage.",
+  "common_failure_modes": [
+    {
+      "mode": "no_protection",
+      "description": "diode open"
+    },
+    {
+      "mode": "stuck_short",
+      "description": "diode shorted (failed short after a transient)"
+    },
+    {
+      "mode": "leakage_high",
+      "description": "diode degraded"
+    }
+  ],
+  "diagnostic_measurements": [
+    "line voltage (normal)",
+    "diode leakage current",
+    "clamping voltage (under surge)"
+  ],
+  "possible_fault_locations": [
+    "TVS diode",
+    "ESD diode"
+  ],
+  "recommended_next_tests": [
+    "check diode forward voltage (diode mode)",
+    "check line voltage normal",
+    "check for short across the diode"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

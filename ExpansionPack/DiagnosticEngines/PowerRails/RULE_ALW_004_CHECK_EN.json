@@ -1,0 +1,45 @@
+{
+  "rule_id": "RULE_ALW_004_CHECK_EN",
+  "topology": "always_on_standby",
+  "applies_to_rail_families": [
+    "+3VALW",
+    "+5VALW"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND vin_present AND vcc_present AND NOT en_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the standby controller's EN pin. ALW rails are typically self-enabled (EN tied to VCC) or always-on; if EN is EC-controlled, it should be high.",
+      "measure": {
+        "what": "EN pin voltage",
+        "where": "Controller EN pin (consult datasheet)",
+        "instrument": "DMM DC volts",
+        "expected": "Active-high EN high when on; many ALW controllers self-enable (EN tied to VCC).",
+        "safety": "ALW controllers are usually always-on, so EN should be high whenever VCC is up."
+      },
+      "interpretations": [
+        {
+          "if_result": "EN high",
+          "then": "Controller is enabled. Proceed to check switching.",
+          "set_facts": [
+            "en_present=True"
+          ],
+          "next_rule": "RULE_ALW_005_CHECK_SWITCHING"
+        },
+        {
+          "if_result": "EN low",
+          "then": "EC is holding the rail off, or EN is externally pulled low. ALW rails being held off is unusual; suspect EC firmware fault or a stuck power button.",
+          "set_facts": [
+            "en_present=False"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need controller datasheet for EN pin and active polarity."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

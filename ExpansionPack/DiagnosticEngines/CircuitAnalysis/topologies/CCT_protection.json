@@ -1,0 +1,51 @@
+{
+  "circuit_id": "CCT_protection",
+  "name": "Protection circuit (OCP/OVP/OTP)",
+  "description": "Monitors a signal and disables the main path when a threshold is crossed. Often latches off until VCC cycled.",
+  "topology": "Comparator + reference + latch + enable FET",
+  "main_components": [
+    "comparator",
+    "reference",
+    "sense resistor (OCP) or divider (OVP)",
+    "thermistor (OTP)",
+    "latch",
+    "enable FET"
+  ],
+  "input": "Sense signal",
+  "output": "Enable signal to the main path",
+  "expected_signal_behavior": "Output asserts (or de-asserts) when sense crosses threshold; latches until reset.",
+  "common_failure_modes": [
+    {
+      "mode": "false_trip",
+      "description": "threshold drifted, noise"
+    },
+    {
+      "mode": "no_trip",
+      "description": "comparator dead, latch stuck"
+    },
+    {
+      "mode": "stuck_latched",
+      "description": "latch won't reset"
+    }
+  ],
+  "diagnostic_measurements": [
+    "sense voltage",
+    "reference voltage",
+    "comparator output",
+    "latch state",
+    "thermistor resistance (OTP)"
+  ],
+  "possible_fault_locations": [
+    "comparator",
+    "reference",
+    "sense components",
+    "latch"
+  ],
+  "recommended_next_tests": [
+    "check sense vs reference",
+    "check comparator output",
+    "check latch reset"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

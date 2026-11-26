@@ -1,0 +1,42 @@
+{
+  "rule_id": "RULE_BOOST_001_RESISTANCE_FIRST",
+  "topology": "boost_converter",
+  "applies_to_rail_families": [
+    "BOOST_GENERIC"
+  ],
+  "condition": {
+    "expression": "NOT rail_voltage_present AND NOT rail_resistance_measured"
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Disconnect power. Measure resistance from boost output to ground.",
+      "measure": {
+        "what": "Boost output resistance to ground",
+        "where": "Boost output diode cathode / output cap",
+        "instrument": "DMM resistance mode",
+        "expected": ">100 ohm typical for low-voltage boosts; backlight boosts at 30+ V can be >10 kohm.",
+        "safety": "Backlight boost outputs can carry residual charge at high voltage; discharge via a bleeder first."
+      },
+      "interpretations": [
+        {
+          "if_result": "Resistance < 10 ohm",
+          "then": "Short on boost output. Suspect output diode shorted, output cap shorted, or load (backlight string) shorted.",
+          "set_facts": [
+            "rail_short=True"
+          ]
+        },
+        {
+          "if_result": "Resistance normal",
+          "then": "No short. Proceed to check input supply.",
+          "set_facts": [
+            "rail_short=False"
+          ],
+          "next_rule": "RULE_BOOST_002_CHECK_INPUT"
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "schema_version": "1.0.0"
+}

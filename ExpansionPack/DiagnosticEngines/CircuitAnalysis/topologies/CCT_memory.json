@@ -1,0 +1,56 @@
+{
+  "circuit_id": "CCT_memory",
+  "name": "Memory interface (DDR)",
+  "description": "DDR SDRAM interface: address/cmd + data + DQS + Vref + VTT. High-speed, impedance-controlled.",
+  "topology": "DDR controller + DRAM + termination",
+  "main_components": [
+    "memory controller (in CPU/PCH)",
+    "DRAM chips",
+    "VTT regulator",
+    "Vref divider",
+    "termination resistors"
+  ],
+  "input": "Address/cmd + data",
+  "output": "Stored/retrieved data",
+  "expected_signal_behavior": "VDDQ at spec (1.5V DDR3, 1.2V DDR4, 1.1V DDR5); VTT = VDDQ/2; Vref = VDDQ/2; DQS edge-aligned to data.",
+  "common_failure_modes": [
+    {
+      "mode": "no_boot",
+      "description": "VDDQ missing, VTT missing"
+    },
+    {
+      "mode": "memory_errors",
+      "description": "Vref drift, signal integrity, bad DRAM"
+    },
+    {
+      "mode": "training_failure",
+      "description": "termination wrong, layout issue"
+    }
+  ],
+  "diagnostic_measurements": [
+    "VDDQ voltage",
+    "VTT voltage",
+    "Vref voltage",
+    "DQS/DQ signal integrity (scope)"
+  ],
+  "possible_fault_locations": [
+    "VDDQ regulator",
+    "VTT regulator",
+    "Vref divider",
+    "DRAM chips",
+    "termination resistors"
+  ],
+  "recommended_next_tests": [
+    "check VDDQ/VTT/Vref",
+    "scope DQS/DQ for signal integrity",
+    "run memory training / memtest"
+  ],
+  "source_references": [
+    {
+      "title": "DDR4 design guide",
+      "url": "https://www.jedec.org/standards-documents/docs/jjesd79-4",
+      "type": "reference_design"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

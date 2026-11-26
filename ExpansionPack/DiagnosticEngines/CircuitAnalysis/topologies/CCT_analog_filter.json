@@ -1,0 +1,52 @@
+{
+  "circuit_id": "CCT_analog_filter",
+  "name": "Analog filter (LP/HP/BP/BR)",
+  "description": "Passive (RC/RLC) or active (op-amp + RC) filter. Sets the bandwidth of a signal path.",
+  "topology": "RC / RLC / active Sallen-Key",
+  "main_components": [
+    "resistors",
+    "capacitors",
+    "inductors (LC filters)",
+    "op-amp (active filters)"
+  ],
+  "input": "Broadband signal",
+  "output": "Filtered signal",
+  "expected_signal_behavior": "Cutoff frequency per R/C values; roll-off per filter order; passband flatness per design.",
+  "common_failure_modes": [
+    {
+      "mode": "wrong_cutoff",
+      "description": "R/C drift"
+    },
+    {
+      "mode": "no_output",
+      "description": "cap open, op-amp dead (active)"
+    },
+    {
+      "mode": "noisy",
+      "description": "cap ESR high"
+    },
+    {
+      "mode": "peaking",
+      "description": "Q wrong"
+    }
+  ],
+  "diagnostic_measurements": [
+    "input vs output (scope)",
+    "cutoff frequency",
+    "passband gain",
+    "stopband attenuation"
+  ],
+  "possible_fault_locations": [
+    "resistors",
+    "capacitors",
+    "inductors",
+    "op-amp (active)"
+  ],
+  "recommended_next_tests": [
+    "scope transfer function",
+    "verify R/C values",
+    "check Q / peaking"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

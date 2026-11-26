@@ -1,0 +1,42 @@
+{
+  "record_id": "DISC_ON_2N3906",
+  "part_number": "2N3906",
+  "manufacturer": "onsemi (multiple vendors)",
+  "manufacturer_short": "onsemi",
+  "category": "bjt_pnp",
+  "package": "TO-92",
+  "pin_count": 3,
+  "pinout": {
+    "base": "pin 1",
+    "collector": "pin 2",
+    "emitter": "pin 3",
+    "notes": "Same TO-92 pinout as 2N3904."
+  },
+  "electrical_characteristics": {
+    "vceo_v": -40.0,
+    "ic_a": -0.2,
+    "hfe_min": 100,
+    "pd_w": 0.625,
+    "thermal_r_ja_c_per_w": 200.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "typical_applications": [
+    "Small-signal switching (high-side)",
+    "Complement to 2N3904"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/2n3906-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VCEO=-40V, IC=-200mA, hFE_min=100 verified. PNP complement to 2N3904.",
+  "replacement_notes": "PNP complement of 2N3904. Same package/pinout. Verify polarity of the circuit before substitution.",
+  "tags": [
+    "pnp",
+    "small_signal",
+    "to92"
+  ],
+  "schema_version": "1.0.0"
+}

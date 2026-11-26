@@ -1,0 +1,219 @@
+{
+  "topology_id": "PSUP_battery_charger",
+  "name": "Battery charger IC (DC input, charge FET, current sense)",
+  "mains_powered": false,
+  "isolated": false,
+  "typical_power_level_w": 100,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "Input fuse, reverse-polarity diode, input cap",
+      "components": [
+        "fuse",
+        "reverse_diode",
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No input voltage. Check the input fuse, reverse-polarity diode, and the input source.",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "input_filter",
+      "description": "Input filter cap + decoupling",
+      "components": [
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "Input present at connector but wrong at the regulator input pin. Check the input trace and decoupling.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "adapter_sense",
+      "description": "Adapter detection (ACIN pin senses adapter via divider)",
+      "components": [
+        "sense_divider"
+      ],
+      "diagnostic_signals": {
+        "acin": "in_range"
+      },
+      "fail_note": "Adapter not detected. The charger IC senses the adapter via the ACIN divider. A dead adapter or open sense resistor reads no ACIN, and the charger won't enable charging.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "charge_switch",
+      "description": "Charge FET (controls battery charge current path)",
+      "components": [
+        "charge_fet",
+        "gate_driver"
+      ],
+      "diagnostic_signals": {
+        "charge_en": "in_range"
+      },
+      "fail_note": "Charge FET not enabled. The charger IC drives the charge FET gate. Check the charge-en signal and the FET.",
+      "depends_on": [
+        "pwm_controller",
+        "adapter_sense"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "current_sense",
+      "description": "Current-sense resistor + sense amp (sets charge current)",
+      "components": [
+        "sense_resistor",
+        "sense_amp"
+      ],
+      "diagnostic_signals": {
+        "charge_current": "in_range"
+      },
+      "fail_note": "Current-sense fault. A open sense resistor reads zero current (charger throttles); a short reads overcurrent (charger trips).",
+      "depends_on": [
+        "charge_switch"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "battery_interface",
+      "description": "Battery pack + gas gauge (SMBus communication)",
+      "components": [
+        "battery_pack",
+        "gas_gauge"
+      ],
+      "diagnostic_signals": {
+        "battery_voltage": "in_range",
+        "smbus": "in_range"
+      },
+      "fail_note": "Battery interface fault. Check the battery voltage and SMBus communication with the gas gauge. The charger won't charge a pack it cannot communicate with.",
+      "depends_on": [
+        "current_sense"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "output_filter",
+      "description": "Input/output caps",
+      "components": [
+        "input_cap",
+        "output_cap"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range"
+      },
+      "fail_note": "Cap fault.",
+      "depends_on": [
+        "charge_switch"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Non-isolated feedback: output divider to controller FB pin",
+      "components": [
+        "fb_divider",
+        "fb_cap"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range"
+      },
+      "fail_note": "Feedback pin not at expected voltage. Check the FB divider resistors and FB decoupling cap.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_charge",
+      "likely_stages": [
+        "adapter_sense",
+        "charge_switch",
+        "battery_interface"
+      ],
+      "notes": "Charger: adapter sense + battery comm are distinctive."
+    },
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "input_protection",
+        "adapter_sense"
+      ],
+      "notes": "Charger no-output: check adapter sense first."
+    },
+    {
+      "pattern": "wrong_voltage",
+      "likely_stages": [
+        "feedback",
+        "output_filter"
+      ],
+      "notes": "Output present but wrong voltage. Check the feedback divider and the reference."
+    },
+    {
+      "pattern": "unstable",
+      "likely_stages": [
+        "output_filter",
+        "feedback"
+      ],
+      "notes": "Output unstable/oscillating. Check output caps, feedback compensation, ESR."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

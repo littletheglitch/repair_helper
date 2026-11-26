@@ -1,0 +1,46 @@
+{
+  "circuit_id": "CCT_uart",
+  "name": "UART interface",
+  "description": "Asynchronous serial: TX/RX + GND. Baud rate, parity, stop bits agreed by both ends.",
+  "topology": "UART TX/RX + level shifter (if needed)",
+  "main_components": [
+    "UART controller",
+    "level shifter (RS232, RS485, or logic)",
+    "ESD diodes (external)"
+  ],
+  "input": "TX/RX logic",
+  "output": "Serial data stream",
+  "expected_signal_behavior": "Idle high; start bit low; 5-9 data bits; optional parity; 1-2 stop bits. Voltage per interface (logic 3.3V, RS232 +/-12V).",
+  "common_failure_modes": [
+    {
+      "mode": "no_data",
+      "description": "TX/RX open, level shifter dead"
+    },
+    {
+      "mode": "garbled",
+      "description": "baud mismatch, ground missing"
+    },
+    {
+      "mode": "stuck_low",
+      "description": "driver shorted"
+    }
+  ],
+  "diagnostic_measurements": [
+    "TX pin idle level",
+    "RX pin idle level",
+    "TX waveform during transmission",
+    "baud rate (scope)"
+  ],
+  "possible_fault_locations": [
+    "UART controller",
+    "level shifter",
+    "ESD diodes"
+  ],
+  "recommended_next_tests": [
+    "verify baud/parity match both ends",
+    "scope TX during transmission",
+    "check level shifter supplies"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

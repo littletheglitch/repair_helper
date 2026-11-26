@@ -1,0 +1,114 @@
+{
+  "record_id": "IC_TI_BQ24725A",
+  "part_number": "BQ24725A",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "charger_ic",
+  "package": "QFN-28 (4x4 mm) / WQFN-28",
+  "pin_count": 28,
+  "pinout": {},
+  "pin_functions": [
+    {
+      "name": "ac_in",
+      "function": "ac_in",
+      "pin": 1
+    },
+    {
+      "name": "battery_drive",
+      "function": "battery_drive",
+      "pin": 2
+    },
+    {
+      "name": "smbus",
+      "function": "smbus",
+      "pin": 3
+    },
+    {
+      "name": "current_sense",
+      "function": "current_sense",
+      "pin": 4
+    },
+    {
+      "name": "gate_drive_hi",
+      "function": "gate_drive_hi",
+      "pin": 5
+    },
+    {
+      "name": "gate_drive_lo",
+      "function": "gate_drive_lo",
+      "pin": 6
+    },
+    {
+      "name": "adapter_select",
+      "function": "adapter_select",
+      "pin": 7
+    },
+    {
+      "name": "charge_current_sense",
+      "function": "charge_current_sense",
+      "pin": 8
+    }
+  ],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 4.5,
+      "max": 24.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 1.0,
+      "max": 19.2,
+      "typ": null,
+      "adjustable": true,
+      "note": "Battery voltage; SMBus-regulated"
+    },
+    "switching_frequency_khz": [
+      600
+    ],
+    "operating_conditions": {
+      "charge_current_a": {
+        "max": 10.0,
+        "note": "Set by sense resistor"
+      },
+      "control_mode": "synchronous_buck_charger",
+      "protection_features": [
+        "input current limit",
+        "OCP",
+        "thermal regulation",
+        "battery absent detect",
+        "adapter OVP"
+      ]
+    }
+  },
+  "typical_applications": [
+    "Laptop/notebook Li-Ion charger (2-3 cell)",
+    "USB-C PD adapter current limiting"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Synchronous buck charger with adapter select",
+      "topology": "synchronous_buck_charger",
+      "description": "Buck from adapter to battery. Back-to-back MOSFETs for adapter select. SMBus sets Ichg/Vcharge/Iin.",
+      "external_components": [
+        "inductor",
+        "2x current-sense resistors",
+        "2x high/low MOSFETs",
+        "adapter-select MOSFETs"
+      ]
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/bq24725a.pdf",
+  "datasheet_source": "Texas Instruments BQ24725A datasheet",
+  "source_date": "2024-01-01",
+  "verification_status": "verified",
+  "verification_notes": "QFN-28 synchronous buck charger. SMBus. NOT pin-compatible with BQ24737/BQ24780S despite same family prefix.",
+  "replacement_notes": "BQ247xx family members differ in pinout, charge current, and SMBus register map. EC firmware is tuned per part. Verify EC firmware compatibility before substituting.",
+  "tags": [
+    "charger",
+    "synchronous_buck",
+    "laptop",
+    "smbus",
+    "qfn28"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,70 @@
+{
+  "record_id": "IC_NUVOTON_NPCE985",
+  "part_number": "NPCE985PA0DX",
+  "manufacturer": "Nuvoton",
+  "manufacturer_short": "Nuvoton",
+  "category": "ec_controller",
+  "package": "LQFP-128",
+  "pin_count": 128,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 1.62,
+      "max": 3.6,
+      "typ": 3.3
+    },
+    "output_voltage_range_v": {
+      "min": null,
+      "max": null,
+      "typ": null,
+      "adjustable": null
+    },
+    "maximum_ratings": {
+      "VCC_v": 3.6,
+      "VSTBY_v": 3.6
+    },
+    "operating_conditions": {
+      "core": "8051-based EC core",
+      "interface": "LPC / eSPI to host",
+      "flash": "embedded flash"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "Notebook Embedded Controller (keyboard scan, power sequencing, thermal)",
+    "Battery / charger SMBus host"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "EC with LPC/eSPI to PCH",
+      "topology": "ec",
+      "description": "Controls power sequencing, fan, keyboard, battery and charger via SMBus.",
+      "external_components": [
+        "32.768 kHz crystal",
+        "32 kHz crystal",
+        "decoupling",
+        "keyboard connector",
+        "thermistors"
+      ]
+    }
+  ],
+  "important_pins": [],
+  "datasheet_url": "https://www.nuvoton.com/products/cloud-computing/pc-related-ics/embedded-controller-npcx-series/",
+  "datasheet_source": "Nuvoton official product page (datasheet under NDA — public page only)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part number and family verified from Nuvoton's public product page. Full datasheet is NDA-only; pin map, EC firmware and EC behavior cannot be independently verified from public sources.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "ECs are firmware-defined. NEVER swap an EC without matching the exact firmware image, board strap config and GPIO map. Even same part number from different firmware rev is incompatible.",
+  "tags": [
+    "ec",
+    "lpc",
+    "espi",
+    "nuvoton"
+  ],
+  "schema_version": "1.0.0"
+}

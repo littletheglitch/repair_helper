@@ -1,0 +1,43 @@
+{
+  "record_id": "DISC_ON_2N3904",
+  "part_number": "2N3904",
+  "manufacturer": "onsemi (multiple vendors)",
+  "manufacturer_short": "onsemi",
+  "category": "bjt_npn",
+  "package": "TO-92",
+  "pin_count": 3,
+  "pinout": {
+    "base": "pin 1",
+    "collector": "pin 2",
+    "emitter": "pin 3",
+    "notes": "TO-92 pinout (1-2-3 left-to-right flat-side-toward-you). Verify against the specific vendor's datasheet; some SMD equivalents (SOT-23) swap pins."
+  },
+  "electrical_characteristics": {
+    "vceo_v": 40.0,
+    "ic_a": 0.2,
+    "hfe_min": 100,
+    "pd_w": 0.625,
+    "thermal_r_ja_c_per_w": 200.0,
+    "operating_temp_range_c": {
+      "min": -55,
+      "max": 150
+    }
+  },
+  "typical_applications": [
+    "Small-signal switching",
+    "Logic-level drive",
+    "Bias"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/2n3903-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VCEO=40V, IC=200mA, hFE_min=100 verified. General-purpose NPN; pinout for TO-92 is standard but SMD variants (MMBT3904 SOT-23) differ.",
+  "replacement_notes": "General-purpose NPN. For switching, ensure IC > load current AND IB > IC/hFE_min. BC547 is similar but pinout differs (C-B-E vs B-C-E).",
+  "tags": [
+    "npn",
+    "small_signal",
+    "to92"
+  ],
+  "schema_version": "1.0.0"
+}

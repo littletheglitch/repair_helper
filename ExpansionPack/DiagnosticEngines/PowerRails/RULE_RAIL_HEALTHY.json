@@ -1,0 +1,69 @@
+{
+  "rule_id": "RULE_RAIL_HEALTHY",
+  "topology": "buck_converter",
+  "priority": 30,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "rail_voltage_in_tolerance AND switching_present",
+    "notes": "Rail voltage is in tolerance and switching is present. The rail is healthy per the supplied measurements. If a symptom persists, the issue is elsewhere (load, transient, or a marginal fault not visible on a static reading)."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Rail is HEALTHY (in tolerance, switching present). No fault in this rail's regulation. If the symptom persists, check the load, ripple under load, or transient response.",
+      "measure": {
+        "what": "Rail under load (ripple + transient)",
+        "where": "Rail test point, under normal load",
+        "instrument": "Oscilloscope AC-coupled",
+        "expected": "Ripple within spec; transients recover within a few switching cycles.",
+        "safety": "Powered, under load."
+      },
+      "interpretations": [
+        {
+          "if_result": "Ripple and transients normal",
+          "then": "Rail is genuinely healthy. Fault is downstream (load) or unrelated.",
+          "set_facts": [
+            "rail_healthy=True"
+          ]
+        },
+        {
+          "if_result": "Ripple high or transients large",
+          "then": "Marginal fault: output cap degraded or compensation weak. See RULE_VOLTAGE_UNSTABLE.",
+          "set_facts": [
+            "rail_marginal=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

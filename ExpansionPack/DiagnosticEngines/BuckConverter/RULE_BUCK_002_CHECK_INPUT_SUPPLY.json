@@ -1,0 +1,55 @@
+{
+  "rule_id": "RULE_BUCK_002_CHECK_INPUT_SUPPLY",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "VCCSA",
+    "VRAM",
+    "DDR_VDD"
+  ],
+  "condition": {
+    "expression": "no_confirmed_short AND NOT vin_measured",
+    "notes": ""
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Measure the controller's VIN pin (input supply to the high-side FET drain).",
+      "measure": {
+        "what": "Controller VIN voltage",
+        "where": "Controller VIN pin (consult datasheet for pin number) or the high-side FET drain pad",
+        "instrument": "DMM DC volts, oscilloscope optional",
+        "expected": "Equals the upstream rail voltage (e.g. +5VALW = 5.0 V). Tolerance per upstream rail spec.",
+        "safety": "Probe carefully to avoid shorting adjacent pins. Use fine needle probes."
+      },
+      "interpretations": [
+        {
+          "if_result": "VIN present and at expected voltage",
+          "then": "Input supply is good. Proceed to check controller VCC (logic supply).",
+          "set_facts": [
+            "vin_present=True"
+          ],
+          "next_rule": "RULE_BUCK_003_CHECK_CONTROLLER_VCC"
+        },
+        {
+          "if_result": "VIN missing",
+          "then": "Upstream rail is dead. Diagnose the upstream rail first (see its topology rules). Do NOT continue on this rail.",
+          "set_facts": [
+            "vin_present=False"
+          ]
+        },
+        {
+          "if_result": "VIN present but wrong voltage",
+          "then": "Upstream rail is out of regulation or loaded down. Diagnose upstream rail; possible short on a sibling rail sharing the same upstream supply.",
+          "set_facts": [
+            "vin_present=True",
+            "vin_voltage_wrong=True"
+          ]
+        }
+      ],
+      "requires_info": true,
+      "requires_info_note": "Need the controller's datasheet to know which pin is VIN and what the expected voltage is. If the controller part number is unknown, identify it from the board marking first."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

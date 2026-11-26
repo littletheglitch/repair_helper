@@ -1,0 +1,7 @@
+Sample board schematic notes (fictional, for testing only).
+EC: input ACOK on EC pin 12 (active high).
+Charger IC ACOK output: charger pin 8 (open drain).
+Always-on converter EN: EC pin 33 (active high).
++3VALW inductor: L5; test point TP3.
++5VALW inductor: L7; test point TP5.
+VRM controller: fictional part SAMPLE-VRM-1.

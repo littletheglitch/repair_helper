@@ -1,0 +1,37 @@
+{
+  "rail_family": "GPU_CORE",
+  "description": "Discrete GPU core voltage rail. Multi-phase synchronous buck, voltage set by GPU firmware. Tightly coupled to VRAM sequencing.",
+  "typical_voltage_v": {
+    "min": 0.6,
+    "typ": 0.9,
+    "max": 1.1,
+    "notes": "Platform-dependent; do NOT assume."
+  },
+  "typical_topology": "gpu_vrm",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51621",
+    "ISL95831",
+    "MAX15496",
+    "NCP81208"
+  ],
+  "upstream_rails": [
+    "+VCC_CORE_IN",
+    "+1.8V"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "controller_vcc_present",
+    "en_signal_present",
+    "switching_present",
+    "power_good_present",
+    "feedback_present",
+    "ripple_measured_mv",
+    "phase_count_observed"
+  ],
+  "schema_version": "1.0.0"
+}

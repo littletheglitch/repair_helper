@@ -1,0 +1,54 @@
+{
+  "manifest_version": "1.0.0",
+  "pack_name": "Electronics_Diagnostic_Expansion_Pack",
+  "pack_version": "1.0.0",
+  "schema_version": "1.0.0",
+  "description": "Standalone expansion pack: component intelligence database + deterministic power-rail diagnostic engine for laptop motherboard repair. Pure Python standard library, no runtime network access, no LLM.",
+  "independent": true,
+  "stdlib_only": true,
+  "runtime_network_access_required": false,
+  "runtime_llm_required": false,
+  "ingests_firmware_dumps": false,
+  "ingests_schematics": false,
+  "ingests_boardview_files": false,
+  "python_requires": ">=3.9",
+  "public_api": {
+    "engine_module": "DiagnosticEngines.core",
+    "engine_factory": "load_engine",
+    "component_db_module": "DiagnosticEngines.core.component_db",
+    "component_db_factory": "ComponentDatabase.load",
+    "diagnose_method": "DiagnosticEngine.diagnose",
+    "measurement_class": "DiagnosticEngines.core.Measurement",
+    "result_class": "DiagnosticEngines.core.DiagnosisResult"
+  },
+  "entry_points": {
+    "validate_database": "Tools/validate_database.py",
+    "validate_rules": "Tools/validate_rules.py",
+    "export_summary": "Tools/export_summary.py",
+    "test_suite": "Tests/run_all_tests.py"
+  },
+  "data_layout": {
+    "ic_records_glob": "ComponentDatabase/ICs/**/*.json",
+    "mosfet_records_glob": "ComponentDatabase/MOSFETs/**/*.json",
+    "replacement_mappings_glob": "ComponentDatabase/ReplacementMappings/*.json",
+    "rail_definitions_glob": "DiagnosticEngines/PowerRails/*.json (excluding RULE_*.json)",
+    "rules_glob": "DiagnosticEngines/**/RULE_*.json",
+    "schemas_glob": "ComponentDatabase/schemas/*.json"
+  },
+  "diagnose_signature": {
+    "method": "DiagnosticEngine.diagnose",
+    "parameters": {
+      "rail_family": {"type": "str", "required": true, "description": "One of the rail families in DiagnosticEngines/PowerRails/."},
+      "measurements": {"type": "list[Measurement]", "required": true, "description": "Measurements collected by the technician."},
+      "controller_part": {"type": "Optional[str]", "required": false, "default": null, "description": "Part number marked on the controller IC. Recommended."},
+      "topology": {"type": "Optional[str]", "required": false, "default": null, "description": "Override the rail's default topology. Rarely needed."}
+    },
+    "returns": "DiagnosisResult"
+  },
+  "stability_promise": "Within schema_version 1.0.0, the public API symbols are stable. New optional fields may be added to dataclasses; existing fields will not be removed or renamed. New rules and rail families may be added without breaking existing diagnoses.",
+  "attribution": {
+    "component_records": "Sourced from manufacturer datasheets; each record carries datasheet_url, datasheet_source and source_date.",
+    "replacement_mappings": "Each mapping carries evidence with verdicts per criterion; COMPATIBLE requires match verdicts on all required criteria.",
+    "community_knowledge": "Excluded from ComponentDatabase; only permitted in Knowledge/ with explicit unverified labelling."
+  }
+}

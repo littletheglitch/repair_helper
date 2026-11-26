@@ -1,0 +1,49 @@
+{
+  "circuit_id": "CCT_amplifier",
+  "name": "Discrete amplifier (BJT/MOSFET)",
+  "description": "Single or multi-stage transistor amplifier. Bias network sets quiescent point; coupling caps pass AC.",
+  "topology": "BJT/FET + bias + coupling",
+  "main_components": [
+    "transistor(s)",
+    "bias resistors",
+    "load resistor",
+    "coupling caps",
+    "emitter/source resistor"
+  ],
+  "input": "Small AC signal",
+  "output": "Amplified AC signal",
+  "expected_signal_behavior": "Quiescent voltages per bias design; AC gain per load/emitter ratio.",
+  "common_failure_modes": [
+    {
+      "mode": "no_output",
+      "description": "transistor dead, bias open"
+    },
+    {
+      "mode": "clipped",
+      "description": "bias wrong, overload"
+    },
+    {
+      "mode": "distortion",
+      "description": "bias drift, cap dried"
+    }
+  ],
+  "diagnostic_measurements": [
+    "collector/drain voltage (quiescent)",
+    "base/gate voltage",
+    "emitter/source voltage",
+    "AC output vs input"
+  ],
+  "possible_fault_locations": [
+    "transistor",
+    "bias resistors",
+    "coupling caps",
+    "load resistor"
+  ],
+  "recommended_next_tests": [
+    "check quiescent DC voltages",
+    "check AC gain",
+    "check coupling caps for ESR"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

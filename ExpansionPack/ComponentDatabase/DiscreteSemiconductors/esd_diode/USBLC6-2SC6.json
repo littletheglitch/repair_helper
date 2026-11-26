@@ -1,0 +1,42 @@
+{
+  "record_id": "DISC_ON_USBLC6_2SC6",
+  "part_number": "USBLC6-2SC6",
+  "manufacturer": "onsemi (ST also makes USBLC6 family)",
+  "manufacturer_short": "onsemi",
+  "category": "esd_diode",
+  "package": "SOT-23-6",
+  "pin_count": 6,
+  "pinout": {
+    "notes": "Bidirectional ESD array for USB D+/D-. Pinout per datasheet; I/O1/I/O2 are the protected lines, GND/VBUS as marked."
+  },
+  "electrical_characteristics": {
+    "vrrm_v": 5.0,
+    "vbr_v": 6.0,
+    "vc_v": 12.0,
+    "pp_w": 0.35,
+    "if_avg_a": null,
+    "vf_v": null,
+    "pd_w": null,
+    "thermal_r_ja_c_per_w": null,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 125
+    }
+  },
+  "typical_applications": [
+    "USB2 D+/D- ESD protection",
+    "General low-capacitance ESD"
+  ],
+  "datasheet_url": "https://www.onsemi.com/pdf/datasheet/usblc6-2-d.pdf",
+  "datasheet_source": "onsemi official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "VRRM, VBR, VC, package verified. Low-capacitance (~3 pF) ESD array specifically for USB2.",
+  "replacement_notes": "ESD diode replacement MUST match VRRM (>= rail), VC (<= IC abs max), capacitance (<= the interface spec — USB2 needs <5pF), and the channel count. A generic TVS will load USB2 too heavily.",
+  "tags": [
+    "esd",
+    "usb",
+    "low_cap"
+  ],
+  "schema_version": "1.0.0"
+}

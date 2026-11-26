@@ -1,0 +1,201 @@
+{
+  "topology_id": "PSUP_boost",
+  "name": "Boost converter (step-up)",
+  "mains_powered": false,
+  "isolated": false,
+  "typical_power_level_w": 50,
+  "stages": [
+    {
+      "id": "input_protection",
+      "description": "Input fuse, reverse-polarity diode, input cap",
+      "components": [
+        "fuse",
+        "reverse_diode",
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "No input voltage. Check the input fuse, reverse-polarity diode, and the input source.",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "input_filter",
+      "description": "Input filter cap + decoupling",
+      "components": [
+        "input_cap"
+      ],
+      "diagnostic_signals": {
+        "input_voltage": "in_range"
+      },
+      "fail_note": "Input present at connector but wrong at the regulator input pin. Check the input trace and decoupling.",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "startup_supply",
+      "description": "Controller VCC (internal LDO or external bias)",
+      "components": [
+        "vcc_cap",
+        "bias_diode"
+      ],
+      "diagnostic_signals": {
+        "vcc": "in_range"
+      },
+      "fail_note": "Controller VCC missing. The IC cannot run. Check the VCC decoupling cap and the VCC feed (internal LDO or bias winding).",
+      "depends_on": [
+        "input_protection"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "pwm_controller",
+      "description": "PWM controller enable + reference",
+      "components": [
+        "controller_ic"
+      ],
+      "diagnostic_signals": {
+        "en": "in_range",
+        "vref": "in_range"
+      },
+      "fail_note": "Controller not enabled or no reference. Check EN source and the internal Vref.",
+      "depends_on": [
+        "startup_supply"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "main_switch",
+      "description": "Switch (N-MOSFET) to ground; charging the inductor",
+      "components": [
+        "switch_fet",
+        "gate_driver"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range",
+        "gate_drive": "in_range"
+      },
+      "fail_note": "No switching. The boost switch must toggle to charge the inductor. Dead gate-drive = controller fault.",
+      "depends_on": [
+        "pwm_controller"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "inductor",
+      "description": "Boost inductor (input-side energy storage)",
+      "components": [
+        "inductor"
+      ],
+      "diagnostic_signals": {
+        "switching": "in_range"
+      },
+      "fail_note": "Inductor fault. An open inductor breaks the boost path.",
+      "depends_on": [
+        "main_switch"
+      ],
+      "side": "low_voltage"
+    },
+    {
+      "id": "boost_diode",
+      "description": "Output boost diode (schottky) — blocks reverse current",
+      "components": [
+        "boost_diode"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range"
+      },
+      "fail_note": "Boost diode fault. An OPEN boost diode means the output cannot rise (no charge path to the output cap). A SHORT boost diode drains the output back to the switch. This is structurally distinct from a buck's rectifier.",
+      "depends_on": [],
+      "side": "low_voltage"
+    },
+    {
+      "id": "output_filter",
+      "description": "Output cap (charged through the boost diode)",
+      "components": [
+        "output_cap"
+      ],
+      "diagnostic_signals": {
+        "output_voltage": "in_range",
+        "output_ripple": "in_range"
+      },
+      "fail_note": "Output cap fault.",
+      "depends_on": [
+        "rectification_secondary",
+        "inductor",
+        "transformer"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "feedback",
+      "description": "Non-isolated feedback: output divider to controller FB pin",
+      "components": [
+        "fb_divider",
+        "fb_cap"
+      ],
+      "diagnostic_signals": {
+        "fb": "in_range"
+      },
+      "fail_note": "Feedback pin not at expected voltage. Check the FB divider resistors and FB decoupling cap.",
+      "depends_on": [
+        "output_filter"
+      ],
+      "side": "secondary"
+    },
+    {
+      "id": "protection",
+      "description": "PGOOD / OVP / OCP / thermal",
+      "components": [
+        "pgood_pullup"
+      ],
+      "diagnostic_signals": {
+        "pgood": "in_range"
+      },
+      "fail_note": "PGOOD not asserted or protection tripping. Check the PGOOD pull-up and the OVP/OCP monitors.",
+      "depends_on": [
+        "feedback"
+      ],
+      "side": "secondary"
+    }
+  ],
+  "fault_patterns": [
+    {
+      "pattern": "no_output",
+      "likely_stages": [
+        "main_switch",
+        "boost_diode",
+        "inductor"
+      ],
+      "notes": "Boost: an open boost diode is a common no-output cause."
+    },
+    {
+      "pattern": "overvoltage",
+      "likely_stages": [
+        "boost_diode",
+        "feedback"
+      ],
+      "notes": "Boost overvoltage = shorted switch or open FB."
+    },
+    {
+      "pattern": "wrong_voltage",
+      "likely_stages": [
+        "feedback",
+        "output_filter"
+      ],
+      "notes": "Output present but wrong voltage. Check the feedback divider and the reference."
+    },
+    {
+      "pattern": "unstable",
+      "likely_stages": [
+        "output_filter",
+        "feedback"
+      ],
+      "notes": "Output unstable/oscillating. Check output caps, feedback compensation, ESR."
+    }
+  ],
+  "schema_version": "1.1.0"
+}

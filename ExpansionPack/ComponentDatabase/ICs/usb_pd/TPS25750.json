@@ -1,0 +1,91 @@
+{
+  "record_id": "IC_TI_TPS25750",
+  "part_number": "TPS25750",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "usb_pd_controller",
+  "package": "WQFN-42 (4.5x4.5 mm)",
+  "pin_count": 42,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 3.0,
+      "max": 22.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 3.0,
+      "max": 21.0,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VBUS_v": 26.0
+    },
+    "operating_conditions": {
+      "control": "USB PD 3.0 sink/source with integrated PP switching",
+      "interface": "I2C"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": []
+  },
+  "typical_applications": [
+    "USB-C PD sink controller in notebooks",
+    "Type-C / PD front-end for charger ICs"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "PD sink with PP1/PP2 switches",
+      "topology": "usb_pd",
+      "description": "Negotiates PD contract and gates VBUS to the charger IC input.",
+      "external_components": [
+        "VBUS cap",
+        "CC1/CC2 ESD",
+        "I2C pull-ups"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VBUS",
+      "description": "VBUS sense and clamp.",
+      "pin_numbers": []
+    },
+    {
+      "function": "CC1/CC2",
+      "description": "USB-PD configuration channel.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PP1/PP2",
+      "description": "Power-path switch outputs.",
+      "pin_numbers": []
+    },
+    {
+      "function": "LDO_1V5/LDO_3V3",
+      "description": "Internal LDO outputs.",
+      "pin_numbers": []
+    },
+    {
+      "function": "SDA/SCL",
+      "description": "I2C to host EC.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/tps25750.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Part family and PD capability verified. Pinout and I2C register map not enumerated — confirm against the live datasheet and the board's firmware configuration.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "PD controllers carry firmware configuration (PDO tables). A swap requires re-flashing the same configuration binary or the board will not negotiate the right contracts.",
+  "tags": [
+    "usb_pd",
+    "type_c",
+    "pd_sink"
+  ],
+  "schema_version": "1.0.0"
+}

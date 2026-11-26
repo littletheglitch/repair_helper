@@ -1,0 +1,52 @@
+{
+  "record_id": "AIC_TI_OPA2134",
+  "part_number": "OPA2134",
+  "manufacturer": "Texas Instruments",
+  "manufacturer_short": "TI",
+  "category": "op_amp",
+  "package": "SOIC-8 / DIP-8",
+  "pin_count": 8,
+  "pinout": {
+    "1": "OUTA",
+    "2": "INA-",
+    "3": "INA+",
+    "4": "V-",
+    "5": "INB+",
+    "6": "INB-",
+    "7": "OUTB",
+    "8": "V+"
+  },
+  "electrical_characteristics": {
+    "supply_voltage_range_v": {
+      "min": 5.0,
+      "max": 36.0
+    },
+    "supply_current_ma": 4.0,
+    "bandwidth_mhz": 8.0,
+    "slew_rate_v_per_us": 20.0,
+    "offset_voltage_mv": 0.5,
+    "input_bias_current_pa": 5,
+    "output_current_ma": 35,
+    "operating_temp_range_c": {
+      "min": -40,
+      "max": 85
+    }
+  },
+  "typical_applications": [
+    "Audio preamp / active filter",
+    "Low-noise signal conditioning"
+  ],
+  "datasheet_url": "https://www.ti.com/lit/ds/symlink/opa2134.pdf",
+  "datasheet_source": "Texas Instruments official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "verified",
+  "verification_notes": "Audio-grade dual JFET-input op-amp. Supply range, GBW, slew rate, pinout verified.",
+  "replacement_notes": "Audio op-amp swaps (NE5532, OPA2604, OPA2134) have similar pinouts but different noise/distortion/slew. For audio, match slew rate and noise; for precision, match offset and CMRR.",
+  "tags": [
+    "opamp",
+    "audio",
+    "jfet_input",
+    "low_noise"
+  ],
+  "schema_version": "1.0.0"
+}

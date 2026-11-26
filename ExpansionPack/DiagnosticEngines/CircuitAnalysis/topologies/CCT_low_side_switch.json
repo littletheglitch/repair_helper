@@ -1,0 +1,45 @@
+{
+  "circuit_id": "CCT_low_side_switch",
+  "name": "Low-side switch",
+  "description": "Load switched to ground (low side). N-channel FET; gate drive referenced to ground.",
+  "topology": "N-MOSFET + gate resistor + load",
+  "main_components": [
+    "N-MOSFET",
+    "gate resistor",
+    "pull-down resistor"
+  ],
+  "input": "Control signal",
+  "output": "Switched ground to load",
+  "expected_signal_behavior": "When on: load sees V+ through FET to ground; VDS ~0. When off: load sees 0 V (no current).",
+  "common_failure_modes": [
+    {
+      "mode": "stuck_on",
+      "description": "FET shorted, gate stuck high"
+    },
+    {
+      "mode": "stuck_off",
+      "description": "gate stuck low, FET open"
+    },
+    {
+      "mode": "overheating",
+      "description": "insufficient VGS"
+    }
+  ],
+  "diagnostic_measurements": [
+    "gate voltage",
+    "drain voltage",
+    "VDS when on"
+  ],
+  "possible_fault_locations": [
+    "N-MOSFET",
+    "gate resistor",
+    "pull-down"
+  ],
+  "recommended_next_tests": [
+    "check gate drive",
+    "check VDS when on",
+    "verify VGS meets logic-level requirement"
+  ],
+  "source_references": [],
+  "schema_version": "1.0.0"
+}

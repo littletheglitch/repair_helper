@@ -1,0 +1,79 @@
+{
+  "rule_id": "RULE_OVERLOAD_IDENTIFY",
+  "topology": "buck_converter",
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "overload",
+    "notes": "Follow-on rule: only evaluated when reached via next_rule from RULE_VOLTAGE_LOW_OUTPUT. Not a standalone candidate; the overload fact is an internal conclusion, not a technician measurement."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Rail is OVERLOADED. To locate the excess load: power off, lift/remove downstream loads one at a time (or use a current-limited bench supply set just above the rail's normal current), and re-measure the rail voltage after each isolation. The load whose removal restores the rail voltage is the culprit.",
+      "measure": {
+        "what": "Rail voltage after isolating each downstream load",
+        "where": "Rail test point, with each downstream load lifted/disconnected in turn",
+        "instrument": "DMM DC volts + current-limited bench supply (set to the rail's nominal voltage and a current limit ~1.5x the normal load)",
+        "expected": "Rail voltage returns to nominal when the overloaded load is isolated. The isolated load will read low resistance to ground (unpowered) if it has a shorted input cap or IC.",
+        "safety": "Use a current-limited supply, NOT the on-board regulator, when injecting into a possibly-shorted rail. Limit current to ~1.5x the rail's normal load to avoid trace damage."
+      },
+      "interpretations": [
+        {
+          "if_result": "Rail restored after isolating load X",
+          "then": "Load X is the culprit. Diagnose load X (likely a shorted input cap or shorted IC). Replace the faulty component, then verify the rail is stable at full load.",
+          "set_facts": [
+            "overload_source_identified=True"
+          ]
+        },
+        {
+          "if_result": "Rail still low after isolating all loads",
+          "then": "The overload is on the rail itself (output cap short, or the regulator's own current limit tripping due to a fault). Check the output cap for short and the regulator's current-sense resistor.",
+          "set_facts": [
+            "rail_internal_fault=True"
+          ]
+        },
+        {
+          "if_result": "Cannot isolate loads (BGA/embedded)",
+          "then": "Use thermal imaging or freeze spray: the overloaded component heats visibly under current-limited injection. If no thermal signature, the load may be many small loads summing — measure each load's input current individually.",
+          "set_facts": [
+            "thermal_isolation_required=True"
+          ],
+          "requires_info": true,
+          "requires_info_note": "Thermal isolation requires a thermal camera or freeze spray; not all shops have these."
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0",
+  "follow_on": true,
+  "priority": 5
+}

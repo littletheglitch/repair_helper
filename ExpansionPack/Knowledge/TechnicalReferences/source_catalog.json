@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Source catalog for the Knowledge Platform. Lists authoritative technical sources. The pack does NOT redistribute copyrighted content; it records metadata + URLs so the host can retrieve and ingest legally.",
+  "policy": {
+    "copyright": "Do not download or redistribute unauthorized full copyrighted books. Prefer legally available documents, public manufacturer datasheets, application notes, open educational material, and user-provided licensed documents.",
+    "bios_dumps": "BIOS dumps must NEVER be included in general knowledge ingestion.",
+    "schematics_boardview": "Schematics and BoardView files remain case-specific and manually selected; never auto-ingested.",
+    "repair_forums": "Do not ingest entire repair forums blindly. Select technically relevant discussions and preserve their context and source."
+  },
+  "categories": [
+    {
+      "category_id": "textbook_electronics",
+      "name": "Electronics textbooks",
+      "sources": [
+        {"title": "Practical Electronics for Inventors", "authors": ["Paul Scherz", "Simon Monk"], "edition": "4th", "publisher": "McGraw-Hill", "year": 2016, "isbn": "978-1259587559", "url": "https://www.mhprofessional.com/9781259587559-usa", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"},
+        {"title": "The Art of Electronics", "authors": ["Paul Horowitz", "Winfield Hill"], "edition": "3rd", "publisher": "Cambridge University Press", "year": 2015, "isbn": "978-0521809269", "url": "https://www.cambridge.org/us/universitypress/subjects/engineering/circuits-and-systems/art-electronics-3rd-edition", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"},
+        {"title": "Electronics for Dummies", "authors": ["Cathleen Shamieh", "Gordon McComb"], "publisher": "Wiley", "year": 2019, "isbn": "978-1119534462", "url": "https://www.wiley.com/en-us/Electronics+For+Dummies%2C+3rd+Edition-p-9781119534462", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"}
+      ]
+    },
+    {
+      "category_id": "textbook_power_electronics",
+      "name": "Power electronics textbooks",
+      "sources": [
+        {"title": "Power Electronics", "authors": ["Daniel W. Hart"], "publisher": "McGraw-Hill", "year": 2010, "isbn": "978-0073380475", "url": "https://www.mhprofessional.com/9780073380475-usa", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"},
+        {"title": "Switching Power Supply Design", "authors": ["Abraham Pressman", "Keith Billings", "Taylor Morey"], "edition": "3rd", "publisher": "McGraw-Hill", "year": 2009, "isbn": "978-0071482721", "url": "https://www.mhprofessional.com/9780071482721-usa", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"},
+        {"title": "Troubleshooting Analog Circuits", "authors": ["Robert A. Pease"], "publisher": "Newnes", "year": 1991, "isbn": "978-0750694995", "url": "https://www.elsevier.com/books/troubleshooting-analog-circuits/pease/978-0-7506-9499-5", "license": "Commercial — do not redistribute", "ingestion_status": "not_ingested"}
+      ]
+    },
+    {
+      "category_id": "manufacturer_datasheets",
+      "name": "Manufacturer datasheets (public, freely redistributable by the manufacturer)",
+      "sources": [
+        {"title": "Texas Instruments datasheet library", "publisher": "Texas Instruments", "url": "https://www.ti.com/design-resources/design-tools-simulation/models-simulators/datasheets.html", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "onsemi datasheet library", "publisher": "onsemi", "url": "https://www.onsemi.com/design/tools-software/technical-datasheets", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Vishay datasheet library", "publisher": "Vishay", "url": "https://www.vishay.com/doc?query=Product", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Richtek product center", "publisher": "Richtek Technology", "url": "https://www.richtek.com/products/", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Alpha & Omega Semiconductor product center", "publisher": "AOS", "url": "https://www.aosmd.com/products", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Macronix datasheets", "publisher": "Macronix", "url": "https://www.macronix.com/en-us/Products/Flash-Memory", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Winbond product catalog", "publisher": "Winbond", "url": "https://www.winbond.com/hq/product/code-storage-flash-memory/", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Nuvoton product catalog", "publisher": "Nuvoton", "url": "https://www.nuvoton.com/products/", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "ITE Tech product catalog", "publisher": "ITE Tech", "url": "https://www.ite.com.tw/en/product", "license": "Public — manufacturer-published (full datasheet under NDA)", "ingestion_status": "metadata_only"}
+      ]
+    },
+    {
+      "category_id": "application_notes",
+      "name": "Manufacturer application notes",
+      "sources": [
+        {"title": "TI application notes index", "publisher": "Texas Instruments", "url": "https://www.ti.com/lit/an/", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "onsemi application notes", "publisher": "onsemi", "url": "https://www.onsemi.com/design/tools-software/technical-documentation/application-notes", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"},
+        {"title": "Vishay application notes", "publisher": "Vishay", "url": "https://www.vishay.com/how/appnotes/", "license": "Public — manufacturer-published", "ingestion_status": "selectively_indexed"}
+      ]
+    },
+    {
+      "category_id": "engineering_standards",
+      "name": "Engineering standards",
+      "sources": [
+        {"title": "ATX12V Power Supply Design Guide", "publisher": "Intel", "url": "https://www.intel.com/content/dam/www/public/us/en/documents/guides/atx12v-design-guide.pdf", "license": "Public — Intel-published", "ingestion_status": "selectively_indexed"},
+        {"title": "USB 2.0 / 3.x specifications", "publisher": "USB-IF", "url": "https://www.usb.org/documents", "license": "Public — USB-IF published", "ingestion_status": "selectively_indexed"},
+        {"title": "JEDEC standards (DDR)", "publisher": "JEDEC", "url": "https://www.jedec.org/standards-documents", "license": "Public — JEDEC published (free registration)", "ingestion_status": "selectively_indexed"}
+      ]
+    },
+    {
+      "category_id": "community_unverified",
+      "name": "Community repair discussions (UNVERIFIED — use with caution)",
+      "sources": [
+        {"title": "BadCaps Forum", "publisher": "Community", "url": "https://www.badcaps.net/forum/", "license": "Community — unverified", "ingestion_status": "not_ingested", "policy_note": "May be consulted as a secondary signal; never as a substitute for the datasheet."},
+        {"title": "Vinafix", "publisher": "Community", "url": "https://vinafix.com/", "license": "Community — unverified", "ingestion_status": "not_ingested", "policy_note": "BIOS/firmware resources; out of scope for this pack."}
+      ]
+    }
+  ]
+}

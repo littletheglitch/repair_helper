@@ -1,0 +1,69 @@
+{
+  "rule_id": "RULE_FAULT_VCC_ABSENT",
+  "topology": "buck_converter",
+  "priority": 20,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "vcc_measured AND NOT vcc_present AND vin_present AND no_confirmed_short",
+    "notes": "Controller VCC was measured and is absent while VIN is present. The controller IC has no supply, so it cannot drive the switch. Likely a dead internal LDO, a missing VCC decoupling cap, or a VCC feed fault."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Controller VCC is absent with VIN present. The controller IC cannot run without VCC. Check the VCC pin decoupling cap (short?) and the VCC feed (internal LDO or external supply). A dead internal LDO means the controller IC is faulty.",
+      "measure": {
+        "what": "VCC pin decoupling cap (resistance) + VCC feed",
+        "where": "Controller VCC pin and its decoupling cap",
+        "instrument": "DMM resistance (unpowered) + DMM volts (powered)",
+        "expected": "VCC at the datasheet-specified voltage (often 5V or 3.3V internal LDO).",
+        "safety": "Unpowered for resistance; powered for voltage."
+      },
+      "interpretations": [
+        {
+          "if_result": "VCC decoupling cap shorted",
+          "then": "Replace the shorted VCC cap. Verify VCC comes up before re-applying load.",
+          "set_facts": [
+            "vcc_cap_short=True"
+          ]
+        },
+        {
+          "if_result": "VCC cap good, VCC still absent",
+          "then": "Controller's internal LDO is dead. Replace the controller IC. Verify the controller is correct for this rail (use the replacement engine).",
+          "set_facts": [
+            "controller_vcc_ldo_dead=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

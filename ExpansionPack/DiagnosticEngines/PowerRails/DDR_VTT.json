@@ -1,0 +1,31 @@
+{
+  "rail_family": "DDR_VTT",
+  "description": "DDR termination rail, VDDQ/2. Sourced from a dedicated VTT regulator or LDO. Must track DDR_VDD.",
+  "typical_voltage_v": {
+    "min": 0.55,
+    "typ": 0.6,
+    "max": 0.75,
+    "notes": "VDDQ/2; tolerance typically +/-1%. Must source AND sink current."
+  },
+  "typical_topology": "ldo",
+  "always_on": false,
+  "common_controllers": [
+    "TPS51200",
+    "RT9179",
+    "ISL88777"
+  ],
+  "upstream_rails": [
+    "DDR_VDD",
+    "+3VALW"
+  ],
+  "downstream_rails": [],
+  "measurement_keys": [
+    "rail_voltage_measured_v",
+    "rail_voltage_expected_v",
+    "rail_resistance_to_ground_ohm",
+    "controller_vin_present",
+    "en_signal_present",
+    "power_good_present"
+  ],
+  "schema_version": "1.0.0"
+}

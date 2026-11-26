@@ -1,0 +1,69 @@
+{
+  "rule_id": "RULE_RIPPLE_EXCESSIVE",
+  "topology": "buck_converter",
+  "priority": 10,
+  "applies_to_rail_families": [
+    "+1.8V",
+    "+3VALW",
+    "+5VALW",
+    "+VCCRTC",
+    "ADAPTER_INPUT",
+    "ATX_12V",
+    "ATX_3V3",
+    "ATX_5V",
+    "ATX_5VSB",
+    "BOOST_GENERIC",
+    "CPU_VRM_INPUT",
+    "DDR_VDD",
+    "DDR_VTT",
+    "EPS_12V",
+    "GPU_CORE",
+    "LCD_VDD",
+    "PCH_VCC_DESKTOP",
+    "PCIE_12V",
+    "RAM_VRM_DESKTOP",
+    "RAM_VTT_DESKTOP",
+    "USB_VBUS",
+    "VCCSA",
+    "VCORE",
+    "VCORE_DESKTOP",
+    "VRAM"
+  ],
+  "condition": {
+    "expression": "ripple_excessive AND no_confirmed_short",
+    "notes": "Output ripple exceeds the rail's limit (rail-defined, or 50 mV default). The DC reading may be fine but the AC content is too high. Common cause: output cap ESR high (dried electrolytic)."
+  },
+  "next_steps": [
+    {
+      "step": 1,
+      "action": "Ripple exceeds the limit. Measure the output cap ESR and replace if high. A dried electrolytic is the most common cause. If ESR is normal, suspect loop instability (compensation network).",
+      "measure": {
+        "what": "Output cap ESR + ripple (scope)",
+        "where": "Output cap",
+        "instrument": "ESR meter + oscilloscope AC-coupled 20MHz",
+        "expected": "Ripple within the rail's spec; ESR < 0.1 ohm (polymer) or < 0.5 ohm (aluminium).",
+        "safety": "Powered."
+      },
+      "interpretations": [
+        {
+          "if_result": "ESR high",
+          "then": "Replace the output cap with a low-ESR part of the same value+voltage.",
+          "set_facts": [
+            "output_cap_degraded=True"
+          ]
+        },
+        {
+          "if_result": "ESR normal but ripple still high",
+          "then": "Loop instability or load transients. Check compensation network (controller datasheet).",
+          "set_facts": [
+            "compensation_fault=True"
+          ]
+        }
+      ],
+      "requires_info": false
+    }
+  ],
+  "rail_voltage_hint_v": null,
+  "references": [],
+  "schema_version": "1.0.0"
+}

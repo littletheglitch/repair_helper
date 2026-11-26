@@ -1,0 +1,93 @@
+{
+  "record_id": "IC_RICHTEK_RT8205",
+  "part_number": "RT8205",
+  "manufacturer": "Richtek Technology",
+  "manufacturer_short": "Richtek",
+  "category": "buck_controller",
+  "package": "WDFN-14L 3x3",
+  "pin_count": 14,
+  "pinout": {},
+  "pin_functions": [],
+  "electrical_characteristics": {
+    "input_voltage_range_v": {
+      "min": 5.0,
+      "max": 25.0,
+      "typ": null
+    },
+    "output_voltage_range_v": {
+      "min": 0.7,
+      "max": 5.5,
+      "typ": null,
+      "adjustable": true
+    },
+    "maximum_ratings": {
+      "VIN_v": 27.0
+    },
+    "operating_conditions": {
+      "switching_frequency_khz_range": "300 to 750"
+    },
+    "quiescent_current_ma": null,
+    "switching_frequency_khz": [
+      300,
+      750
+    ]
+  },
+  "typical_applications": [
+    "Laptop always-on / standby rails (+3VALW, +5VALW)",
+    "DDR termination / VTT rail"
+  ],
+  "common_circuit_configurations": [
+    {
+      "name": "Dual synchronous buck",
+      "topology": "synchronous_buck",
+      "description": "Two independent buck outputs from a single IC, common in ALW rails.",
+      "external_components": [
+        "MOSFETs",
+        "inductors",
+        "feedback dividers"
+      ]
+    }
+  ],
+  "important_pins": [
+    {
+      "function": "VIN",
+      "description": "Main input supply (typically from adapter/battery).",
+      "pin_numbers": []
+    },
+    {
+      "function": "VDDA",
+      "description": "Analog supply, typically 5 V.",
+      "pin_numbers": []
+    },
+    {
+      "function": "EN1/EN2",
+      "description": "Enable per channel.",
+      "pin_numbers": []
+    },
+    {
+      "function": "FB1/FB2",
+      "description": "Feedback per channel.",
+      "pin_numbers": []
+    },
+    {
+      "function": "PGOOD",
+      "description": "Power-good open-drain output.",
+      "pin_numbers": []
+    }
+  ],
+  "datasheet_url": "https://www.richtek.com/assets/product_file/RT8205=RT8205A/DS8205A-12.pdf",
+  "datasheet_source": "Richtek Technology official datasheet (PDF)",
+  "source_date": "2024-06-01",
+  "verification_status": "partial",
+  "verification_notes": "Common standby controller on many Clevo/Compal boards. Package and voltage range verified against the Richtek product page; pin map not enumerated.",
+  "known_compatible_alternatives": [],
+  "conditional_alternatives": [],
+  "incompatible_alternatives": [],
+  "replacement_notes": "Dual-channel ALW controllers are board-specific; EN routing and PGOOD daisy-chain differ between vendors. Replacement only after checking the schematic.",
+  "tags": [
+    "alw",
+    "standby",
+    "dual_buck"
+  ],
+  "schema_version": "1.0.0"
+}
